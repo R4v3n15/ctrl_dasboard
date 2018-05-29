@@ -105,6 +105,18 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>importar">
+                              <span data-feather="file-text"></span>
+                              Importar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>importar/repetidos">
+                              <span data-feather="file-text"></span>
+                              Repetidos
+                            </a>
+                        </li>
                         <?php if (View::active($filename, 'alumnos')): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>wines">

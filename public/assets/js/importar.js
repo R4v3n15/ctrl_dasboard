@@ -10,6 +10,8 @@ var Import = {
         this.importTeachers();
         this.clasesList();
         this.importGroups();
+
+        this.getRepeatedList();
     },
 
     importGroups: function(){
@@ -17,7 +19,7 @@ var Import = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumnos/importarGrupos',
+                url: _root_ + 'importar/importarGrupos',
                 success: function(data){
                     console.log(data);
                     if (data) {
@@ -32,7 +34,7 @@ var Import = {
         $.ajax({
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumnos/getClasesList',
+            url: _root_ + 'importar/getClasesList',
             success: function(data){
                 $('#lista_clases').html(data);
             }
@@ -44,7 +46,7 @@ var Import = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumnos/importarMaestros',
+                url: _root_ + 'importar/importarMaestros',
                 success: function(data){
                     console.log(data);
                     alert('Teachers Imported');
@@ -53,27 +55,27 @@ var Import = {
         });
     },
 
-    getStuentsList: function(page=0){
-        let that = this;
+    getStuentsList: function(){
+        let _this = this;
         $.ajax({
-            data: {page:page},
+            data: { page:_this.vars.currentPage},
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumnos/getAlumnosList',
-            success: function(data){
-                $('#students_list').html(data);
-                that.importStudent();
-                that.navigationPage();
+            url: _root_ + 'importar/importarAlumnos',
+            success: function(response){
+                $('#students_list').html(response);
+                _this.importStudent();
+                _this.navPage();
             }
         });
     },
 
-    navigationPage: function(lista){
-        let that = this;
-        $(".page-students").on('click', function(event){
+    navPage: function(){
+        let _this = this;
+        $(".page-students").click(function(event){
             event.preventDefault();
-            that.vars.currentPage = parseInt($(this).data("students"));
-            that.showPaylist($(this).data("students"));
+            _this.vars.currentPage = parseInt($(this).data("students"));
+            _this.getStuentsList();
         });
     },
 
@@ -86,7 +88,7 @@ var Import = {
                 data: { alumno: alumno },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumnos/importarAlumno',
+                url: _root_ + 'importar/importarAlumno',
                 success: function(data){
                     console.log(data);
                     that.getStuentsList();
@@ -96,7 +98,17 @@ var Import = {
     },
 
     getRepeatedList: function(){
-        let that = this;
+        let _this = this;
+        $.ajax({
+            synch: 'true',
+            type: 'POST',
+            url: _root_ + 'importar/listaRepetidos',
+            success: function(response){
+                $('#lista_repetidos').html(response);
+                // _this.importStudent();
+                // _this.navPage();
+            }
+        });
     },
 
     navigationPage: function(){
@@ -119,7 +131,7 @@ var Import = {
                     data: { student: id, name: name, surname: surname, lastname: lastname },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumnos/corregirAlumnoRepetido',
+                    url: _root_ + 'importar/corregirAlumnoRepetido',
                     success: function(data){
                         $('#'+id+'message').text('[ Actualizado: Ok ]');
                     }

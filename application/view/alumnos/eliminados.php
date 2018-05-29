@@ -1,11 +1,15 @@
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-md-12 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
-            <h5 class="text-info">Alumnos de Baja</h5>
+            <h5 class="text-info">Alumnos Eliminados</h5>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <button type="button" id="button" class="btn btn-sm btn-outline-info">Send <i class="fa fa-send"></i></button>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <button type="button" id="button" class="btn btn-sm btn-info">Send <i class="fa fa-send"></i></button>
                 <table id="example" class="table table-sm table-striped" style="width:100%">
                     <thead>
                         <tr class="bg-info">
@@ -16,6 +20,7 @@
                             <th class="text-center">Sexo</th>
                             <th class="text-center">Grupo</th>
                             <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -27,6 +32,7 @@
                             <th class="text-center">Sexo</th>
                             <th class="text-center">Grupo</th>
                             <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -40,7 +46,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Dar de Alta</h5>
+                <h5 class="modal-title" id="ModalCenterTitle">Reactivar</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>

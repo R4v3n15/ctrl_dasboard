@@ -197,4 +197,21 @@ class GeneralModel
         return null;
     }
 
+    public static function allStudentsDeleted() {
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT s.student_id, s.id_tutor, CONCAT_WS(' ',s.name, s.surname, s.lastname) as name, 
+                                               s.age, s.genre, s.avatar, g.class_id,
+                                               g.convenio, sd.studies, sd.lastgrade
+                                        FROM students as s, students_groups as g, students_details as sd
+                                        WHERE s.deleted  = 1
+                                          AND s.student_id = g.student_id
+                                          AND s.student_id = sd.student_id;");
+        $students->execute();
+        if ($students->rowCount() > 0) {
+            return $students->fetchAll();
+        }
+
+        return null;
+    }
+
 }

@@ -401,13 +401,23 @@ class AlumnosController extends Controller
     public function baja() {
         Registry::set('js', array('alumnosbaja&assets/js'));
         $this->View->render('alumnos/baja', array(
-            'u_type'    => Session::get('user_account_type'),
-            'cursos'    => CursoModel::getCourses()
+            'u_type'    => Session::get('user_account_type')
         ));
     }
 
     public function tablaAlumnosBaja(){
         $this->View->renderJSON(AlumnoModel::tableInactiveStudents());
+    }
+
+    public function eliminados() {
+        Registry::set('js', array('alumnoseliminados&assets/js'));
+        $this->View->render('alumnos/eliminados', array(
+            'u_type'    => Session::get('user_account_type')
+        ));
+    }
+
+    public function tablaAlumnosEliminados(){
+        $this->View->renderJSON(AlumnoModel::tableDeletedStudents());
     }
 
     public function editUsername() {
@@ -429,64 +439,10 @@ class AlumnosController extends Controller
 
 
 
-    /////////////////////////////////////////////////////
-    // =  =   =   =  =  I M P O R T A R  =  =  =  =  = //
-    /////////////////////////////////////////////////////
-    public function importarGrupos() {
-        echo json_encode(ImportOldDataModel::importGroups());
-    }
-    
-    public function importarClases() {
-        Registry::set('js', array('importar&assets/js'));
-        $this->View->render('importar/clases');
-    }
 
-    public function getClasesList(){
-        ImportOldDataModel::getClasesList();
-    }
-
-    public function importarAlumnos() {
-        Registry::set('js', array('importar&assets/js'));
-        $this->View->render('importar/index');
-    }
-
-    public function alumnosRepetidos() {
-        H::getLibrary('paginadorLib');
-        $page = 0;
-        $paginator = new \Paginador();
-        
-        Registry::set('js', array('jquery.dataTables.min&assets/js','importar&assets/js'));
-        $all_data = ImportOldDataModel::getRepeatedStudents();
-        $data = $paginator->paginar($all_data, $page, 20);
-        // H::p($data);
-        // exit();
-        // $data = $paginator->paginar($all_data, $page,20);
-        $this->View->render('importar/repetidos', array(
-            'repetidos'  => $paginator->paginar($all_data, 0, 20),
-            'paginacion' => $paginator->getView('pagination_ajax', 'repeated')
-        ));
-    }
-
-    public function corregirAlumnoRepetido(){
-        ImportOldDataModel::updateNameStudent(Request::post('student'), 
-                                          Request::post('name'), 
-                                          Request::post('surname'), 
-                                          Request::post('lastname'));
-    }
-
-    public function getAlumnosList(){
-        ImportOldDataModel::importStudents(Request::post('page'));
-    }
-
-    public function importarMaestros() {
-        echo json_encode(ImportOldDataModel::getTeachersList());
-    }
-
-    public function importarAlumno() {
-        echo json_encode(ImportOldDataModel::importStudent(Request::post('alumno')));
-    }
-
-
+    /////////////////////////////////////////////
+    // =  =   =   =  =  M I S C =  =  =  =  =  //
+    /////////////////////////////////////////////
 
 
 

@@ -1,6 +1,6 @@
 <?php
 
-class ImportOldDataModel
+class ImportarModel
 {
 	public static function getClasesList(){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -99,7 +99,7 @@ class ImportOldDataModel
 			$lastname = '%'.trim($row->surname2_s).'%';
 			$query = $database->prepare("SELECT id_student, name_s, surname1_s, surname2_s, status, id_tutor 
 									   FROM naatikdb.student
-									   WHERE name_s LIKE :name
+									   WHERE name_s     LIKE :name
 										 AND surname1_s LIKE :surname
 										 AND surname2_s LIKE :lastname;");
 			$query->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
@@ -114,7 +114,63 @@ class ImportOldDataModel
 				}
 			}
 		}
-		return $repetidos;
+		self::procesarRepetidos($repetidos);
+	}
+
+	public static function procesarRepetidos($lista){
+		$database = DatabaseFactory::getFactory()->getConnection();
+		foreach ($lista as $repetidos) {
+			H::p($repetidos);
+            continue;
+			echo '<div class="table-responsive">';
+                    echo '<table class="table table-striped table-sm table-bordered">';
+                    echo '<thead>';
+                        echo '<tr class="bg-info">';
+                        echo '<th class="text-center">ID</th>';
+                        echo '<th class="text-center">Nombre</th>';
+                        echo '<th class="text-center">Apellido Pat.</th>';
+                        echo '<th class="text-center">Apellido Mat.</th>';
+                        echo '<th class="text-center">Estado</th>';
+                        echo '<th class="text-center">Tutor</th>';
+                        echo '<th class="text-center">Opciones</th>';
+                        echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+                        foreach ($repetidos as $alumno) {
+                        	H::p($alumno);
+                        	continue;
+                        	$tutor = $database->prepare("SELECT CONCAT_WS(' ', name_t, surname1_t, surname2_t) as nombre 
+						                        		 FROM naatikdb.tutor
+						                        		 WHERE id_tutor = :tutor
+						                        		 LIMIT 1;");
+							$tutor->execute(array(':tutor' => $alumno->id_tutor));
+							$tutor = $tutor->fetch();
+
+                            echo '<tr>';
+                            echo '<td class="text-center">'.$alumno->id_student.'</td>'; 
+                            echo '<td class="text-center">
+									<input type="text" id="'.$alumno->id_student.'name" value="'.$alumno->name_s.'">
+                                  </td>';
+                            echo '<td class="text-center">
+									<input type="text" id="'.$alumno->id_student.'surname" value="'.$alumno->surname1_s.'">
+                                  </td>';
+                            echo '<td class="text-center">
+									<input type="text" id="'.$alumno->id_student.'lastname" value="'.$alumno->surname2_s.'">
+                                  </td>';
+                            echo '<td class="text-center">'.$alumno->status.'</td>';
+                            echo '<td class="text-center">
+									<input type="text" id="'.$alumno->id_student.'tutor" value="'.$tutor->nombre.'">
+                                  </td>';
+                            echo '<td class="text-center">
+									<button type="button" class="btn btn-sm btn-info btn_update" 
+                                        id="'.$alumno->id_student.'"><i class="fa fa-save"></i></button>
+                                  </td>';
+                            echo '</tr>';   
+                        }
+                    echo '</tbody>';
+                    echo '</table>';
+                    echo '</div>';
+		}
 	}
 
 	public static function updateNameStudent($student, $name, $surname, $lastname){
@@ -146,6 +202,9 @@ class ImportOldDataModel
 			$alumnos = $query->fetchAll();
 			$items   = $paginator->paginar($alumnos, $page, $filas);
 			foreach ($items as $row) {
+				$txt = array('.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG', '.gif');
+				$avatar_name = str_replace($txt, '', $row->photo_s);
+				$avatar = str_replace('default', $row->sexo, $avatar_name);
 				$students[$row->id_student] = new stdClass();
 				$students[$row->id_student]->xported        = $row->exportado;
 				$students[$row->id_student]->student_id     = $row->id_student;
@@ -160,7 +219,7 @@ class ImportOldDataModel
 				$students[$row->id_student]->reference      = $row->reference;
 				$students[$row->id_student]->isckness       = $row->sickness;
 				$students[$row->id_student]->medication     = $row->medication;
-				$students[$row->id_student]->avatar         = $row->photo_s;
+				$students[$row->id_student]->avatar         = strtolower($avatar);
 				$students[$row->id_student]->description    = $row->comment_s;
 				$students[$row->id_student]->homestay       = $row->homestay;
 				$students[$row->id_student]->status         = $row->status;
@@ -176,20 +235,16 @@ class ImportOldDataModel
 			$counter    = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
 			$paginacion = $paginator->getView('pagination_ajax', 'students');
 			self::displayStudentsList($students, $counter);
-			echo '<div class="row">';
-				echo '<div class="col-sm-12 text-center">';
-					echo $paginacion;
-				echo '</div>';
-			echo '</div>';
+			echo $paginacion;
 		}
 	}
 
 	public static function displayStudentsList($alumnos, $cont){
 		echo '<div class="table-responsive">';
-			echo '<table class="table table-bordered table-hover table-striped">';
+			echo '<table class="table table-sm table-hover table-striped">';
 				echo '<thead>';
-					echo '<tr class="info">';
-						echo '<th>#</th>';
+					echo '<tr class="bg-info">';
+						echo '<th>No.</th>';
 						echo '<th>Foto</th>';
 						echo '<th>Nombre</th>';
 						echo '<th>Tutor</th>';
@@ -202,7 +257,7 @@ class ImportOldDataModel
 					foreach ($alumnos as $alumno){
 						echo '<tr>';
 							echo '<td>'.($cont++).'</td>';
-							echo '<td>'.$alumno->avatar.'</td>';
+							echo '<td>'.$alumno->avatar.'.jpg</td>';
 							echo '<td>'.$alumno->surname.' '.$alumno->lastname.' '.$alumno->name.'</td>';
 							echo '<td>';
 								if (count($alumno->tutor) > 0) {
