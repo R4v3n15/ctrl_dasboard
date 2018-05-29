@@ -1,0 +1,132 @@
+.table {
+  margin-bottom: 0;
+}
+.table-sm td.row-flat {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  margin: 0;
+  max-width: 12rem;
+}
+
+.btn, .form-control, .modal-content, .alert .card, .input-group-prepend, .input-group-text {
+	border-radius: 0;
+}
+
+.btn-shadow {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.18);
+}
+
+.btn-flat-xs{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.btn-flat-sm{
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+}
+
+.btn-flat-md{
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+}
+
+.btn-flat-lg{
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
+}
+
+.btn-xs{
+    margin-top: -2px;
+    padding-bottom: 0.8px;
+    padding-top: 0.6px;
+}
+
+.required {
+  border: solid 1px #FB9065;
+  background: #F4DEE8;
+}
+
+.snackbar {
+  background-color: rgba(40, 40, 40, 0.75);
+}
+
+#snackbar-container>div.snackbar.snackbar-blue {
+  background-color: rgba(20, 141, 190, 0.8);
+  color: white;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+  padding: 5px 6px;
+}
+
+#snackbar-container>div.snackbar.snackbar-green {
+  background-color: rgba(38, 195, 134, 0.87);
+  color: white;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+  padding: 5px 6px;
+}
+
+#snackbar-container>div.snackbar.snackbar-orange {
+  background-color: rgba(225, 120, 0, 0.8);
+  color: white;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+  padding: 5px 6px;
+}
+
+#snackbar-container>div.snackbar.snackbar-red {
+  background-color: rgba(195, 0, 10, 0.8);
+  color: white;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+  padding: 5px 6px;
+}
+
+
+
+.table-responsive {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 3px rgba(0,0,0,0.23);
+}
+
+
+#wrapper {
+    padding-left: 250px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-left: 3.5rem;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    left: 250px;
+    width: 250px;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 0;
+}
+
+#page-content-wrapper {
+    padding: 35px 20px 20px 20px;
+    position: relative;
+    width: 100%;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+}

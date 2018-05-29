@@ -1,0 +1,87 @@
+.fa.fa-star{
+    font-size: 2.2rem;
+    color: rgb(220, 220, 220);
+}
+
+.fa.fa-star.checked{
+    font-size: 2.2rem;
+    color: rgb(230, 250, 10);
+}
+
+/*Indicadores, viñetas*/
+.i-blue{
+  padding-right: 6px;
+  color: rgb(20, 141, 200);
+  font-size: 14px;
+}
+
+.i-green{
+  padding-right: 6px;
+  color: rgb(20, 200, 140);
+  font-size: 14px;
+}
+
+.i-purple{
+  padding-right: 6px;
+  color: rgb(103, 20, 220);
+  font-size: 14px;
+}
+
+.i-yellow{
+  padding-right: 6px;
+  font-size: 14px;
+  color: rgb(190, 250, 10);
+  font-size: 14px;
+}
+
+.i-red{
+  padding-right: 6px;
+  color: rgb(250, 20, 40);
+  font-size: 14px;
+}
+
+
+.fa-check {
+  color: rgb(210, 210, 210);
+  font-size: 1.3em;
+  /*font-weight: bold;*/
+  padding: 0;
+  margin: 0;
+}
+
+.fa-check-circle {
+  color: rgb(20, 200, 140);
+  font-size: 1.48em;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+}
+
+.mdi-action-beca {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: rgb(240, 100, 10);
+  padding: 0 0 5px 2px;
+  margin: 0;
+}
+
+.mdi-action-na {
+  font-size: 1em;
+  font-weight: bold;
+  color: rgb(120, 120, 150);
+  padding: 0;
+  margin: 0;
+}
+
+.mdi-content-create {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: rgb(240, 120, 50);
+  padding: 0;
+  margin: 0;
+}
+
+.tiny {
+  margin: 2px 0;
+  padding: 0;
+}
