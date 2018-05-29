@@ -1,6 +1,6 @@
 <?php
 
-class AlumnoController extends Controller
+class AlumnosController extends Controller
 {
 
     public function __construct() {
@@ -286,15 +286,15 @@ class AlumnoController extends Controller
                 Request::post('invoice'),
                 Request::post('comment')
             );
-            Redirect::to('alumno/perfilAlumno/'.$alumno);
+            Redirect::to('alumnos/perfilAlumno/'.$alumno);
         } else {
             Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumno/perfilAlumno/'.$alumno);
+            Redirect::to('alumnos/perfilAlumno/'.$alumno);
         }
     }
 
     public function obtenerAlumnosBaja() {
-        AlumnoModel::getStudentsCheckout(); 
+        AlumnoModel::getStudentsCheckout();
     }
 
     public function convenio(){
@@ -323,10 +323,10 @@ class AlumnoController extends Controller
                 Request::post('tel_celular'),
                 Request::post('familiar'),
                 Request::post('tel_familiar'));
-            Redirect::to('alumno/perfilAlumno/'.Request::post('alumno'));
+            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
         }  else {
             Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumno/perfilAlumno/'.Request::post('alumno'));
+            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
         }
     }
 
@@ -339,10 +339,10 @@ class AlumnoController extends Controller
                 Request::post('nivel_estudio'),
                 Request::post('grado_estudio')
                 );
-            Redirect::to('alumno/perfilAlumno/'.Request::post('alumno'));
+            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
         } else {
             Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumno/perfilAlumno/'.Request::post('alumno'));
+            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
         }
     }
 
@@ -399,9 +399,15 @@ class AlumnoController extends Controller
     }
 
     public function baja() {
+        Registry::set('js', array('alumnosbaja&assets/js'));
         $this->View->render('alumnos/baja', array(
-            'user_name' => Session::get('user_name'),
+            'u_type'    => Session::get('user_account_type'),
+            'cursos'    => CursoModel::getCourses()
         ));
+    }
+
+    public function tablaAlumnosBaja(){
+        $this->View->renderJSON(AlumnoModel::tableInactiveStudents());
     }
 
     public function editUsername() {

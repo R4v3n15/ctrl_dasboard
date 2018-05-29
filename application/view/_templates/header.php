@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Control Escolar</title>
+    <title>Control</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="<?php echo Config::get('URL'); ?>favicon.ico">
+    <!-- <link rel="icon" href="<?php Config::get('URL'); ?>favicon.ico"> -->
     <!-- CSS -->
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/snackbar.min.css" rel="stylesheet">
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/dashboard.css" rel="stylesheet">
+    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/dataTables.min.css" rel="stylesheet">
     <!-- <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome.min.css" rel="stylesheet"> -->
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome-all.min.css" rel="stylesheet">
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/main.css" rel="stylesheet">
@@ -54,24 +55,22 @@
                                 data-target="#testCollapse"
                                 href="javascript:void(0)">
                               <span data-feather="file"></span>
-                              Test
+                              Alumnos
                             </a>
                             <div id="testCollapse" 
                                  class="collapse ml-3" 
                                  aria-labelledby="headingTwo" 
                                  data-parent="#accordionExample">
                                 <ul class="list-group">
-                                    <li class="dropdown-item"><a href="#">Alumnos</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumno/inscribir">Nuevo</a></li>
-                                    <li class="dropdown-item"><a href="#">Sep</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos">Alumnos</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/inscribir">Nuevo</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/becados">Becados</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/sep">Sep</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/baja">Baja</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/egresados">Egresados</a></li>
+                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/eliminados">Eliminados</a></li>
                                 </ul>
                             </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'alumnos') ? 'active': '';?>" href="<?= $base_url; ?>alumno">
-                              <span data-feather="file"></span>
-                              Alumnos
-                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <?= View::active($filename, 'cursos') ? 'active': '';?>" href="<?= $base_url; ?>curso">

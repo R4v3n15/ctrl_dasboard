@@ -52,7 +52,7 @@ var Alumnos = {
             data: { curso: curso, page: page },
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/tablaAlumnos',
+            url: _root_ + 'alumnos/tablaAlumnos',
             success: function(data){
                 $('#tabla_alumnos').html(data);
                 feather.replace();
@@ -69,7 +69,7 @@ var Alumnos = {
         $.ajax({
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/alumnosCurso',
+            url: _root_ + 'alumnos/alumnosCurso',
             success: function(data){
                 $.each(data, function(i, value){
                     $('#'+i).text(value);
@@ -135,7 +135,7 @@ var Alumnos = {
                 data: { alumno: alumno, clase: clase },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/agregarAlumnoGrupo',
+                url: _root_ + 'alumnos/agregarAlumnoGrupo',
                 success: function(data){
                     if (data !== '0') {
                         // Close Modal
@@ -173,7 +173,7 @@ var Alumnos = {
                     },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/obtenerGrupos',
+                    url: _root_ + 'alumnos/obtenerGrupos',
                     success: function(data){
                         let option = '<option value="" hidden>Seleccione...</option>';
                         if (data !== null) {
@@ -219,7 +219,7 @@ var Alumnos = {
             },
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/obtenerPerfilAlumno',
+            url: _root_ + 'alumnos/obtenerPerfilAlumno',
             success: function(data){
                 $('#myTabContent').removeClass('well-content');
                 $('#myTabContent').addClass('body-content');
@@ -254,7 +254,7 @@ var Alumnos = {
         $.ajax({
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/obtenerAlumnosBaja',
+            url: _root_ + 'alumnos/obtenerAlumnosBaja',
             success: function(data){
                 $('#checkout_list').html(data);
                 $('#tbl_checkout').DataTable();
@@ -274,7 +274,7 @@ var Alumnos = {
                     },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/obtenerNivelesCurso',
+                    url: _root_ + 'alumnos/obtenerNivelesCurso',
                     success: function(a){
                         var option = '<option value="">Seleccione...</option>';
                         if (a !== 'null') {
@@ -302,7 +302,7 @@ var Alumnos = {
                     data: { curso: $(this).val() },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/obtenerNivelesCurso',
+                    url: _root_ + 'alumnos/obtenerNivelesCurso',
                     success: function(data){
                         var option = '<option value="">Seleccione...</option>';
                         if (data !== 'null') {
@@ -358,7 +358,7 @@ var Alumnos = {
                 data: { curso: curso },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/obtenerNivelesCurso',
+                url: _root_ + 'alumnos/obtenerNivelesCurso',
                 success: function(data){
                     console.log(data);
                     var option = '';
@@ -422,7 +422,7 @@ var Alumnos = {
             data: { alumno: alumno, clase: clase },
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/cambiarGrupoAlumno',
+            url: _root_ + 'alumnos/cambiarGrupoAlumno',
             success: function(data){
                 if (data === '1') {
                     $('#general_snack').attr('data-content', 'Reasignación de grupo realizado!');
@@ -455,7 +455,7 @@ var Alumnos = {
                     data: { alumnos: alumnos, clase: clase },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/cambiarGrupoAlumnos',
+                    url: _root_ + 'alumnos/cambiarGrupoAlumnos',
                     success: function(data){
                         if (data === '1') {
                             $('#general_snack').attr('data-content', 'Reasignación de grupo realizado!');
@@ -535,7 +535,7 @@ var Alumnos = {
                 data: { alumno: alumno, estado: 1 },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/bajaAlumno',
+                url: _root_ + 'alumnos/bajaAlumno',
                 success: function(data){
                     if (data === '1') {
                         $('#student_snack').attr('data-content', 'Alumno dado de BAJA correctamente!');
@@ -554,7 +554,7 @@ var Alumnos = {
                 data: { alumno: alumno, estado: 0 },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/bajaAlumno',
+                url: _root_ + 'alumnos/bajaAlumno',
                 success: function(data){
                     if (data === '1') {
                         $('#student_snack').attr('data-content', 'Alumno dado de ALTA correctamente!');
@@ -591,7 +591,7 @@ var Alumnos = {
                 data: { alumno: alumno, estado: 0 },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/bajaAlumno',
+                url: _root_ + 'alumnos/bajaAlumno',
                 success: function(data){
                     if (data === '1') {
                         $('#general_snack').attr('data-content', 'Alumno dado de ALTA correctamente!');
@@ -613,7 +613,7 @@ var Alumnos = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/obtenerListaFactura',
+                url: _root_ + 'alumnos/obtenerListaFactura',
                 success: function(data){
                     $('#invoice_students_list').html(data);
                     $('#invoice_list').modal('show');
@@ -643,7 +643,7 @@ var Alumnos = {
                 data: { alumno: alumno },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/eliminarAlumno',
+                url: _root_ + 'alumnos/eliminarAlumno',
                 success: function(data){
                     var response = JSON.parse(data);
                     if (response === 1) {
@@ -699,7 +699,7 @@ var Alumnos = {
                     data: { alumnos: alumnos },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/eliminarAlumnos',
+                    url: _root_ + 'alumnos/eliminarAlumnos',
                     success: function(data){
                         var response = JSON.parse(data);
                         if (response === 1) {

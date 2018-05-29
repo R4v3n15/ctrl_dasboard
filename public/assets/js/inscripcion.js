@@ -31,7 +31,7 @@ var Inscripcion = {
             synch: 'false',
             type: 'GET',
             data: {formulario: form},
-            url: _root_ + 'alumno/formularioInscripcion',
+            url: _root_ + 'alumnos/formularioInscripcion',
             success: function(data){
                 $('#formulario').html(data);
                 _this.studentHasTutor();
@@ -82,7 +82,7 @@ var Inscripcion = {
                     },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/validarTutor',
+                    url: _root_ + 'alumnos/validarTutor',
                     success: function(data){
                         if (data !== null) {
                             let name = data.namet+' '+data.surnamet+' '+data.lastnamet;
@@ -108,7 +108,7 @@ var Inscripcion = {
                 },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/obtenerDatosTutor',
+                url: _root_ + 'alumnos/obtenerDatosTutor',
                 success: function(response){
                     if (response !== null) {
                         let name = response.namet + ' ' + response.surnamet +' '+ response.lastnamet;
@@ -163,7 +163,7 @@ var Inscripcion = {
                     synch: 'true',
                     type: 'POST',
                     data: $('#tutorForm').serialize(),
-                    url: _root_ + 'alumno/crearTutor'
+                    url: _root_ + 'alumnos/crearTutor'
                 })
                 .then(function(response){
                     if (response.success) {
@@ -211,7 +211,7 @@ var Inscripcion = {
                     },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/validarAlumno',
+                    url: _root_ + 'alumnos/validarAlumno',
                     success: function(data){
                         if (data !== null) {
                             let status = data.estado;
@@ -253,7 +253,7 @@ var Inscripcion = {
                     synch: 'true',
                     type: 'POST',
                     data: $('#studentForm').serialize(),
-                    url: _root_ + 'alumno/crearAlumno'
+                    url: _root_ + 'alumnos/crearAlumno'
                 })
                 .then(function(response){
                     console.log(response);
@@ -272,7 +272,7 @@ var Inscripcion = {
                                 contentType: false,
                                 processData: false,
                                 data: formData,
-                                url: _root_ + 'alumno/crearAvatar'
+                                url: _root_ + 'alumnos/crearAvatar'
                             })
                             .then(function(feeback){
                                 console.log(feeback);
@@ -319,7 +319,7 @@ var Inscripcion = {
                     synch: 'true',
                     type: 'POST',
                     data: $('#studiesForm').serialize(),
-                    url: _root_ + 'alumno/crearEstudios'
+                    url: _root_ + 'alumnos/crearEstudios'
                 })
                 .then(function(response){
                     if (response.success) {
@@ -484,7 +484,7 @@ var Inscripcion = {
                     data: { curso: curso },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/gruposPorNivel',
+                    url: _root_ + 'alumnos/gruposPorNivel',
                     success: function(grupos){
                         let options = '<option value="" hidden>Seleccione un grupo...</option>';
 
@@ -520,7 +520,7 @@ var Inscripcion = {
                     data: { clase: clase },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/datosClase',
+                    url: _root_ + 'alumnos/datosClase',
                     success: function(data){
                         if (data !== null) {
                             $('#clasedata').removeClass('d-none');
@@ -551,48 +551,14 @@ var Inscripcion = {
 
 
 
-    existStudent: function() {
-        let that = this;
 
-        $('#name').keydown(function() {
-            if ($('#name').val().length >= 2) {
-                $.ajax({
-                    data: {
-                        name: $('#name').val(),
-                        surname: $('#surname').val(),
-                        lastname: $('#lastname').val()
-                    },
-                    synch: 'true',
-                    type: 'POST',
-                    url: _root_ + 'alumno/existeAlumno',
-                    success: function(data){
-                        if (data != 'null') {
-                            var res = JSON.parse(data);
-                            var head  = 'El alumno: ';
-                            var foot  = ' <br /> Ya está registrado, se encuentra en '+res.grupo+'.<br /> ¿Desea continuar con el registro actual?';
-                            var student = head+res.name+' '+res.surname+' '+res.lastname+foot;
-                            var btnOk = '<a id="btn_continue" class="btn btn-sm btn-info btn-raised">Continuar Registro</a>';
-                            var btnNo = ' <a id="btn_cancel" class="btn btn-sm btn-warning btn-raised">Cancelar Registro</a>';
-                            
-                            $('#exist_student').html('<p class="text-center">'+student+'</p>'+btnNo+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+btnOk);
-
-                            that.selectAction();
-                        }
-                    }
-                });
-            } else {
-                $('#exist_student').html('');
-                $('#exist_student').removeClass('mini-box');
-            }
-        });
-    },
 
     selectAction: function(){
         $('#btn_cancel').click(function(){
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/cancelarRegistro',
+                url: _root_ + 'alumnos/cancelarRegistro',
                 success: function(data){
                     $('#name').val('');
                     $('#surname').val('');
@@ -615,100 +581,7 @@ var Inscripcion = {
             $('#exist_student').html('');
             $('#exist_student').removeClass('mini-box');
         });
-    },
-
-    getGroupsByCourse: function() {
-        $('#course').change(function(){
-            var curso = $(this).val();
-            if (curso !== '' && curso !== '0') {
-                $.ajax({
-                    data: {
-                        curso: curso
-                    },
-                    synch: 'true',
-                    type: 'POST',
-                    url: _root_ + 'alumno/obtenerNivelesCurso',
-                    success: function(data){
-                        var option = '<option value="" hidden>Seleccione grupo...</option>';
-                        if (data !== 'null') {
-                            var res = JSON.parse(data);
-                            for (var i = 0; i < res.length; i++) {
-                                option = option + '<option value="'+res[i].class_id+'">'+res[i].group_name+'</option>';
-                            }
-                        } else {
-                            option = '<option value="">Curso sin grupos</option>';
-                        }
-                        $('#groupList').attr('required', true);
-                        $('#groupList').attr('disabled', false);
-                        $('#groupList').html(option);
-                    }
-                });
-            }
-
-            if (curso === '0') {
-                var option = '<option value="0">En Espera</option>';
-                $('#groupList').attr('required', false);
-                $('#groupList').attr('disabled', true);
-                $('#clase_id').val(0);
-                $('#groupList').html(option);
-            }
-        });
-    },
-
-    //Informacion de la clase->inscribir alumno.
-    getClassInfo: function() {
-        $('#groupList').change(function(){
-            var clase = $(this).val();
-            // console.log(clase);
-            if (clase !== '') {
-                $.ajax({
-                    data: { clase: clase },
-                    synch: 'true',
-                    type: 'POST',
-                    url: _root_ + 'alumno/obtenerInfoClase',
-                    success: function(a){
-                        // console.log(a);
-                        if (a !== 'null') {
-                            $('#clasedata').addClass('rounded');
-                            var res = JSON.parse(a);
-                            // console.log(res);
-                            $('#clase_id').val(res.class_id);
-                            $('#clase_name').html('<strong>Clase: </strong>'+res.course+' '+res.group_name);
-                            $('#horario_c').html('<strong>Horario: </strong>'+res.hour_init+' - '+res.hour_end);
-                            $('#f_inicio').html('<strong>Inicia: </strong>'+res.date_init);
-                            $('#f_fin').html('<strong>Termina: </strong>'+res.date_init);
-
-                            $('#fecha_inicio').val(res.date_init);
-
-                            $.ajax({
-                                data: { clase: res.schedul_id },
-                                synch: 'true',
-                                type: 'POST',
-                                url: _root_ + 'alumno/obtenerDiasClase',
-                                success: function(data){
-                                    console.log(data);
-                                    if (data !== 'null') {
-                                        var r = JSON.parse(data);
-                                        var day = '';
-                                        for (var i = 0; i < r.length; i++) {
-                                            day !== '' ? day = day+', '+ r[i].day : day = day + r[i].day;
-                                        }
-                                        $('#dias').html('<strong>Días: </strong>'+day);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        });
-    },
-
-    activeData: function() {
-
-        
-    },
-    
+    }, 
 };
 
 Inscripcion.initialize();

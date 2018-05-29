@@ -149,7 +149,7 @@ class AlumnoModel
                                         '.$convenio.'
                                       </div>';
                             }
-                            echo '<tr class="row_data">';
+                            echo '<tr class="active">';
                             echo '<td class="text-center">'.$check.'</td>';
                             echo '<td class="text-center">'.$avatar.'</td>';
                             echo '<td class="text-center txt">'.$row->apellido.'</td>';
@@ -632,6 +632,77 @@ class AlumnoModel
 
 
 
+    public static function tableInactiveStudents(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = GeneralModel::allStudents();
+
+        if ($students !== null) {
+
+            $datos = [];
+            $counter = 1;
+            foreach ($students as $alumno) {
+                $id_grupo = 0;
+                $grupo = 'Sin Grupo';
+
+                if ($alumno->class_id !== NULL) {
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, CONCAT_WS(' ', cu.course, g.group_name) as grupo
+                                                 FROM classes as c, courses as cu, groups as g
+                                                 WHERE c.class_id  = :clase
+                                                   AND c.status    = 1
+                                                   AND c.course_id = cu.course_id
+                                                   AND c.group_id  = g.group_id
+                                                 LIMIT 1;");
+                    $clase->execute(array(':clase' => $alumno->class_id));
+                    if ($clase->rowCount() > 0) {
+                        $clase = $clase->fetch();
+                        $id_grupo = $clase->class_id;
+                        $grupo = $clase->grupo;
+                    }
+                }
+
+                //-> Tutor del Alumno
+                $id_tutor     = 0;
+                $nombre_tutor = 'N/A';
+                if ($alumno->id_tutor !== NULL) {
+                    $tutor = $database->prepare("SELECT id_tutor, CONCAT_WS(' ', namet, surnamet, lastnamet) as name
+                                                    FROM tutors
+                                                    WHERE id_tutor = :tutor
+                                                 LIMIT 1;");
+                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
+                    if ($tutor->rowCount() > 0) {
+                        $tutor = $tutor->fetch();
+                        $id_tutor = $tutor->id_tutor;
+                        $nombre_tutor = $tutor->name;
+                    }
+                }
+
+                $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar;
+
+                if (!file_exists($url)) {
+                    $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
+                }
+                $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
+
+                $info = array(
+                    'count' => $counter,
+                    'name'  => $alumno->name,
+                    'age'   => $alumno->age,
+                    'genre' => $alumno->genre,
+                    'avatar' => $avatar,
+                    'studies' => $alumno->studies.' '.$alumno->lastgrade,
+                    'group'   => $grupo,
+                    'tutor'   => $nombre_tutor
+                );
+
+                array_push($datos, $info);
+                $counter++;
+            }
+
+            return array('data' => $datos);
+        }
+
+        return null;    
+    }
 
     public static function checkOutStudent($alumno, $estado) {
         $database = DatabaseFactory::getFactory()->getConnection();

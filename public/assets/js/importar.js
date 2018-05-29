@@ -17,7 +17,7 @@ var Import = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/importarGrupos',
+                url: _root_ + 'alumnos/importarGrupos',
                 success: function(data){
                     console.log(data);
                     if (data) {
@@ -32,7 +32,7 @@ var Import = {
         $.ajax({
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/getClasesList',
+            url: _root_ + 'alumnos/getClasesList',
             success: function(data){
                 $('#lista_clases').html(data);
             }
@@ -44,7 +44,7 @@ var Import = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/importarMaestros',
+                url: _root_ + 'alumnos/importarMaestros',
                 success: function(data){
                     console.log(data);
                     alert('Teachers Imported');
@@ -59,7 +59,7 @@ var Import = {
             data: {page:page},
             synch: 'true',
             type: 'POST',
-            url: _root_ + 'alumno/getAlumnosList',
+            url: _root_ + 'alumnos/getAlumnosList',
             success: function(data){
                 $('#students_list').html(data);
                 that.importStudent();
@@ -86,7 +86,7 @@ var Import = {
                 data: { alumno: alumno },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumno/importarAlumno',
+                url: _root_ + 'alumnos/importarAlumno',
                 success: function(data){
                     console.log(data);
                     that.getStuentsList();
@@ -119,7 +119,7 @@ var Import = {
                     data: { student: id, name: name, surname: surname, lastname: lastname },
                     synch: 'true',
                     type: 'POST',
-                    url: _root_ + 'alumno/corregirAlumnoRepetido',
+                    url: _root_ + 'alumnos/corregirAlumnoRepetido',
                     success: function(data){
                         $('#'+id+'message').text('[ Actualizado: Ok ]');
                     }

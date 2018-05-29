@@ -1,4 +1,3 @@
-<?php $base_url = Config::get('URL'); ?>
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-md-12 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
@@ -210,45 +209,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div id="change_group" class="modal fade">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Cambiar de Grupo</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                        <h6 class="text-center"><small>Seleccione un curso y grupo a asignar.</small></h6>
-                        <input type="hidden" id="alumno_number" class="form-control">
-                        <div class="form-group">
-                            <label class="col-sm-6"><small>Curso:</small> 
-                                <select class="form-control " id="course_list">
-                                    <option value="">Seleccione...</option>
-                                    <?php if ($this->cursos): ?>
-                                        <?php foreach ($this->cursos as $curso): ?>
-                                            <option value="<?= $curso->course_id; ?>"><?= $curso->course; ?></option>
-                                        <?php endforeach ?>
-                                    <?php endif ?>
-                                    <option value="0">EN ESPERA</option>
-                                </select>
-                            </label>
-                            <label class="col-sm-6"><small>Grupo:</small> 
-                                <select class="form-control" id="grupos">
-                                </select>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-10 col-sm-offset-1 text-center">
-                        <button type="button" id="do_change_group" class="btn btn-sm btn-second btn-raised">Cambiar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div id="invoice_list" class="modal fade">
     <div class="modal-dialog modal-lg">

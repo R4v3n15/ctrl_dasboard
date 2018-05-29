@@ -27,7 +27,7 @@ var Perfil = {
             data: {alumno: alumno},
             // url: _root_ + 'alumno/datosAlumno',
             // url: _root_ + 'alumno/datosTutor',
-            url: _root_ + 'alumno/datosAcademicos',
+            url: _root_ + 'alumnos/datosAcademicos',
             success: function(data){
                 $('#editar_form').html(data);
             }

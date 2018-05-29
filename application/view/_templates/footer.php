@@ -12,6 +12,8 @@
 	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/jquery-331.min.js"></script>
     <script src="<?php echo Config::get('URL'); ?>assets/libs/js/popper.min.js"></script>
 	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/bootstrap.min.js"></script>
+    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/coreDataTables.min.js"></script>
+    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/dataTables.min.js"></script>
     <script src="<?php echo Config::get('URL'); ?>assets/libs/js/feather.min.js"></script>
     <script src="<?php echo Config::get('URL'); ?>assets/libs/js/snackbar.min.js"></script>
 
