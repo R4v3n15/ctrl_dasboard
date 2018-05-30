@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Control Escolar</title>
+    <title>Control</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,18 +39,16 @@
             <label for="user_password">Password</label>
         </div>
        
-        <div class="col-sm-6">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" 
-                           name="set_remember_me_cookie" 
-                           class="remember-me-checkbox" 
-                           data-toggle='tooltip' 
-                           data-placement='bottom' 
-                           data-trigger='hover' 
-                           title='Mantener sesión abierta'/>
-                    Guardar Sesión
-                </label>
+        <div class="col-sm-6 mb-3">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox"
+                       name="set_remember_me_cookie" 
+                       class="custom-control-input remember-me-checkbox"
+                       data-toggle='tooltip'
+                       data-placement='bottom'
+                       title='Guardar sesión' 
+                       id="customCheck1">
+                <label class="custom-control-label" for="customCheck1">Recordar sesión</label>
             </div>
         </div>
         <?php if (!empty($this->redirect)) { ?>
