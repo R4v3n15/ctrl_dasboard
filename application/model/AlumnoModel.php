@@ -1245,9 +1245,13 @@ class AlumnoModel
 
 
 
-    public static function updateTutor($tutor){
+    public static function updateTutor($tutor, $name, $surname, $lastname, $ocupation, $phone, $cellphone, $relation, $phone_alt, $relation_alt, $street, $number, $between, $colony, $city, $state, $zipcode, $country){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
+
+        $name = strtolower(trim($name));
+        $surname = strtolower(trim($surname));
+        $lastname = strtolower(trim($lastname));
 
         $database->beginTransaction();
         try{
@@ -1262,33 +1266,58 @@ class AlumnoModel
                                                 phone_alt      = :phone_alt,
                                                 relationship_alt = :relation_alt
                                             WHERE id_tutor = :tutor");
-            $update= $update->execute(array(':name'         => ucwords(strtolower($tutor['name'])),
-                                            ':surname'      => ucwords(strtolower($tutor['surname'])),
-                                            ':lastname'     => ucwords(strtolower($tutor['lastname'])),
-                                            ':job'          => $tutor['ocupation'],
-                                            ':phone'        => $tutor['phone'],
-                                            ':cellphone'    => $tutor['cellphone'],
-                                            ':relation'     => $tutor['relationship'],
-                                            ':phone_alt'    => $tutor['phone_alt'],
-                                            ':relation_alt' => $tutor['relation_alt'],
-                                            ':tutor'        => $tutor['tutor_id']));
-            if (!$update) {
-                $commit = false;
+            $update= $update->execute(array(':name'         => ucwords($name),
+                                            ':surname'      => ucwords($surname),
+                                            ':lastname'     => ucwords($lastname),
+                                            ':job'          => trim($ocupation),
+                                            ':phone'        => trim($phone),
+                                            ':cellphone'    => trim($cellphone),
+                                            ':relation'     => $relation,
+                                            ':phone_alt'    => trim($phone_alt),
+                                            ':relation_alt' => $relation_alt,
+                                            ':tutor'        => $tutor
+                                        ));
+            if ($update) {
+                $_sql = $database->prepare("UPDATE address 
+                                            SET street     = :street, 
+                                                st_number  = :st_number, 
+                                                st_between = :st_between, 
+                                                colony     = :colony,
+                                                city       = :city, 
+                                                zipcode    = :zipcode, 
+                                                state      = :state, 
+                                                country    = :country
+                                            WHERE user_id   = :user 
+                                              AND user_type = 1;");
+                $save = $_sql->execute(array(
+                        ':user'       => $tutor,
+                        ':street'     => ucwords(strtolower(trim($street))),
+                        ':st_number'  => trim($number),
+                        ':st_between' => trim($between),
+                        ':colony'     => ucwords(strtolower(trim($colony))),
+                        ':city'       => ucwords(strtolower(trim($city))),
+                        ':zipcode'    => trim($zipcode),
+                        ':state'      => ucwords(strtolower(trim($state))),
+                        ':country'    => ucwords(strtolower(trim($country)))
+                ));
+
+                if (!$save) {
+                    $commit = false;
+                }
+            } else {
+               $commit = false; 
             }
             
         }catch (PDOException $e) {
             $commit = false;
         }
 
-        $updateAddress = self::updateAddress($tutor['tutor_id'], Session::get('address'), 1);
-
         if (!$commit || !$updateAddress) {
             $database->rollBack();
-            Session::add('feedback_negative','Error al actualizar tutor!');
-            return false;
+            return array('updated' => false, 'message' => 'Error al actualizar, intente de nuevo o reporte el problema!');
         }else {
             $database->commit();
-            return (int)$tutor['tutor_id'];
+            return array('updated' => true, 'message' => 'Datos del tutor actualizados correctamente!');
         }
     }
 
@@ -1393,113 +1422,104 @@ class AlumnoModel
     // =  = = = = = = = = UPDATE STUDENTS DATA = = = = = = //
     /////////////////////////////////////////////////////////
 
-    public static function updateStudentData($student_id, $tutor, $name, $surname, $lastname, $birthdate, $genre, $edo_civil, $cellphone, $reference, $street, $number, $between, $colony, $sickness, $medication, $homestay, $acta, $invoice, $comentario) {
+    public static function updateStudentData($student, $tutor, $name, $surname, $lastname, $birthdate, $genre, $edo_civil, $cellphone, $reference, $street, $number, $between, $colony, $sickness, $medication, $homestay, $acta, $invoice, $comentario) {
         $database = DatabaseFactory::getFactory()->getConnection();
-        $name     = ucwords(strtolower($name));
-        $surname  = ucwords(strtolower($surname));
-        $lastname = ucwords(strtolower($lastname));
+        $name     = ucwords(strtolower(trim($name)));
+        $surname  = ucwords(strtolower(trim($surname)));
+        $lastname = ucwords(strtolower(trim($lastname)));
         $age      = H::getAge($birthdate);
+        $tutor    = (int)$tutor;
 
-        if ($tutor !== 0) {
-            $user = $tutor;
-            $typo = 1;
-        } else {
-            $user = $student_id;
-            $typo = 2;
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $_sql = $database->prepare("UPDATE students 
+                                        SET name       = :name,
+                                            surname    = :surname,
+                                            lastname   = :lastname,
+                                            birthday   = :birthdate,
+                                            age        = :age,
+                                            genre      = :genre,
+                                            edo_civil  = :edo_civil,
+                                            cellphone  = :cellphone,
+                                            reference  = :reference,
+                                            sickness   = :sickness,
+                                            medication = :medication,
+                                            comment_s  = :comentario
+                                        WHERE student_id = :student;");
+            $update  =  $_sql->execute(array(':name'      => $name,
+                                            ':surname'   => $surname,
+                                            ':lastname'  => $lastname,
+                                            ':birthdate' => $birthdate,
+                                            ':age'       => $age,
+                                            ':genre'     => $genre,
+                                            ':edo_civil' => $edo_civil,
+                                            ':cellphone' => $cellphone,
+                                            ':reference' => $reference,
+                                            ':sickness'  => $sickness,
+                                            ':medication' => $medication,
+                                            ':comentario' => $comentario,
+                                            ':student' => $student));
+
+            if ($update) {
+                $_sql = null;
+
+                $set_details =  $database->prepare("UPDATE students_details
+                                                    SET facturacion     = :factura,
+                                                        homestay        = :homestay,
+                                                        acta_nacimiento = :acta
+                                                    WHERE id_student = :student;");
+                $set_details->execute(array(':factura'  => $invoice,
+                                            ':homestay' => $homestay,
+                                            ':acta'     => $acta,
+                                            ':student'  => $student));
+                
+                if ($tutor !== 0) {
+                    $_sql = $database->prepare("UPDATE address 
+                                                SET street     = :street, 
+                                                    st_number  = :st_number, 
+                                                    st_between = :st_between, 
+                                                    colony     = :colony,
+                                                    city       = :city, 
+                                                    zipcode    = :zipcode, 
+                                                    state      = :state, 
+                                                    country    = :country
+                                                WHERE user_id   = :user 
+                                                  AND user_type = 2;");
+                    $save = $_sql->execute(array(
+                            ':user'       => $student,
+                            ':street'     => ucwords(strtolower(trim($street))),
+                            ':st_number'  => trim($number),
+                            ':st_between' => trim($between),
+                            ':colony'     => ucwords(strtolower(trim($colony))),
+                            ':city'       => ucwords(strtolower(trim($city))),
+                            ':zipcode'    => trim($zipcode),
+                            ':state'      => ucwords(strtolower(trim($state))),
+                            ':country'    => ucwords(strtolower(trim($country)))
+                    ));
+
+                    if (!$save) {
+                        $commit = false;
+                    }
+                }
+            } else {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
         }
 
-        $sql = $database->prepare("UPDATE students SET name       = :name,
-                                                       surname    = :surname,
-                                                       lastname   = :lastname,
-                                                       birthday   = :birthdate,
-                                                       age        = :age,
-                                                       genre      = :genre,
-                                                       edo_civil  = :edo_civil,
-                                                       cellphone  = :cellphone,
-                                                       reference  = :reference,
-                                                       sickness   = :sickness,
-                                                       medication = :medication,
-                                                       comment_s  = :comentario
-                                    WHERE student_id = :student_id;");
-        $update  =  $sql->execute(array(':name'      => $name,
-                                        ':surname'   => $surname,
-                                        ':lastname'  => $lastname,
-                                        ':birthdate' => $birthdate,
-                                        ':age'       => $age,
-                                        ':genre'     => $genre,
-                                        ':edo_civil' => $edo_civil,
-                                        ':cellphone' => $cellphone,
-                                        ':reference' => $reference,
-                                        ':sickness'  => $sickness,
-                                        ':medication' => $medication,
-                                        ':comentario' => $comentario,
-                                        ':student_id' => $student_id));
-
-        if ($update) {
-            $set_up  =  $database->prepare("UPDATE address
-                                            SET street     = :calle,
-                                                st_number  = :numero,
-                                                st_between = :entre,
-                                                reference  = :referencia,
-                                                colony     = :colonia
-                                            WHERE user_id  = :user
-                                              AND user_type = :tipo;");
-            $set_up->execute(array(':calle'  => $street,
-                                   ':numero' => $number,
-                                   ':entre'  => $between,
-                                   ':referencia' => $reference,
-                                   'colonia' => $colony,
-                                   ':user'   => $user,
-                                   ':tipo'   => $typo));
-
-            $set_details =  $database->prepare("UPDATE students_details
-                                                SET facturacion     = :factura,
-                                                    homestay        = :homestay,
-                                                    acta_nacimiento = :acta
-                                                WHERE id_student = :student;");
-            $set_details->execute(array(':factura'  => $invoice,
-                                        ':homestay' => $homestay,
-                                        ':acta'     => $acta,
-                                        ':student'  => $student_id));
-            Session::add('feedback_positive', "Datos del Alumno actualizados correctamente");
-        } else {
-            Session::add('feedback_negative', "Error al actualizar, intente de nuevo por favor!");
-        }
-    }
-
-    public static function updateTutorData($tutor, $name, $surname, $lastname, $job, $relationship, $phone, $cellphone, $relation_alt, $phone_alt){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $name     = ucwords(strtolower($name));
-        $surname  = ucwords(strtolower($surname));
-        $lastname = ucwords(strtolower($lastname));
-
-        $update  =  $database->prepare("UPDATE tutors
-                                        SET namet     = :name,
-                                            surnamet  = :surname,
-                                            lastnamet = :lastname,
-                                            job       = :job,
-                                            phone     = :phone,
-                                            cellphone = :cellphone,
-                                            relationship = :relation,
-                                            phone_alt      = :phone_alt,
-                                            relationship_alt = :relation_alt
-                                        WHERE id_tutor = :tutor");
-        $update= $update->execute(array(':name'         => $name,
-                                        ':surname'      => $surname,
-                                        ':lastname'     => $lastname,
-                                        ':job'          => $job,
-                                        ':phone'        => $phorene,
-                                        ':cellphone'    => $cellphone,
-                                        ':relation'     => $relationship,
-                                        ':phone_alt'    => $phone_alt,
-                                        ':relation_alt' => $relation_alt,
-                                        ':tutor'        => $tutor));
-        if ($update) {
-            Session::add('feedback_positive', 'Datos del Tutor actualizados correctamente.');
-        } else {
-            Session::add('feedback_negative', "Error al actualizar, intente de nuevo por favor!");
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => 'Error al actualizar, intente de nuevo o reporte el problema!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => 'Datos del Alumno actualizados correctamente!');
         }
     }
+
+
 
     public static function updateAcademicData($alumno, $ocupacion, $lugar_trabajo, $estudios, $grado){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -1521,6 +1541,9 @@ class AlumnoModel
             Session::add('feedback_negative', "Error al actualizar, intente de nuevo por favor!");
         }
     }
+
+
+
 
     //We don´t erase the student info from de DB, just give a deleted status
     public static function tableDeletedStudents(){
@@ -1636,5 +1659,23 @@ class AlumnoModel
         }
 
         return $success;
+    }
+
+    public static function template(){
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => 'error message');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => 'success message');
+        }
     }
 }
