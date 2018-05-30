@@ -106,7 +106,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="form-group border border-info p-2">
+            <div class="form-group border border-info bg-light p-2">
                 <label for="address" class="col-12">Dirección:</label>
                 <div class="input-group">
                    <input type="text" 

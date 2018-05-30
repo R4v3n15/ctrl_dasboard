@@ -1,49 +1,48 @@
 var Perfil = {
+
     initialize: function(){
         console.log('Profile Initialize');
         this.setActiveForm();
-        this.getUpdateForm();
-
-        // this.navigateInscriptionForms();
+        this.navigateForms();
     },
 
     setActiveForm: function(){
-        
+        // Iniciado desde main.js
+        let form = sessionStorage.getItem('activeForm');
+        $('#form-'+form).addClass('active');
+        this.getUpdateForm(form);
     },
 
     getActiveForm: function(){
-        
+        return sessionStorage.getItem('activeForm');
     },
 
-    getUpdateForm: function() {
+    getUpdateForm: function(activeForm=1) { 
         let _this = this;
         let alumno = $('#alumno').data('alumno');
         let tutor  = $('#alumno').data('tutor');
         $.ajax({
-            synch: 'false',
+            synch: 'true',
             type: 'POST',
-            // data: {alumno: alumno},
-            // data: {tutor: tutor},
-            data: {alumno: alumno},
-            // url: _root_ + 'alumno/datosAlumno',
-            // url: _root_ + 'alumno/datosTutor',
-            url: _root_ + 'alumnos/datosAcademicos',
+            data: {alumno: alumno, tutor: tutor, form: activeForm},
+            url: _root_ + 'alumnos/editarAlumno',
             success: function(data){
                 $('#editar_form').html(data);
             }
         });
     },
 
-    navigateInscriptionForms: function(){
+    navigateForms: function(){
         let _this = this;
-        $('.btn_forms').click(function(event) {
+        $('.editar-datos').click(function(event) {
             event.preventDefault();
             let form = $(this).data('form');
-            $('.btn_forms').removeClass('active');
-            sessionStorage.setItem('formNewStudent', form);
-            $('#form_'+form).addClass('active');
-            console.log(_this.getActiveForm());
-            _this.getInscriptionForm(form);
+            sessionStorage.setItem('activeForm', form);
+
+            $('.editar-datos').removeClass('active');
+            $(this).addClass('active')
+
+            _this.getUpdateForm(form);
         });
     },
 

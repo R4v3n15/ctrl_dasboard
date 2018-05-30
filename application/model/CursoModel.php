@@ -23,6 +23,31 @@ class CursoModel
         return $query->fetchAll();
     }
 
+
+    public static function getActiveCourses() {
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $_sql = $database->prepare("SELECT c.class_id, cu.course_id, cu.course 
+                                    FROM classes as c, courses as cu
+                                    WHERE c.course_id = cu.course_id
+                                      AND c.status    = 1
+                                    GROUP BY c.course_id;");
+        $_sql->execute();    
+
+        return $_sql->fetchAll();
+    }
+
+    public static function getActiveGroups() {
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $_sql = $database->prepare("SELECT c.class_id, g.group_id, g.group_name 
+                                    FROM classes as c, groups as g
+                                    WHERE c.group_id = g.group_id
+                                      AND c.status   = 1");
+        $_sql->execute();
+
+        return $_sql->fetchAll();
+    }
+
     public static function addNewClass($curso, $grupo, $f_inicio, $f_fin, $ciclo, $dias, 
                                        $h_inicio, $h_salida, $c_normal, $c_promocional, 
                                        $c_inscripcion, $maestro){

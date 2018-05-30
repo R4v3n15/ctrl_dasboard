@@ -7,14 +7,10 @@ var Inscripcion = {
         console.log('Inscripcion Initialize');
         this.setActiveForm();
         this.navigateInscriptionForms();
-        
-        this.existStudent();
-        this.getGroupsByCourse();
-        this.getClassInfo();
-        this.activeData();
     },
 
     setActiveForm: function(){
+        // Iniciado desde main.js
         form = sessionStorage.getItem('formNewStudent');
         $('#form_'+form).addClass('active');
         this.getInscriptionForm(form);

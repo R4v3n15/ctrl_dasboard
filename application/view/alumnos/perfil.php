@@ -1,13 +1,25 @@
-<?php $alumno = $this->alumno; ?>
+<?php 
+    $alumno = $this->alumno; 
+    $url_base = Config::get('URL');
+?>
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-md-12 px-3">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
             <h5 class="text-info">Perfil</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <button class="btn btn-sm btn-outline-secondary">Tutor</button>
-                    <button class="btn btn-sm btn-outline-secondary">Alumno</button>
-                    <button class="btn btn-sm btn-outline-secondary">Academicos</button>
+                    <button class="btn btn-sm btn-outline-info editar-datos"
+                            id="form-1"
+                            data-form="1">Alumno</button>
+                    <button class="btn btn-sm btn-outline-info editar-datos btn-flat-sm"
+                            id="form-2"
+                            data-form="2">Tutor</button>
+                    <button class="btn btn-sm btn-outline-info editar-datos"
+                            id="form-3" 
+                            data-form="3">Academicos</button>
+                    <a  class="btn btn-sm btn-outline-secondary"
+                        href="<?= $url_base; ?>mapa/u/<?= $alumno->student_id; ?>"
+                        data-form="3">Croquis</a>
                 </div>
             </div>
         </div>
@@ -55,7 +67,7 @@
                 </div>
             </div>
             <div class="col-sm-9" id="editar_form">
-                formulario
+                
             </div>
         </div>
     </main>

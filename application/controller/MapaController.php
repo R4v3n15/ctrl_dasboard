@@ -15,7 +15,7 @@ class MapaController extends Controller
     }
 
     public function u($user) {
-        $this->View->render('mapa/mapa', array('alumno' => $user));
+        $this->View->render('mapa/mapa', array('address' => MapaModel::getAddresStudent($user)));
     }
 
 

@@ -9,28 +9,42 @@
                     <div class="input-group col-12 mb-2">
                         <input type="text" 
                                class="form-control form-control-sm" 
-                               id="street" 
+                               id="street"
+                               value="<?= $this->address->street; ?>" 
                                placeholder="Nombre de calle">
 
                         <input type="text" 
                                class="form-control form-control-sm" 
-                               id="number" 
+                               id="number"
+                               value="<?= $this->address->number; ?>" 
                                placeholder="Numero de calle">
 
                         <input type="text" 
                                class="form-control form-control-sm" 
-                               id="between" 
+                               id="between"
+                               value="<?= $this->address->between; ?>" 
                                placeholder="Entre calle 1 y calle 2">
 
                         <input type="text" 
                                class="form-control form-control-sm" 
-                               id="colony" 
+                               id="colony"
+                               value="<?= $this->address->colony; ?>" 
                                placeholder="Colonia">
                     </div>
                     <div class="col-10">
                         <button type="button" class="btn btn-success btn-sm mr-3">Guardar Croquis</button>
-                        <input type="hidden" class="form-control form-control-sm" name="latitud" id="lat">
-                        <input type="hidden" class="form-control form-control-sm" name="longitud" id="lng">
+                        <input type="text" 
+                                class="form-control form-control-sm" 
+                                value="<?= $this->address->latitude; ?>" 
+                                name="latitud" id="lat">
+                        <input type="text" 
+                                class="form-control form-control-sm" 
+                                value="<?= $this->address->longitud; ?>" 
+                                name="longitud" id="lng">
+                        <input type="text" 
+                                class="form-control form-control-sm" 
+                                value="<?= $this->address->name; ?>" 
+                                name="alumno" id="student">
                     </div>
                     <div class="col-2 text-right">
                         <button type="button" class="btn btn-secondary btn-sm" title="Ayuda">
@@ -60,10 +74,12 @@
         map: map
     });
 
+    var student = document.getElementById('student').value;
+
     setCoords(map);
 
     var infowindow = new google.maps.InfoWindow({
-        content: '<p>Dirección de: Alumno Ape1 Ape2</p>'
+        content: '<p><strong>Ubicación de:</strong> '+student+'</p>'
     });
 
     infowindow.open(map, marker);

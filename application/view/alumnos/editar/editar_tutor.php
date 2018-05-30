@@ -5,7 +5,7 @@
 <h5 class="text-center text-secondary">Datos del Tutor</h5>
 <hr class="mt-1">
 <form action="<?= $action; ?>" method="POST" class="form-horizontal">
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-12 text-center">Nombre Completo:</label>
         <div class="col-12 input-group">
             <input type="hidden" name="id_tutor" value="<?= $tutor->id_tutor; ?>">
@@ -38,7 +38,7 @@
 
     <div class="row">
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Ocupación:</label>
                 <div class="col-12">
                     <input type="tel" 
@@ -51,29 +51,29 @@
             </div>
         </div>      
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Parentesco: </label>
                 <div class="col-12">
                     <select class="form-control form-control-sm " name="parentesco">
                         <option value="" hidden>Seleccione...</option>
                         <option value="Madre" 
-                                <?= $tutor->relationship == 'Madre' ? 'checked' : ''; ?>>Madre</option>
+                                <?= $tutor->relationship == 'Madre' ? 'selected' : ''; ?>>Madre</option>
                         <option value="Padre" 
-                                <?= $tutor->relationship == 'Padre' ? 'checked' : ''; ?>>Padre</option>
+                                <?= $tutor->relationship == 'Padre' ? 'selected' : ''; ?>>Padre</option>
                         <option value="Abuelo(a)" 
-                                <?= $tutor->relationship == 'Abuelo(a)' ? 'checked' : ''; ?>>Abuelo(a)</option>
+                                <?= $tutor->relationship == 'Abuelo(a)' ? 'selected' : ''; ?>>Abuelo(a)</option>
                         <option value="Hermano(a)" 
-                                <?= $tutor->relationship == 'Hermano(a)' ? 'checked' : ''; ?>>Hermano(a)</option>
+                                <?= $tutor->relationship == 'Hermano(a)' ? 'selected' : ''; ?>>Hermano(a)</option>
                         <option value="Tio(a)" 
-                                <?= $tutor->relationship == 'Tío(a)' ? 'checked' : ''; ?>>Tío(a)</option>
+                                <?= $tutor->relationship == 'Tío(a)' ? 'selected' : ''; ?>>Tío(a)</option>
                         <option value="Tutor" 
-                                <?= $tutor->relationship == 'Tutor' ? 'checked' : ''; ?>>Tutor</option>
+                                <?= $tutor->relationship == 'Tutor' ? 'selected' : ''; ?>>Tutor</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Teléfono de Casa: </label>
                 <div class="col-12">
                     <input type="tel" 
@@ -88,7 +88,7 @@
         </div>
 
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Teléfono Celular: </label>
                 <div class="col-12">
                       <input type="tel" 
@@ -102,29 +102,29 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Otro Familiar: </label>
                 <div class="col-12">
                     <select class="form-control form-control-sm " name="familiar">
                         <option value="" hidden>Seleccione...</option>
                         <option value="Madre" 
-                                <?= $tutor->relationship_alt == 'Madre' ? 'checked' : ''; ?>>Madre</option>
+                                <?= $tutor->relationship_alt == 'Madre' ? 'selected' : ''; ?>>Madre</option>
                         <option value="Padre" 
-                                <?= $tutor->relationship_alt == 'Padre' ? 'checked' : ''; ?>>Padre</option>
+                                <?= $tutor->relationship_alt == 'Padre' ? 'selected' : ''; ?>>Padre</option>
                         <option value="Abuelo(a)" 
-                                <?= $tutor->relationship_alt == 'Abuelo(a)' ? 'checked' : ''; ?>>Abuelo(a)</option>
+                                <?= $tutor->relationship_alt == 'Abuelo(a)' ? 'selected' : ''; ?>>Abuelo(a)</option>
                         <option value="Hermano(a)" 
-                                <?= $tutor->relationship_alt == 'Hermano(a)' ? 'checked' : ''; ?>>Hermano(a)</option>
+                                <?= $tutor->relationship_alt == 'Hermano(a)' ? 'selected' : ''; ?>>Hermano(a)</option>
                         <option value="Tio(a)" 
-                                <?= $tutor->relationship_alt == 'Tio(a)' ? 'checked' : ''; ?>>Tío(a)</option>
+                                <?= $tutor->relationship_alt == 'Tio(a)' ? 'selected' : ''; ?>>Tío(a)</option>
                         <option value="Tutor" 
-                                <?= $tutor->relationship_alt == 'Tutor' ? 'checked' : ''; ?>>Tutor</option>
+                                <?= $tutor->relationship_alt == 'Tutor' ? 'selected' : ''; ?>>Tutor</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-12">Teléfono de Familiar: </label>
                 <div class="col-12">
                     <input type="tel" 

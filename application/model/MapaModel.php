@@ -2,6 +2,38 @@
 
 class MapaModel
 {
+	public static function getAddresStudent($student){
+		$database = DatabaseFactory::getFactory()->getConnection();
+		$_sql = $database->prepare("SELECT student_id, id_tutor, reference,
+										   CONCAT_WS(' ', name, surname, lastname) as name
+									FROM students 
+									WHERE student_id = :student 
+									LIMIT 1;");
+		$_sql->execute(array(':student' => $student));
+
+		if ($_sql->rowCount() > 0) {
+			$alumno = $_sql->fetch();
+			if ((int)$alumno->id_tutor !== 0) {
+				$address = $database->prepare("SELECT * FROM address WHERE user_id = :tutor AND user_type = 1 LIMIT 1;");
+				$address->execute(array(':tutor' => $alumno->id_tutor));
+			} else {
+				$address = $database->prepare("SELECT * FROM address WHERE user_id = :student AND user_type = 2 LIMIT 1;");
+				$address->execute(array(':student' => $alumno->student_id));
+			}
+			$address = $address->fetch();
+
+			$alumno->address  = $address->id_address;
+			$alumno->street   = $address->street;
+			$alumno->number   = $address->st_number;
+			$alumno->between  = $address->st_between;
+			$alumno->colony   = $address->colony;
+			$alumno->latitude = $address->latitud;
+			$alumno->longitud = $address->longitud;
+			
+			return $alumno;
+		}
+		return null;
+	}
 
 	public static function getMarks(){
 		$database = DatabaseFactory::getFactory()->getConnection();

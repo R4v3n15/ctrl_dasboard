@@ -26,7 +26,7 @@ class AlumnosController extends Controller
 
     public function obtenerGrupos() {
         if(Request::post('curso')){
-            $this->View->renderJSON(AlumnoModel::getLevelsByClass(Request::post('curso')));
+            $this->View->renderJSON(AlumnoModel::getGroupsByCourse(Request::post('curso')));
         }
     }
 
@@ -41,25 +41,32 @@ class AlumnosController extends Controller
         ));
     }
 
-    public function datosAlumno(){
-        $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
-            'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
-        ));
+    public function editarAlumno(){
+        switch ((int)Request::post('form')) {
+            case 1:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
+                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
+                ));
+                break;
+            case 2:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_tutor', array(
+                    'tutor' => AlumnoModel::tutorProfileData(Request::post('tutor'))
+                ));
+                break;
+            case 3:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_estudios', array(
+                    'estudios' => AlumnoModel::studiesProfileData(Request::post('alumno')),
+                    'cursos'   => CursoModel::getActiveCourses(),
+                    'grupos'   => CursoModel::getActiveGroups()
+                ));
+                break;
+            default:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
+                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
+                ));
+                break;
+        }
     }
-
-    public function datosTutor(){
-        $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_tutor', array(
-            'tutor' => AlumnoModel::tutorProfileData(Request::post('tutor'))
-        ));
-    }
-
-    public function datosAcademicos(){
-        AlumnoModel::studiesProfileData(Request::post('alumno'));
-        // $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_estudios', array(
-        //     'estudios' => AlumnoModel::studiesProfileData(Request::post('alumno'))
-        // ));
-    }
-
 
 
     public function formularioInscripcion(){

@@ -11,6 +11,7 @@ var Main = {
             sessionStorage.setItem('paginacion_alumnos', 10);
             sessionStorage.setItem('vista_alumnos', 'curso_1');
             sessionStorage.setItem('formNewStudent', 'tutor');
+            sessionStorage.setItem('activeForm', 1);
             sessionStorage.setItem('vista_clases', 1);
             sessionStorage.setItem('vista_pagos', 1);
         }

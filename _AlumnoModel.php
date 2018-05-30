@@ -88,8 +88,8 @@ class AlumnoModel
 
             $details->clase = $clase;
 
-            H::p($details);
-            exit();
+            // H::p($details);
+            // exit();
 
             return $details;
         }

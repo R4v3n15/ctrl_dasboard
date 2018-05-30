@@ -23,6 +23,7 @@ var Alumnos = {
     },
 
     setActiveView: function(){
+        // Iniciado desde main.js
         let active_view = sessionStorage.getItem('vista_alumnos');
         this.getStudentsTable($('#'+active_view).data('curso'));
     },

@@ -168,7 +168,7 @@ class AlumnoModel
                                 echo '<ul class="dropdown-menu student">';
                                 if ($show) {
                                 echo '<li>
-                                            <a href="'.Config::get('URL').'alumno/perfil/'.$row->id.'"
+                                            <a href="'.Config::get('URL').'alumnos/perfil/'.$row->id.'"
                                                data-student="'.$row->id.'"
                                                data-tutor="'.$row->id_tutor.'"
                                                data-clase="'.$row->id_grupo.'"
@@ -178,7 +178,7 @@ class AlumnoModel
                                             </a>
                                         </li>';
                                 echo    '<li>
-                                            <a href="'.Config::get('URL').'alumno/convenio">
+                                            <a href="'.Config::get('URL').'alumnos/convenio">
                                                 <span class="text-primary" data-feather="chevron-right"></span>
                                                 Convenio
                                             </a></li>';
@@ -451,8 +451,8 @@ class AlumnoModel
 
             $details->clase = $clase;
 
-            H::p($details);
-            exit();
+            // H::p($details);
+            // exit();
 
             return $details;
         }
