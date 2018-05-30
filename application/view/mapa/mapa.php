@@ -33,15 +33,15 @@
                     </div>
                     <div class="col-10">
                         <button type="button" class="btn btn-success btn-sm mr-3">Guardar Croquis</button>
-                        <input type="text" 
+                        <input type="hidden" 
                                 class="form-control form-control-sm" 
                                 value="<?= $this->address->latitude; ?>" 
                                 name="latitud" id="lat">
-                        <input type="text" 
+                        <input type="hidden" 
                                 class="form-control form-control-sm" 
                                 value="<?= $this->address->longitud; ?>" 
                                 name="longitud" id="lng">
-                        <input type="text" 
+                        <input type="hidden" 
                                 class="form-control form-control-sm" 
                                 value="<?= $this->address->name; ?>" 
                                 name="alumno" id="student">
@@ -63,10 +63,12 @@
 
 <script>
     function initMap() {
+        var latitud  = parseFloat(document.getElementById('lat').value);
+        var longitud = parseFloat(document.getElementById('lng').value);
       var map = new google.maps.Map(document.getElementById('map'), {
         minZoom: 10,
         zoom: 14,
-        center: {lat: 19.579994462915835, lng: -88.04420235898436}
+        center: {lat: latitud, lng: longitud}
       });
 
     var marker = new google.maps.Marker({
