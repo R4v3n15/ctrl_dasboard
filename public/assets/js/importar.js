@@ -105,7 +105,7 @@ var Import = {
             url: _root_ + 'importar/listaRepetidos',
             success: function(response){
                 $('#lista_repetidos').html(response);
-                // _this.importStudent();
+                _this.updateRepeated();
                 // _this.navPage();
             }
         });
@@ -120,7 +120,7 @@ var Import = {
     },
     
     updateRepeated: function(){
-        let that = this; 
+        let _this = this; 
         $('.btn_update').on('click', function(){
             let id = $(this).attr('id'),
                 name = $('#'+id+'name').val(),
@@ -137,7 +137,24 @@ var Import = {
                     }
                 });
             }
-        }); 
+        });
+
+        $('.btn_delete').on('click', function(){
+            let id = $(this).attr('id'),
+                sep = $(this).data('sep');
+
+            $.ajax({
+                data: { student: id, sep:sep },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'importar/eliminarRepetido'
+            })
+            .then(function(response){
+                _this.getRepeatedList();
+            });
+
+        });
+
     }
     
 };

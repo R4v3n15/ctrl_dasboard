@@ -87,7 +87,7 @@ class ImportarModel
 
 	public static function getRepeatedStudents(){
 		$database = DatabaseFactory::getFactory()->getConnection();
-		$sql = $database->prepare("SELECT * FROM naatikdb.student ORDER BY surname1_s");
+		$sql = $database->prepare("SELECT id_student, name_s, surname1_s, surname2_s FROM naatikdb.student ORDER BY surname1_s");
 		$sql->execute();
 
 		$repetidos = [];
@@ -97,19 +97,20 @@ class ImportarModel
 			$name     = '%'.trim($row->name_s).'%';
 			$surname  = '%'.trim($row->surname1_s).'%';
 			$lastname = '%'.trim($row->surname2_s).'%';
-			$query = $database->prepare("SELECT id_student, name_s, surname1_s, surname2_s, status, id_tutor 
-									   FROM naatikdb.student
-									   WHERE name_s     LIKE :name
-										 AND surname1_s LIKE :surname
-										 AND surname2_s LIKE :lastname;");
-			$query->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
 
-			if ($query->rowCount() > 1) {
-				if (!in_array($row->id_student, $revisados)) {
-					$repetidos[$row->id_student] = new stdClass();
-					$repetidos[$row->id_student]->items = $query->fetchAll();
-					foreach ($repetidos[$row->id_student]->items as $value) {
-						array_push($revisados, $value->id_student);
+			if (!in_array($row->id_student, $revisados)) {
+				$query = $database->prepare("SELECT id_student, name_s, surname1_s, surname2_s, status, id_tutor 
+										   FROM naatikdb.student
+										   WHERE name_s     LIKE :name
+											 AND surname1_s LIKE :surname
+											 AND surname2_s LIKE :lastname;");
+				$query->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+
+				if ($query->rowCount() > 1) {
+					$alumnos = $query->fetchAll();
+					array_push($repetidos, $alumnos);
+					foreach ($alumnos as $alumno) {
+						array_push($revisados, $alumno->id_student);
 					}
 				}
 			}
@@ -120,9 +121,7 @@ class ImportarModel
 	public static function procesarRepetidos($lista){
 		$database = DatabaseFactory::getFactory()->getConnection();
 		foreach ($lista as $repetidos) {
-			H::p($repetidos);
-            continue;
-			echo '<div class="table-responsive">';
+			echo '<div class="table-responsive mb-2">';
                     echo '<table class="table table-striped table-sm table-bordered">';
                     echo '<thead>';
                         echo '<tr class="bg-info">';
@@ -132,19 +131,55 @@ class ImportarModel
                         echo '<th class="text-center">Apellido Mat.</th>';
                         echo '<th class="text-center">Estado</th>';
                         echo '<th class="text-center">Tutor</th>';
+                        echo '<th class="text-center">SEP</th>';
+                        echo '<th class="text-center">A. Info</th>';
+                        echo '<th class="text-center">E. Info</th>';
+                        echo '<th class="text-center">Beca</th>';
                         echo '<th class="text-center">Opciones</th>';
                         echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
                         foreach ($repetidos as $alumno) {
-                        	H::p($alumno);
-                        	continue;
                         	$tutor = $database->prepare("SELECT CONCAT_WS(' ', name_t, surname1_t, surname2_t) as nombre 
 						                        		 FROM naatikdb.tutor
 						                        		 WHERE id_tutor = :tutor
 						                        		 LIMIT 1;");
 							$tutor->execute(array(':tutor' => $alumno->id_tutor));
 							$tutor = $tutor->fetch();
+
+							
+							$_sql = $database->prepare("SELECT id_student, reg_sep, id_classes 
+														FROM naatikdb.academic_info WHERE id_student = :student");
+							$_sql->execute(array(':student' => $alumno->id_student));
+							$info = $_sql->rowCount();
+
+							$infoS = 0;
+							$sep = 0;
+							$grupo=null;
+							if ($info > 0) {
+								$aka = $_sql->fetch();
+								$sep = $aka->reg_sep;
+								$sqlS = $database->prepare("SELECT id_sep FROM naatikdb.sep WHERE id_sep = :sep");
+								$sqlS->execute(array(':sep' => $aka->reg_sep));
+								$infoS = $sqlS->rowCount();
+
+								$sqlG = $database->prepare("SELECT * 
+															FROM naatikdb.classes as c, naatikdb.naatik_course as cu, naatikdb.groups_nc as g
+															WHERE c.id_class = :clase
+															  AND c.id_course = cu.id_course
+															  AND c.id_group  = g.id_group
+															");
+								$sqlG->execute(array(':clase' => $aka->id_classes));
+								$infoG = $sqlG->rowCount();
+							}
+
+							$sql = $database->prepare("SELECT id_st FROM naatikdb.info_extrast WHERE id_st = :student");
+							$sql->execute(array(':student' => $alumno->id_student));
+							$infoE = $sql->rowCount();
+
+							$sqlB = $database->prepare("SELECT id_student FROM naatikdb.scholar WHERE id_student = :student");
+							$sqlB->execute(array(':student' => $alumno->id_student));
+							$infoB = $sqlB->rowCount();
 
                             echo '<tr>';
                             echo '<td class="text-center">'.$alumno->id_student.'</td>'; 
@@ -161,10 +196,21 @@ class ImportarModel
                             echo '<td class="text-center">
 									<input type="text" id="'.$alumno->id_student.'tutor" value="'.$tutor->nombre.'">
                                   </td>';
-                            echo '<td class="text-center">
-									<button type="button" class="btn btn-sm btn-info btn_update" 
-                                        id="'.$alumno->id_student.'"><i class="fa fa-save"></i></button>
-                                  </td>';
+                            echo '<td class="text-center">'.$infoS.'</td>';
+                            echo '<td class="text-center">'.$info.'</td>';
+                            echo '<td class="text-center">'.$infoE.'</td>';
+                            echo '<td class="text-center">'.$infoB.'</td>';
+                            echo '<td class="text-center">';
+                            	if((int)$info > 0 && (int)$infoE > 0 && (int)$infoS > 0 && (int)$infoB > 0 && $alumno->status != 'baja'){
+									echo '<button type="button" class="btn btn-sm btn-info btn_update" 
+									              id="'.$alumno->id_student.'"><i class="fa fa-save"></i></button>';
+                            	} else {
+                            		echo '<button type="button" 
+                            					  class="btn btn-sm btn-danger btn_delete"
+                            					  data-sep="'.$sep.'"
+									              id="'.$alumno->id_student.'"><i class="fa fa-trash"></i></button>';
+                            	}
+                            echo  '</td>';
                             echo '</tr>';   
                         }
                     echo '</tbody>';
@@ -185,6 +231,38 @@ class ImportarModel
 							':lastname' => trim($lastname), 
 							':student' => $student));
 	}
+
+	public static function deleteStudent($student, $sep){
+		$database = DatabaseFactory::getFactory()->getConnection();
+		// Alumnos
+		$sqlA = $database->prepare("DELETE FROM naatikdb.student WHERE id_student = :student;");
+		$sqlA->execute(array(':student' => $student));
+
+		// Academico
+		$sqlA = $database->prepare("DELETE FROM naatikdb.academic_info WHERE id_student = :student;");
+		$sqlA->execute(array(':student' => $student));
+
+		// Extra
+		$sqlA = $database->prepare("DELETE FROM naatikdb.info_extrast WHERE id_st = :student;");
+		$sqlA->execute(array(':student' => $student));
+
+		// Sep
+		$sqlA = $database->prepare("DELETE FROM naatikdb.sep WHERE id_sep = :sep;");
+		$sqlA->execute(array(':sep' => $sep));
+
+		// Becas
+		$sqlA = $database->prepare("DELETE FROM naatikdb.scholar WHERE id_student = :student;");
+		$sqlA->execute(array(':student' => $student));
+
+		// Pagos
+		$sqlA = $database->prepare("DELETE FROM naatikdb.pays WHERE id_student = :student;");
+		$sqlA->execute(array(':student' => $student));
+	}
+
+
+
+
+
 
 	public static function importStudents($page) {
 		H::getLibrary('paginadorLib');

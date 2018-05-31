@@ -36,18 +36,6 @@ class ImportarController extends Controller
     // }
 
     public function repetidos() {
-        // H::getLibrary('paginadorLib');
-        // $page = 0;
-        // $paginator = new \Paginador();
-        
-        // $all_data = ImportarModel::getRepeatedStudents();
-        // $data = $paginator->paginar($all_data, $page, 20);
-
-        // $this->View->render('importar/repetidos', array(
-        //     'repetidos'  => $paginator->paginar($all_data, 0, 20),
-        //     'paginacion' => $paginator->getView('pagination_ajax', 'repeated')
-        // ));
-        
         $this->View->render('importar/repetidos');
     }
 
@@ -60,6 +48,10 @@ class ImportarController extends Controller
                                           Request::post('name'), 
                                           Request::post('surname'), 
                                           Request::post('lastname'));
+    }
+
+    public function eliminarRepetido(){
+        $this->View->renderJSON(ImportarModel::deleteStudent(Request::post('student'), Request::post('sep')));
     }
 
     public function importarMaestros() {
