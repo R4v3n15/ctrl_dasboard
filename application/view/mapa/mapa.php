@@ -65,39 +65,40 @@
     function initMap() {
         var latitud  = parseFloat(document.getElementById('lat').value);
         var longitud = parseFloat(document.getElementById('lng').value);
-      var map = new google.maps.Map(document.getElementById('map'), {
-        minZoom: 10,
-        zoom: 14,
-        center: {lat: latitud, lng: longitud}
-      });
 
-    var marker = new google.maps.Marker({
-        position: map.getCenter(),
-        map: map
-    });
+        var map = new google.maps.Map(document.getElementById('map'), {
+            minZoom: 10,
+            zoom: 14,
+            center: {lat: latitud, lng: longitud}
+        });
 
-    var student = document.getElementById('student').value;
+        var marker = new google.maps.Marker({
+            position: map.getCenter(),
+            map: map
+        });
 
-    setCoords(map);
+        var student = document.getElementById('student').value;
 
-    var infowindow = new google.maps.InfoWindow({
-        content: '<p><strong>Ubicación de:</strong> '+student+'</p>'
-    });
+        setCoords(map);
 
-    infowindow.open(map, marker);
+        var infowindow = new google.maps.InfoWindow({
+            content: '<p><strong>Ubicación de:</strong> '+student+'</p>'
+        });
 
-    // google.maps.event.addListener(marker, 'mouseover', function() {
-    //     infowindow.open(map, marker);
-    // });
+        infowindow.open(map, marker);
 
-    // map.addListener('click', function(e) {
-    //     map.setZoom(map.getZoom() + 1);
-    // });
+        // google.maps.event.addListener(marker, 'mouseover', function() {
+        //     infowindow.open(map, marker);
+        // });
 
-    map.addListener('click', function(e) {
-        // map.setZoom(map.getZoom() + 1);
-        placeMarkerAndPanTo(e.latLng, map, marker);
-    });
+        // map.addListener('click', function(e) {
+        //     map.setZoom(map.getZoom() + 1);
+        // });
+
+        map.addListener('click', function(e) {
+            // map.setZoom(map.getZoom() + 1);
+            placeMarkerAndPanTo(e.latLng, map, marker);
+        });
 }
 
 function placeMarkerAndPanTo(latLng, map, marker) {

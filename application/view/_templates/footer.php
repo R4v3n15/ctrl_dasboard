@@ -9,6 +9,7 @@
     <script>
         var _root_ = "<?php echo Config::get('URL');  ?>";
     </script>
+    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/modernizr.min.js"></script>
 	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/jquery-331.min.js"></script>
     <script src="<?php echo Config::get('URL'); ?>assets/libs/js/popper.min.js"></script>
 	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/bootstrap.min.js"></script>

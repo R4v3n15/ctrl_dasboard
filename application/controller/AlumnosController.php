@@ -34,40 +34,19 @@ class AlumnosController extends Controller
         $this->View->renderJSON(AlumnoModel::countStudents());
     }
 
-    public function perfil($alumno) {
-        Registry::set('js', array('mapa&assets/js', 'perfil&assets/js'));
-        $this->View->render('alumnos/perfil', array(
-            'alumno'  => AlumnoModel::studentProfile($alumno)
+
+    public function inscribir() {
+        // Session::destroy('activo');
+        if (Session::get('activo') == null) {
+            Session::set('activo', 'info_tutor');
+        }
+        Registry::set('css',array('fileinput.min&assets/libs/css', 'tpicker.min&assets/libs/css'));
+        Registry::set('js', array('mapa&assets/js', 'fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'tpicker&assets/libs/js', 'inscripcion&assets/js'));
+        $this->View->render('alumnos/inscribir', array(
+            'cursos'    => CursoModel::getCourses(),
+            'niveles'   => CursoModel::getGroups()
         ));
     }
-
-    public function editarAlumno(){
-        switch ((int)Request::post('form')) {
-            case 1:
-                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
-                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
-                ));
-                break;
-            case 2:
-                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_tutor', array(
-                    'tutor' => AlumnoModel::tutorProfileData(Request::post('tutor'))
-                ));
-                break;
-            case 3:
-                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_estudios', array(
-                    'estudios' => AlumnoModel::studiesProfileData(Request::post('alumno')),
-                    'cursos'   => CursoModel::getActiveCourses(),
-                    'grupos'   => CursoModel::getActiveGroups()
-                ));
-                break;
-            default:
-                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
-                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
-                ));
-                break;
-        }
-    }
-
 
     public function formularioInscripcion(){
 
@@ -226,21 +205,75 @@ class AlumnosController extends Controller
     }
 
 
-
-
-
-    public function inscribir() {
-        // Session::destroy('activo');
-        if (Session::get('activo') == null) {
-            Session::set('activo', 'info_tutor');
-        }
-        Registry::set('css',array('fileinput.min&assets/libs/css', 'tpicker.min&assets/libs/css'));
-    Registry::set('js', array('mapa&assets/js', 'fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'tpicker&assets/libs/js', 'inscripcion&assets/js'));
-        $this->View->render('alumnos/inscribir', array(
-            'cursos'    => CursoModel::getCourses(),
-            'niveles'   => CursoModel::getGroups()
+    public function perfil($alumno) {
+        Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
+        Registry::set('js', array('fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'pikaday.min&assets/libs/js', 'perfil&assets/js'));
+        $this->View->render('alumnos/perfil', array(
+            'alumno'  => AlumnoModel::studentProfile($alumno)
         ));
     }
+
+    public function editarAlumno(){
+        switch ((int)Request::post('form')) {
+            case 1:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
+                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
+                ));
+                break;
+            case 2:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_tutor', array(
+                    'tutor' => AlumnoModel::tutorProfileData(Request::post('tutor'))
+                ));
+                break;
+            case 3:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_estudios', array(
+                    'estudios' => AlumnoModel::studiesProfileData(Request::post('alumno')),
+                    'cursos'   => CursoModel::getActiveCourses(),
+                    'grupos'   => CursoModel::getActiveGroups()
+                ));
+                break;
+            default:
+                $this->View->renderWithoutHeaderAndFooter('alumnos/editar/editar_alumno', array(
+                    'alumno' => AlumnoModel::studentProfileData(Request::post('alumno'))
+                ));
+                break;
+        }
+    }
+
+    public function updateStudent(){
+        if (Request::post('student_id') && Request::post('name') && Request::post('surname') && Request::post('lastname') && Request::post('genre') && Request::post('edo_civil')) {
+
+            $this->View->renderJSON(AlumnoModel::updateStudentData(
+                                        Request::post('student'),
+                                        Request::post('name'),
+                                        Request::post('surname'),
+                                        Request::post('lastname'),
+                                        Request::post('birthdate'),
+                                        Request::post('genre'),
+                                        Request::post('edo_civil'),
+                                        Request::post('cellphone'),
+                                        Request::post('reference'),
+                                        Request::post('sickness'),
+                                        Request::post('medication'),
+                                        Request::post('homestay'),
+                                        Request::post('acta'),
+                                        Request::post('invoice'),
+                                        Request::post('comment'),
+                                        Request::post('address'),
+                                        Request::post('street'),
+                                        Request::post('number'),
+                                        Request::post('between'),
+                                        Request::post('colony'),
+                                        Request::post('city'),
+                                        Request::post('zipcode'),
+                                        Request::post('state'),
+                                        Request::post('country')
+            ));
+        }
+    }
+
+
+
 
     public function obtenerAlumnos() {
         AlumnoModel::students(Request::post('curso'));
@@ -264,39 +297,6 @@ class AlumnosController extends Controller
     public function obtenerDiasClase() {
         if(Request::post('clase')){
             echo json_encode(CursoModel::getDaysByClass(Request::post('clase')));
-        }
-    }
-
-    public function actualizarDatosAlumno(){
-        $alumno = Request::post('student_id');
-
-        if (Request::post('student_id') && Request::post('name') && Request::post('surname') && Request::post('lastname') && Request::post('genre') && Request::post('edo_civil')) {
-            AlumnoModel::updateStudentData(
-                Request::post('student_id'),
-                Request::post('tutor_id'),
-                Request::post('name'),
-                Request::post('surname'),
-                Request::post('lastname'),
-                Request::post('birthdate'),
-                Request::post('genre'),
-                Request::post('edo_civil'),
-                Request::post('cellphone'),
-                Request::post('reference'),
-                Request::post('street'),
-                Request::post('number'),
-                Request::post('between'),
-                Request::post('colony'),
-                Request::post('sickness'),
-                Request::post('medication'),
-                Request::post('homestay'),
-                Request::post('acta'),
-                Request::post('invoice'),
-                Request::post('comment')
-            );
-            Redirect::to('alumnos/perfilAlumno/'.$alumno);
-        } else {
-            Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumnos/perfilAlumno/'.$alumno);
         }
     }
 

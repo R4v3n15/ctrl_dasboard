@@ -4,6 +4,7 @@
 ?>
 <h5 class="text-center text-secondary">Datos del Tutor</h5>
 <hr class="mt-1">
+<?php if ($this->tutor): ?>
 <form action="<?= $action; ?>" method="POST" class="form-horizontal">
     <div class="form-group row">
         <label class="col-12 text-center">Nombre Completo:</label>
@@ -145,4 +146,9 @@
         </div>
     </div>
 </form>
+<?php else: ?>
+
+<h4 class="text-center text-info my-4">Alumno sin tutor</h4>
+
+<?php endif ?>
 

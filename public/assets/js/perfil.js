@@ -28,6 +28,7 @@ var Perfil = {
             url: _root_ + 'alumnos/editarAlumno',
             success: function(data){
                 $('#editar_form').html(data);
+                _this.activeData();
             }
         });
     },
@@ -49,15 +50,14 @@ var Perfil = {
 
 
     activeData: function() {
+        // $('#fecha_inicio').datetimepicker({
+        //     format: 'YYYY-MM-DD',
+        //     defaultDate: $('#birthdate').val()
+        // });
 
-        $('#fecha_inicio').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
-
-        $('#bornday').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
+        pikadayResponsive(document.getElementById("bdate"),{
+            classes : "form-control form-control-sm",
+            placeholder: "Fecha de Nacimiento"
         });
 
         $("#avatar").fileinput({

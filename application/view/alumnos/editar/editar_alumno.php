@@ -10,9 +10,7 @@
             <div class="form-group">
                 <label for="fullname" class="col-sm-12 text-center">Nombre Completo:</label>
                 <div class="input-group">
-                    <input type="hidden" name="student_id" value="<?= $alumno->student_id; ?>">
-                    <input type="hidden" name="tutor_id" value="<?= $alumno->id_tutor; ?>">
-
+                    <input type="hidden" name="student" value="<?= $alumno->student_id; ?>">
                     <input type="text" 
                           class="form-control form-control-sm text-center" 
                           id="surname" 
@@ -45,10 +43,11 @@
                 <label class="col-12">Fecha de Nacimiento: </label>
                 <div class="col-12">
                     <input type="text" 
-                           class="form-control form-control-sm" 
-                           id="bornday" 
-                           name="birthdate" 
-                           value="<?= $alumno->birthday; ?>">
+                           id="bdate" 
+                           class="form-control form-control-sm"
+                           placeholder="Fecha de Nacimiento"
+                           value="<?= $alumno->birthday; ?>"
+                           name="bdate">
                 </div>
             </div>
         </div>
@@ -108,7 +107,11 @@
         <div class="col-12">
             <div class="form-group border border-info bg-light p-2">
                 <label for="address" class="col-12">Dirección:</label>
-                <div class="input-group">
+                <div class="input-group mb-2">
+                    <input type="hidden" 
+                          class="form-control form-control-sm" 
+                          name="address"
+                          value="<?= $alumno->address->id_address; ?>">
                    <input type="text" 
                           class="form-control form-control-sm" 
                           name="street"
@@ -129,6 +132,28 @@
                           name="colony"
                           placeholder="Colonia" 
                           value="<?= $alumno->address->colony; ?>">
+                </div>
+                <div class="input-group">
+                   <input type="text" 
+                          class="form-control form-control-sm" 
+                          name="city"
+                          placeholder="Ciudad" 
+                          value="<?= $alumno->address->city; ?>">
+                   <input type="text" 
+                          class="form-control form-control-sm" 
+                          name="zipcode"
+                          placeholder="Código Postal" 
+                          value="<?= $alumno->address->zipcode; ?>">
+                   <input type="text" 
+                          class="form-control form-control-sm" 
+                          name="state"
+                          placeholder="Estado" 
+                          value="<?= $alumno->address->state; ?>">
+                   <input type="text" 
+                          class="form-control form-control-sm"  
+                          name="country"
+                          placeholder="País" 
+                          value="<?= $alumno->address->country; ?>">
                 </div>
             </div>
         </div>
@@ -228,7 +253,7 @@
             <div class="form-group row">
                 <label class="col-12">Comentario sobre el alumno(a): </label>
                 <div class="col-12">
-                    <textarea name="comment" rows="3" class="form-control texto"><?=  $alumno->comment_s;  ?></textarea>
+                    <textarea name="comment" rows="2" class="form-control texto"><?=  $alumno->comment_s;  ?></textarea>
                 </div>
             </div>
         </div>  
