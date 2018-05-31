@@ -131,6 +131,7 @@ class ImportarModel
                         echo '<th class="text-center">Apellido Mat.</th>';
                         echo '<th class="text-center">Estado</th>';
                         echo '<th class="text-center">Tutor</th>';
+                        echo '<th class="text-center">Grupo</th>';
                         echo '<th class="text-center">SEP</th>';
                         echo '<th class="text-center">A. Info</th>';
                         echo '<th class="text-center">E. Info</th>';
@@ -163,14 +164,18 @@ class ImportarModel
 								$sqlS->execute(array(':sep' => $aka->reg_sep));
 								$infoS = $sqlS->rowCount();
 
-								$sqlG = $database->prepare("SELECT * 
+								$sqlG = $database->prepare("SELECT cu.course, g.group 
 															FROM naatikdb.classes as c, naatikdb.naatik_course as cu, naatikdb.groups_nc as g
 															WHERE c.id_class = :clase
 															  AND c.id_course = cu.id_course
 															  AND c.id_group  = g.id_group
 															");
 								$sqlG->execute(array(':clase' => $aka->id_classes));
-								$infoG = $sqlG->rowCount();
+
+								if ($sqlG->rowCount() > 0) {
+									$infoG = $sqlG->rowCount();
+									$grupo = $infoG->course .' '. $infoG->group;
+								}
 							}
 
 							$sql = $database->prepare("SELECT id_st FROM naatikdb.info_extrast WHERE id_st = :student");
@@ -196,6 +201,7 @@ class ImportarModel
                             echo '<td class="text-center">
 									<input type="text" id="'.$alumno->id_student.'tutor" value="'.$tutor->nombre.'">
                                   </td>';
+                            echo '<td class="text-center">'.$grupo.'</td>';
                             echo '<td class="text-center">'.$infoS.'</td>';
                             echo '<td class="text-center">'.$info.'</td>';
                             echo '<td class="text-center">'.$infoE.'</td>';
