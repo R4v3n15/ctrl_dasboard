@@ -204,6 +204,23 @@ class AlumnosController extends Controller
 
     }
 
+    public function cambiarGrupoAlumno(){
+        if (Request::post('alumno') && Request::post('clase') !== "") {
+            $this->View->renderJSON(AlumnoModel::ChangeStudentGroup(Request::post('alumno'), Request::post('clase')));
+        } else {
+            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
+        }
+    }
+
+    public function cambiarGrupoAlumnos(){
+        if (Request::post('alumnos') && Request::post('clase') !== "") {
+            $this->View->renderJSON(AlumnoModel::ChangeStudentsGroup(Request::post('alumnos'), Request::post('grupo')));
+        } else {
+            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
+        }
+    }
+
+
 
     public function perfil($alumno) {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
@@ -360,22 +377,6 @@ class AlumnosController extends Controller
     public function agregarAlumnoGrupo(){
         if (Request::post('alumno') && Request::post('clase')) {
             AlumnoModel::AddStudentToClass(Request::post('alumno'), Request::post('clase'));
-        } else {
-            echo 0;
-        }
-    }
-
-    public function cambiarGrupoAlumno(){
-        if (Request::post('alumno') && Request::post('clase') !== "") {
-            AlumnoModel::ChangeStudentGroup(Request::post('alumno'), Request::post('clase'));
-        } else {
-            echo 0;
-        }
-    }
-
-    public function cambiarGrupoAlumnos(){
-        if (Request::post('alumnos') && Request::post('clase') !== "") {
-            AlumnoModel::ChangeStudentsGroup(Request::post('alumnos'), Request::post('clase'));
         } else {
             echo 0;
         }

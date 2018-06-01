@@ -28,7 +28,6 @@ var Main = {
 
 
         let toggled = parseInt(sessionStorage.getItem('toggledMenu'));
-        console.log(toggled)
         if (toggled === 1) {
             // $('#sidebar-wrapper').fadeOut('450');
             setTimeout(function(){

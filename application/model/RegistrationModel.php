@@ -218,11 +218,11 @@ class RegistrationModel
                 $sql = $database->prepare("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1;");
                 $sql->execute();
                 $teacher = $sql->fetch()->user_id;
-                if (isset($_FILES['avatar_file']) && $_FILES['avatar_file'] !== null) {
+                if (!empty($_FILES) && isset($_FILES['avatar_file']) && $_FILES['avatar_file']['tmp_name'] !== "") {
                     PhotosModel::createAvatar($teacher, 'teacher', $_FILES['avatar_file']);
                 }
-                if (isset($_FILES['avatar']) && $_FILES['avatar'] !== null) {
-                    PhotosModel::createAvatar($teacher, 'teacher', $_FILES['avatar_file']);
+                if (!empty($_FILES) && isset($_FILES['avatar']) && $_FILES['avatar']['tmp_name'] !== "") {
+                    PhotosModel::createAvatar($teacher, 'teacher', $_FILES['avatar']);
                 }
             }
             return true;

@@ -21,6 +21,16 @@ class MaestroController extends Controller
         MaestroModel::teachersTable(Request::post('page'));
     }
 
+    public function validarUsuario(){
+        $this->View->renderJSON(MaestroModel::validateUsername(Request::post('username')));
+    }
+
+    public function validarEmail(){
+        $this->View->renderJSON(MaestroModel::validateEmail(Request::post('user_email')));
+    }
+
+    
+
     public function maestro() {
         if(Request::post('maestro')){
             echo json_encode(MaestroModel::getTeacher(Request::post('maestro')));

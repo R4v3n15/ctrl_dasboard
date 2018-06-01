@@ -92,6 +92,34 @@ class MaestroModel
         return $query->fetch();
     }
 
+    public static function validateUsername($username){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $_sql = $database->prepare("SELECT user_name FROM users WHERE user_name = :username LIMIT 1;");
+        $_sql->execute(array(':username' => $username));
+
+        if ($_sql->rowCount() > 0) {
+            $user = $_sql->fetch();
+            return array(
+                        'exists' => true, 
+                        'message' => '&#x2718; El numbre de usuario: <strong>' .$user->user_name. '</strong> ya existe, elija otro por favor!');
+        }
+        return array('exists' => false);
+    }
+
+    public static function validateEmail($email){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $_sql = $database->prepare("SELECT user_email FROM users WHERE user_email = :email LIMIT 1;");
+        $_sql->execute(array(':email' => $email));
+
+        if ($_sql->rowCount() > 0) {
+            $user = $_sql->fetch();
+            return array(
+                        'exists' => true, 
+                        'message' => '&#x2718; El email: <strong>' .$user->user_email. '</strong> ya existe, elija otro por favor!');
+        }
+        return array('exists' => false);
+    }
+
     public static function updateTeacher($teacher, $name, $lastname, $useremail, $username, $password){
         $database = DatabaseFactory::getFactory()->getConnection();
         $user_password_hash = password_hash($password, PASSWORD_DEFAULT);

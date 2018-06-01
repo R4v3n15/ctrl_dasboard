@@ -29,7 +29,7 @@ class AlumnoModel
             $datos = [];
             foreach ($alumnos as $alumno) {
                 $id_grupo = 0;
-                $grupo = '<a href="javascript:void(0)" class="link adding_group" data-student="'.$alumno->student_id.'"
+                $grupo = '<a href="javascript:void(0)" class="link add_to_group" data-student="'.$alumno->student_id.'"
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
@@ -106,12 +106,10 @@ class AlumnoModel
         $u_type = Session::get('user_account_type');
         $show = $u_type === '1' || $u_type === '2'; //-> true or false
         if (count($alumnos) > 0) {
-            $main_check =  '<div class="checkbox select_all"><label><span class="fa fa-arrow-up">
-                                </span>
-                                    <input type="checkbox" class="check_all" id="select_all_'.$curso.'" />
-                                </label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                            </div>';
+            $check_all = '&nbsp;&nbsp;<div class="custom-control custom-checkbox ml-4">
+                            <input type="checkbox" class="custom-control-input check_all" id="checkAll">
+                            <label class="custom-control-label" for="checkAll"><i class="fa fa-arrow-up"></i></label>
+                          </div>';
             echo '<div class="table-responsive">';
                 echo '<table id="tbl_students_'.$curso.'"
                              class="table table-striped table-sm table-bordered">';
@@ -140,14 +138,14 @@ class AlumnoModel
                             }
                             $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
                             $convenio = $row->convenio == "0" ?
-                                            '<span data-toggle="tooltip" title="Convenio Pendiente" class="o-red fa fa-file-text-o"></span>' :
-                                                '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                                            '<i data-toggle="tooltip" title="Convenio Pendiente" class="fa fa-file"></i>' :
+                                                '';
                             if ($show) {
-                            $check = '<div class="checkbox"><label><b>'.$r.'</b>
-                                        <input type="checkbox" class="check_one" name="alumnos[]" value="'.$row->id.'" />
-                                        </label>
-                                        '.$convenio.'
-                                      </div>';
+                                $check = '<div class="custom-control custom-checkbox">
+                                            <span class="mr-4">'.$convenio.'</span>
+                                            <input type="checkbox" class="custom-control-input check-item" id="customCheck'.$c.'" value="'.$row->id.'">
+                                            <label class="custom-control-label" for="customCheck'.$c.'">'.$r.'</label>
+                                        </div>';
                             }
                             echo '<tr class="active">';
                             echo '<td class="text-center">'.$check.'</td>';
@@ -214,11 +212,11 @@ class AlumnoModel
                     if ($u_type === '1' || $u_type === '2') {
                     echo '<tfoot>';
                     echo '<tr>';
-                    echo '<td class="text-center">'.$main_check.'</td>';
+                    echo '<td class="text-center">'.$check_all.'</td>';
                     echo '<td class="text-center">
                           </td>';
                     echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-info change_multi">
+                            <button type="button" class="btn btn-sm mini btn-info" id="changeAll">
                                 Cambiar de Grupo
                             </button>
                           </td>';
@@ -430,38 +428,69 @@ class AlumnoModel
     public static function ChangeStudentGroup($alumno, $clase){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $clase === '0' ? $clase = NULL : $clase = (int)$clase;
-        $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
-        $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
-        if ($save) {
-            if ($clase === NULL) {
-                $update_status = $database->prepare("UPDATE students SET status = 2 WHERE student_id = :student;");
-                $update_status->execute(array(':student' => $alumno));
+        (int)$clase === 0 ? $clase = NULL : $clase = (int)$clase;
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
+            $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
+            if ($save) {
+                $status = 1;
+                if($clase === null){
+                    $status = 2;
+                }
+                $update = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
+                $updated = $update->execute(array(':status' => $status, ':student' => $alumno));
             } else {
-                $update_status = $database->prepare("UPDATE students SET status = 1 WHERE student_id = :student;");
-                $update_status->execute(array(':student' => $alumno));
-            }
-            echo 1;
-        } else {
-            echo 2;
+                $commit = false;
+            }        
+        } catch (PDOException $e) {
+            $commit = false;
         }
 
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
+        }
     }
 
     public static function ChangeStudentsGroup($alumnos, $clase){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $clase === '0' ? $clase = NULL : $clase = (int)$clase;
-        $count = 0;
-        foreach ($alumnos as $alumno) {
-            $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
-            $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
-            if (!$save) {
-                $count++;
-            }
+        $clase === '0' ? $clase = null : $clase = (int)$clase;
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            foreach ($alumnos as $alumno) {
+                $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
+                $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
+
+                if ($save) {
+                    $status = 1;
+                    if($clase === null){
+                        $status = 2;
+                    }
+                    $update = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
+                    $updated = $update->execute(array(':status' => $status, ':student' => $alumno));
+                } else {
+                    $commit = false;
+                    break;
+                }
+            }                       
+        } catch (PDOException $e) {
+            $commit = false;
         }
 
-        echo $count === 0 ? 1 : 2;
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
+        }
     }
 
 
@@ -1639,10 +1668,10 @@ class AlumnoModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => 'error message');
+            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
         }else {
             $database->commit();
-            return array('success' => true, 'message' => 'success message');
+            return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
         }
     }
 }

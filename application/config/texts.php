@@ -47,7 +47,7 @@ return array(
     "FEEDBACK_ACCOUNT_ACTIVATION_FAILED" => "Sorry, no such id/verification code combination here! It might be possible that your mail provider (Yahoo? Hotmail?) automatically visits links in emails for anti-scam scanning, so this activation link might been clicked without your action. Please try to log in on the main page.",
     "FEEDBACK_AVATAR_UPLOAD_SUCCESSFUL" => "Foto guardada correctamente.",
     "FEEDBACK_AVATAR_UPLOAD_WRONG_TYPE" => "Solo son validos imagenes JPG y/o PNG.",
-    "FEEDBACK_AVATAR_UPLOAD_TOO_SMALL" => "La imagen es muy pequeña. Necesita una imagen de 100x100 pixeles minimo.",
+    "FEEDBACK_AVATAR_UPLOAD_TOO_SMALL" => "La imagen es muy pequeña. Necesita una imagen de 400x400 pixeles minimo.",
     "FEEDBACK_AVATAR_UPLOAD_TOO_BIG" => "La foto es demasiado grande. Intente con una imagen menor a 8MB.",
     "FEEDBACK_AVATAR_FOLDER_DOES_NOT_EXIST_OR_NOT_WRITABLE" => "No existe carpeta para fotos o no tiene permiso de escritura.",
     "FEEDBACK_AVATAR_IMAGE_UPLOAD_FAILED" => "No se guardo la foto, intentelo más tarde.",

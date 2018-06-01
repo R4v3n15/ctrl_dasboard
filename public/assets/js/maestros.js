@@ -6,6 +6,7 @@ var Maestros = {
     initialize: function(){
         console.log('Maestros Initialize');
         this.getTeachersTable();
+        this.usernameValidation();
     },
 
     getTeachersTable: function(page=0){
@@ -34,16 +35,65 @@ var Maestros = {
         });
     },
 
+    usernameValidation: function(){
+        let validateUsername = null;
+        $('#user_name').keyup(function() {
+            clearTimeout(validateUsername);
+            if ($('#user_name').val() !== '') {
+                validateUsername = setTimeout(function(){
+                    let username = $('#user_name').val();
+                    $.ajax({
+                        data: { username: username },
+                        synch: 'true',
+                        type: 'POST',
+                        url: _root_ + 'maestro/validarUsuario',
+                        success: function(username){
+                            if (username.exists) {
+                                $('#invalid-username').html(username.message);
+                            } else {
+                                $('#invalid-username').html('');
+                            }
+                        }
+                    });
+                }, 550)
+            }
+        });
+
+        let validateEmail = null;
+        $('#user_email').keyup(function() {
+            clearTimeout(validateEmail);
+            if ($('#user_email').val() !== '') {
+                validateEmail = setTimeout(function(){
+                    let user_email = $('#user_email').val();
+                    $.ajax({
+                        data: { user_email: user_email },
+                        synch: 'true',
+                        type: 'POST',
+                        url: _root_ + 'maestro/validarEmail',
+                        success: function(email){
+                            if (email.exists) {
+                                $('#invalid-email').html(email.message);
+                            } else {
+                                $('#invalid-email').html('');
+                            }
+                        }
+                    });
+                }, 550)
+            }
+        });
+    },
+
     newTeacher: function(){
         let that = this;
         $('#newTeacher').on('click', function(){
             $('#modalAddTeacher').modal('show');
 
-            $("#avatar").fileinput({
-                showCaption: true,
-                browseClass: "btn btn-info btn-md",
-                fileType: "image"
-            });
+        });
+
+        $("#avatar").fileinput({
+            showCaption: true,
+            browseClass: "btn btn-info btn-md",
+            fileType: "image"
         });
 
         $("#avatar_file").fileinput({

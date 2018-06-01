@@ -57,7 +57,8 @@
                                    class="form-control form-control-sm" 
                                    placeholder="Nombre(s)"
                                    aria-label="Nombre"
-                                   aria-describedby="addon1" 
+                                   aria-describedby="addon1"
+                                   autocomplete="off" 
                                    required />
                         </div>
                     </div>
@@ -72,7 +73,8 @@
                                    class="form-control form-control-sm" 
                                    placeholder="Apellido(s)"
                                    aria-label="Apellido"
-                                   aria-describedby="addon2" 
+                                   aria-describedby="addon2"
+                                   autocomplete="off"
                                    required />
                         </div>
                     </div>
@@ -91,32 +93,42 @@
                         
                     </div>
                     <div class="col-md-12">
+                        <span id="invalid-username" class="text-danger"></span>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="addon4">Usuario:</span>
                             </div>
                             <input type="text" 
-                                   pattern="[a-zA-Z0-9]{2,64}" 
+                                   pattern="[a-zA-Z0-9]{4,64}" 
                                    name="user_name"
+                                   id="user_name"
                                    class="form-control form-control-sm" 
                                    placeholder="Nombre de Usuario"
                                    aria-label="Username"
                                    aria-describedby="addon4"
-                                   autocomplete="off" 
+                                   autocomplete="off"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Mínimo 4 caracteres"
                                    required />
                         </div>
                     </div>
                     <div class="col-md-12">
+                        <span id="invalid-email" class="text-danger"></span>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="addon5">Correo:</span>
                             </div>
-                            <input type="email" 
+                            <input type="email"
+                                   id="user_email" 
                                    name="user_email"
                                    class="form-control form-control-sm" 
                                    placeholder="Correo Electronico"
                                    aria-label="Username"
                                    aria-describedby="addon5"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Ej. maestro@gmail.com"
                                    autocomplete="off" 
                                    required />
                         </div>
@@ -132,6 +144,9 @@
                                    placeholder="Contraseña"
                                    aria-label="Username"
                                    aria-describedby="addon6"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Mínimo 5 caracteres"
                                    pattern=".{5,}"
                                    required />
                         </div>
@@ -146,7 +161,10 @@
                                    class="form-control form-control-sm" 
                                    placeholder="Repetir Contraseña" 
                                    aria-label="Username"
-                                   aria-describedby="addon6"
+                                   aria-describedby="addon7"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Mínimo 5 caracteres"
                                    pattern=".{5,}"
                                    required />
                         </div> 
@@ -239,7 +257,7 @@
                             </div>
                             <input type="text" 
                                    pattern="[a-zA-Z0-9]{2,64}" 
-                                   id="user_name"
+                                   id="username"
                                    name="user_name"
                                    class="form-control form-control-sm" 
                                    placeholder="Nombre de Usuario"
@@ -255,7 +273,7 @@
                                 <span class="input-group-text" id="addon5">Correo:</span>
                             </div>
                             <input type="email" 
-                                   id="user_email"  
+                                   id="useremail"  
                                    name="user_email"
                                    class="form-control form-control-sm" 
                                    placeholder="Correo Electronico"
@@ -272,7 +290,7 @@
                             </div>
                             <input type="password" 
                                    name="user_password"
-                                   id="user_password"
+                                   id="userpassword"
                                    class="form-control form-control-sm" 
                                    placeholder="Contraseña"
                                    aria-label="Username"
@@ -284,7 +302,7 @@
                     <div class="col-12 text-center">
                     <input type="submit" 
                            value="Actualizar"
-                           id="add_teacher" 
+                           id="update_teacher" 
                            class="btn btn-primary" />
                     </div>
                 </form>

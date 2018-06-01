@@ -173,7 +173,7 @@ class ImportarModel
 								$sqlG->execute(array(':clase' => $aka->id_classes));
 
 								if ($sqlG->rowCount() > 0) {
-									$infoG = $sqlG->rowCount();
+									$infoG = $sqlG->fetch();
 									$grupo = $infoG->course .' '. $infoG->group;
 								}
 							}
@@ -207,7 +207,7 @@ class ImportarModel
                             echo '<td class="text-center">'.$infoE.'</td>';
                             echo '<td class="text-center">'.$infoB.'</td>';
                             echo '<td class="text-center">';
-                            	if((int)$info > 0 && (int)$infoE > 0 && (int)$infoS > 0 && (int)$infoB > 0 && $alumno->status != 'baja'){
+                            	if((int)$info > 0 && (int)$infoE > 0 && (int)$infoS > 0 && (int)$infoB > 0 && $grupo != null){
 									echo '<button type="button" class="btn btn-sm btn-info btn_update" 
 									              id="'.$alumno->id_student.'"><i class="fa fa-save"></i></button>';
                             	} else {
@@ -549,6 +549,222 @@ class ImportarModel
 		 return false;
 	}
 
+	public static function importarAlumno($alumno) {
+		$database = DatabaseFactory::getFactory()->getConnection();
+		$commit   = true;
+		$_sql = $database->prepare("SELECT * FROM naatikdb.student WHERE id_student = :student LIMIT 1;");
+		$_sql->execute(array(':student' => $student));
+		$alumno = $_sql->fetch();
+
+		// Evitar Duplicidad
+		$name     = trim(ucwords(strtolower($alumno->name_s)));
+		$surname  = trim(ucwords(strtolower($alumno->surname1_s)));
+		$lastname = trim(ucwords(strtolower($alumno->surname2_s)));
+		$verify = $database->prepare("SELECT student_id
+									  FROM students 
+									  WHERE name     = :name
+										AND surname  = :surname
+										AND lastname = :lastname
+									  LIMIT 1;");
+		$verify->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+		if ($verify->rowCount() > 0) {
+			return array('success' => true, 'message' => '&#x2713; I M P O R T A D O!!');
+		}
+
+        $database->beginTransaction();
+        try{
+        	$update = $database->prepare("UPDATE naatikdb.student SET exportado = 1 WHERE id_student = :student;");
+			$imported = $update->execute(array(':student' => $alumno->id_student));
+
+			if ($imported) {
+				// Importar Tutor
+				$validarTutor = $database->prepare("SELECT * FROM naatikdb.tutor 
+													WHERE id_tutor = :tutor
+													  AND name_t != 'N/A'
+													  AND name_t NOT LIKE '%---%'
+													  AND surname1_t != 'N/A'
+													  AND surname2_t != 'N/A'
+													LIMIT 1;");
+				$validarTutor->execute(array(':tutor' => $tutor));
+
+				$tutor_id = null;
+				if ($validarTutor->rowCount() > 0) {
+					$tutor = $validarTutor->fetch();
+					$tutor_name = ucwords(strtolower(trim($tutor->name_t)));
+					$tutor_surname = ucwords(strtolower(trim($tutor->surname1_t)));
+					$tutor_lastname = ucwords(strtolower(trim($tutor->surname2_t)));
+
+					$verify = $database->prepare("SELECT id_tutor
+												  FROM tutors 
+												  WHERE namet = :name
+													AND surnamet = :surname
+													AND lastnamet = :lastname
+												  LIMIT 1;");
+					$verify->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+
+					if ($verify->rowCount() > 0) {
+						$tutor_id = $verify->fetch()->id_tutor;
+					} else {
+						$save_tutor  = "INSERT INTO tutors(namet, surnamet, lastnamet, job, cellphone, phone,
+														   relationship, phone_alt, relationship_alt)
+													VALUES(:name, :surname, :lastname, :job, :cellphone, :phone,
+														   :relation, :phone_alt, :relation_alt);";
+						$query = $database->prepare($save_tutor);
+						$query->execute(array(
+											':name'         => ucwords(strtolower(trim($tutor->name_t))),
+											':surname'      => ucwords(strtolower(trim($tutor->surname1_t))),
+											':lastname'     => ucwords(strtolower(trim($tutor->surname2_t))),
+											':job'          => trim($tutor->job),
+											':cellphone'    => trim($tutor->cellphone_t),
+											':phone'        => trim($tutor->phone),
+											':relation'     => $tutor->relationship,
+											':phone_alt'    => trim($tutor->phone_alt),
+											':relation_alt' => $tutor->relationship_alt
+										));
+						if ($query->rowCount() > 0) {
+							$tutor_id = $database->lastInsertId();
+
+							$sql = $database->prepare("INSERT INTO address(user_id, user_type, street, st_number, st_between, colony,
+														city, zipcode, state, country, latitud, longitud)
+												VALUES(:user, :user_type, :street, :st_number, :st_between, :colony,
+													   :city, :zipcode, :state, :country, :latitud, :longitud);");
+							$query->execute(array(
+								':user'       => $user,
+								':user_type'  => $user_type,
+								':street'     => $address['street'],
+								':st_number'  => $address['number'],
+								':st_between' => $address['between'],
+								':colony'     => $address['colony'],
+								':city'       => 'Felipe Carrillo Puerto',
+								':zipcode'    => 77200,
+								':state'      => 'Quintana Roo',
+								':country'    => 'México',
+								':latitud'    => $address['latitud'],
+								':longitud'   => $address['longitud'])
+						    );
+
+							if ($query->rowCount() < 1) {
+								return false;
+							}
+							
+						} else {
+							$commit = false;
+						}
+					}
+				}
+
+
+
+
+
+
+
+
+				// Importar Alumno
+				$txt = array('.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG', '.gif');
+				$avatar_name = str_replace($txt, '', $alumno->photo_s);
+				$avatar = str_replace('default', $alumno->sexo, $avatar_name);
+
+				switch ($alumno->status) {
+					case 'activo':   $estado = 1; break;
+					case 'inactivo': $estado = 1; break;
+					case 'baja':     $estado = 0; break;
+					default: $estado = 2; break;
+				}
+
+				$edad = H::getAge($alumno->birthday);
+				$sql =  $database->prepare("INSERT INTO students(id_tutor, name, surname, lastname,
+																 birthday, age, genre, edo_civil,
+																 cellphone, reference, sickness,
+																 medication, avatar, comment_s, status)
+														 VALUES(:tutor, :name, :surname, :lastname,
+																:birthday, :age, :genre, :edo_civil,
+																:cellphone, :reference, :sickness,
+																:medication, :avatar, :comment_s, :status);");
+				$sql->execute(array(':tutor'      => $tutor,
+									':name'       => $name,
+									':surname'    => $surname,
+									':lastname'   => $lastname,
+									':birthday'   => $alumno->birthday,
+									':age'        => $edad,
+									':genre'      => $alumno->sexo,
+									':edo_civil'  => $alumno->edo_civil,
+									':cellphone'  => trim($alumno->cellphone),
+									':reference'  => trim($alumno->reference),
+									':sickness'   => trim($alumno->sickness),
+									':medication' => trim($alumno->medication),
+									':avatar'     => $avatar,
+									':comment_s'  => $alumno->comment_s,
+									':status'     => $estado));
+				
+				
+				if ($sql->rowCount() > 0) {
+					$id_alumno = $database->lastInsertId();
+
+					//Insert Student Details
+					$detalle = $alumno['academic'];
+					$extra   = $alumno['detail'];
+					$details =  $database->prepare("INSERT INTO students_details(student_id, convenio, facturacion,
+																				 homestay, acta_nacimiento, ocupation, 
+																				 workplace, studies, lastgrade, 
+																				 prior_course, prior_comments)
+															 VALUES(:student, :convenio, :invoice, :homestay,
+																	:acta, :ocupation, :workplace, :studies,
+																	:lastgrade, :prior_course, :prior_comments);");
+					$details->execute(array(':student'         => $id_alumno,
+											':convenio'        => $extra->convenio,
+											':invoice'         => $extra->facturacion,
+											':homestay'        => $alumno['homestay'],
+											':acta'            => $extra->acta,
+											':ocupation'       => $detalle['ocupation'],
+											':workplace'       => $detalle['workplace'],
+											':studies'         => $detalle['studies'],
+											':lastgrade'       => $detalle['level'],
+											':prior_course'    => 1,
+											':prior_comments'  => $detalle['prior_course']));
+					if ($details->rowCount() > 0) {
+						$groups =  $database->prepare("INSERT INTO students_groups(student_id, date_begin, 
+																					convenio, state, created_at)
+																 VALUES(:student, :date_begin, :convenio, 
+																		 1, :created_at);");
+						$groups->execute(array(':student'       => $id_alumno,
+												':convenio'     => $extra->convenio,
+												':date_begin'   => $detalle['date_init'],
+												':created_at'   => $detalle['date_init']));
+						if ($detalle['sep'] !== false) {
+							$sep = $detalle['sep'];
+							$save = $database->prepare("INSERT INTO students_sep(student_id, sep_code, date_register, 
+																				 beca, status)
+																	 VALUES(:student, :sep_code, :date_register,
+																			:beca, 1);");
+							$save->execute(array(':student'       => $id_alumno,
+												 ':sep_code'      => $extra->regis_num,
+												 ':date_register' => $extra->date_incorporate,
+												 ':beca'          => $extra->beca));
+
+						}
+						$commit = true;
+
+					}
+				}
+					
+				} else {
+					$commit = false;
+				}
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; I M P O R T A D O!!');
+        }
+	}
+
 
 
 	public static function importStudent($student) {
@@ -563,21 +779,7 @@ class ImportarModel
 			$alumno = $query->fetch();
 
 			// Evitar Repeticiones
-			$name     = trim(ucwords(strtolower($alumno->name_s)));
-			$surname  = trim(ucwords(strtolower($alumno->surname1_s)));
-			$lastname = trim(ucwords(strtolower($alumno->surname2_s)));
-			$verify = $database->prepare("SELECT student_id
-										  FROM students 
-										  WHERE name     = :name
-											AND surname  = :surname
-											AND lastname = :lastname
-										  LIMIT 1;");
-			$verify->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
-			if ($verify->rowCount() > 0) {
-				$update = $database->prepare("UPDATE naatikdb.student SET exportado = 1 WHERE id_student = :student;");
-				$update->execute(array(':student' => $st_alumno));
-				return true;
-			}
+
 
 			$tutor_data = self::getTutor($alumno->id_tutor);
 			$tutor = 0;
@@ -588,17 +790,21 @@ class ImportarModel
 			$imported = true;
 
 			if ($imported) {
-				$student['name']         = ucwords(strtolower($alumno->name_s));
-				$student['surname']      = ucwords(strtolower($alumno->surname1_s));
-				$student['lastname']     = ucwords(strtolower($alumno->surname2_s));
+				$txt = array('.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG', '.gif');
+				$avatar_name = str_replace($txt, '', $alumno->photo_s);
+				$avatar = str_replace('default', $alumno->sexo, $avatar_name);
+
+				$student['name']         = ucwords(strtolower(trim($alumno->name_s)));
+				$student['surname']      = ucwords(strtolower(trim($alumno->surname1_s)));
+				$student['lastname']     = ucwords(strtolower(trim($alumno->surname2_s)));
 				$student['birthdate']    = $alumno->birthday;
 				$student['age']          = $alumno->age;
 				$student['genre']        = $alumno->sexo;
 				$student['civil_stat']   = $alumno->edo_civil;
-				$student['cellphone']    = $alumno->cellphone;
-				$student['reference']    = $alumno->reference;
-				$student['sickness']     = $alumno->sickness;
-				$student['medication']   = $alumno->medication;
+				$student['cellphone']    = trim($alumno->cellphone);
+				$student['reference']    = trim($alumno->reference);
+				$student['sickness']     = trim($alumno->sickness);
+				$student['medication']   = trim($alumno->medication);
 				$student['avatar']       = strtolower($alumno->photo_s);
 				$student['comment']      = $alumno->comment_s;
 				switch ($alumno->status) {
@@ -669,14 +875,6 @@ class ImportarModel
 			return $verify->fetch()->student_id;
 		}
 
-		if ($alumno['avatar'] === 'default.png') {
-			$avatar = Config::get('AVATAR_DEFAULT_IMAGE_MALE');
-			if ($alumno['genre'] === 'Femenino') {
-				$avatar = Config::get('AVATAR_DEFAULT_IMAGE_FEMALE');
-			}
-		} else {
-			$avatar = $alumno['avatar'];
-		}
 
 		$commit = false;
 		$database->beginTransaction();

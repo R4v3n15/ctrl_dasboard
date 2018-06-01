@@ -30,10 +30,6 @@
         <div class="row">
             <div class="col-12">
                 <?php $this->renderFeedbackMessages(); ?>
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
-                </div>
             </div>
             <div class="col-12" id="tabla_alumnos">
                 
@@ -73,6 +69,7 @@
                                             <option value="<?= $curso->course_id; ?>"><?= $curso->course; ?></option>
                                         <?php endforeach ?>
                                     <?php endif ?>
+                                    <option value="0">En Espera</option>
                                 </select>
                             </div>
                         </div>
@@ -101,43 +98,6 @@
     </div>
 </div>
 
-<!-- <div id="add_to_group" class="modal fade">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Agregar Alumno a Grupo</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                        <p class="text-center"><small>Seleccione un curso de la lista, luego el grupo.</small></p>
-                        <input type="hidden" id="alumno_id" class="form-control">
-                        <div class="form-group">
-                            <label class="col-sm-6"><small>Curso:</small> 
-                                <select class="form-control " id="course">
-                                    <option value="">Seleccione...</option>
-                                    <?php if ($this->cursos): ?>
-                                        <?php foreach ($this->cursos as $curso): ?>
-                                            <option value="<?= $curso->course_id; ?>"><?= $curso->course; ?></option>
-                                        <?php endforeach ?>
-                                    <?php endif ?>
-                                </select>
-                            </label>
-                            <label class="col-sm-6"><small>Grupo:</small> 
-                                <select class="form-control" id="groups">
-                                </select>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-10 col-sm-offset-1 text-center">
-                        <button type="button" id="add_in_group" class="btn btn-sm btn-second btn-raised">Agregar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div class="modal fade" id="modalChangeGroup" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -151,20 +111,21 @@
             <div class="modal-body">
                 <div class="row justify-content-center">
                     <div class="col-10">
-                        <h6 class="text-center text-info">Seleccione un curso y grupo a asignar.</h6>
-                        <input type="hidden" id="alumno_number" class="form-control">
+                        <h6 class="text-center text-info" id="updateMessage"></h6>
+                        <h5 class="text-center text-secondary"><small>Seleccione un curso y un grupo.</small></h5>
                         <div class="form-group">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="addon1">Curso:</span>
                                 </div>
-                                <select class="form-control" id="course_list" aria-label="Curso" aria-describedby="addon1">
+                                <select class="form-control" id="updatecourse" aria-label="Curso" aria-describedby="addon1">
                                     <option value="" hidden>Seleccione...</option>
                                     <?php if ($this->cursos): ?>
                                         <?php foreach ($this->cursos as $curso): ?>
                                             <option value="<?= $curso->course_id; ?>"><?= $curso->course; ?></option>
                                         <?php endforeach ?>
                                     <?php endif ?>
+                                     <option value="0">En Espera</option>
                                 </select>
                             </div>
                         </div>
@@ -173,28 +134,11 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="addon12">Grupo:</span>
                                 </div>
-                                <select class="form-control" id="grupos" aria-label="Curso" aria-describedby="addon2">
+                                <select class="form-control" id="updategroups" aria-label="Curso" aria-describedby="addon2">
                                     <option value="" hidden>Seleccione...</option>
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label class="col-sm-6"><small>Curso:</small> 
-                                <select class="form-control " id="course_list">
-                                    <option value="">Seleccione...</option>
-                                    <?php if ($this->cursos): ?>
-                                        <?php foreach ($this->cursos as $curso): ?>
-                                            <option value="<?= $curso->course_id; ?>"><?= $curso->course; ?></option>
-                                        <?php endforeach ?>
-                                    <?php endif ?>
-                                    <option value="0">EN ESPERA</option>
-                                </select>
-                            </label>
-                            <label class="col-sm-6"><small>Grupo:</small> 
-                                <select class="form-control" id="grupos">
-                                </select>
-                            </label>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -203,7 +147,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="change_group" class="btn btn-primary">Cambiar</button>
+                    <button type="button" id="updateGroup" class="btn btn-primary">Cambiar</button>
                 </div>
             </div>
         </div>
