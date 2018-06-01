@@ -1,19 +1,18 @@
 <?php 
-    $action = Config::get('URL') . "alumno/actualizarDatosTutor";
     $tutor = $this->tutor; 
 ?>
 <h5 class="text-center text-secondary">Datos del Tutor</h5>
 <hr class="mt-1">
 <?php if ($this->tutor): ?>
-<form action="<?= $action; ?>" method="POST" class="form-horizontal">
+<form id="updateTutorForm" method="POST" class="form-horizontal">
     <div class="form-group row">
         <label class="col-12 text-center">Nombre Completo:</label>
         <div class="col-12 input-group">
-            <input type="hidden" name="id_tutor" value="<?= $tutor->id_tutor; ?>">
+            <input type="hidden" id="tutor_id" name="tutor" value="<?= $tutor->id_tutor; ?>">
             <input type="text" 
                    class="form-control form-control-sm text-center" 
-                   id="apellido_pat" 
-                   name="ape_pat"
+                   id="surname" 
+                   name="surname"
                    pattern="[a-zA-Z\s]{3,60}" 
                    value="<?= $tutor->surnamet; ?>"
                    autofocus
@@ -21,16 +20,16 @@
 
             <input type="text" 
                    class="form-control form-control-sm text-center" 
-                   id="apellido_pat" 
-                   name="ape_mat"
+                   id="lastname" 
+                   name="lastname"
                    pattern="[a-zA-Z\s]{3,60}" 
                    value="<?= $tutor->lastnamet; ?>" 
                    autocomplete="off">
 
             <input type="text" 
                    class="form-control form-control-sm text-center" 
-                   id="nombre_tutor" 
-                   name="nombre_tutor"
+                   id="name" 
+                   name="name"
                    pattern="[a-zA-Z\s]{3,60}" 
                    value="<?= $tutor->namet; ?>" 
                    autocomplete="off">
@@ -45,7 +44,7 @@
                     <input type="tel" 
                            class="form-control form-control-sm" 
                            id="ocupacion" 
-                           name="ocupacion" 
+                           name="ocupation" 
                            value="<?= $tutor->job; ?>"
                            autocomplete="off">
                 </div>
@@ -55,7 +54,7 @@
             <div class="form-group row">
                 <label class="col-12">Parentesco: </label>
                 <div class="col-12">
-                    <select class="form-control form-control-sm " name="parentesco">
+                    <select class="form-control form-control-sm " name="relationship">
                         <option value="" hidden>Seleccione...</option>
                         <option value="Madre" 
                                 <?= $tutor->relationship == 'Madre' ? 'selected' : ''; ?>>Madre</option>
@@ -79,10 +78,9 @@
                 <div class="col-12">
                     <input type="tel" 
                            class="form-control form-control-sm" 
-                           id="tel_casa" 
-                           name="tel_casa" 
+                           id="phone" 
+                           name="phone" 
                            value="<?= $tutor->phone; ?>" 
-                           pattern="[0-9\s]{8,15}"
                            autocomplete="off">
                 </div>
             </div>
@@ -94,10 +92,9 @@
                 <div class="col-12">
                       <input type="tel" 
                            class="form-control form-control-sm" 
-                           id="tel_celular" 
-                           name="tel_celular" 
+                           id="cellphone" 
+                           name="cellphone" 
                            value="<?= $tutor->cellphone; ?>"
-                           pattern="[0-9\s]{8,15}"
                            autocomplete="off">
                 </div>
             </div>
@@ -106,7 +103,7 @@
             <div class="form-group row">
                 <label class="col-12">Otro Familiar: </label>
                 <div class="col-12">
-                    <select class="form-control form-control-sm " name="familiar">
+                    <select class="form-control form-control-sm " name="relationship_alt">
                         <option value="" hidden>Seleccione...</option>
                         <option value="Madre" 
                                 <?= $tutor->relationship_alt == 'Madre' ? 'selected' : ''; ?>>Madre</option>
@@ -130,8 +127,8 @@
                 <div class="col-12">
                     <input type="tel" 
                            class="form-control form-control-sm" 
-                           id="tel_familiar" 
-                           name="tel_familiar" 
+                           id="phone_alt" 
+                           name="phone_alt" 
                            value="<?= $tutor->phone_alt; ?>" 
                            pattern="[0-9\s]{8,15}"
                            autocomplete="off">
@@ -142,7 +139,7 @@
 
     <div class="row justify-content-center mt-3">
         <div class="col-6 text-center">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <button type="button" id="update_tutor" class="btn btn-primary">Actualizar</button>
         </div>
     </div>
 </form>

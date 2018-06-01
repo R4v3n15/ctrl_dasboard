@@ -1,15 +1,14 @@
 <?php 
-    $action = Config::get('URL') . "alumno/actualizarDatosAcademicos";
     $alumno = $this->estudios;
     $clase  = $alumno->clase;
 ?>
 <h5 class="text-center text-secondary">Datos Academicos</h5>
 <hr class="mt-1">
-<form action="<?= $action; ?>" method="POST" class="form-horizontal">
+<form id="updateStudiesForm" method="POST" class="form-horizontal">
     <div class="form-group row">
         <label class="col-sm-6">Ocupación:
-            <input type="hidden" name="alumno" value="<?= $alumno->student_id; ?>">
-            <select class="form-control form-control-sm" name="ocupacion">
+            <input type="hidden" id="student" name="student" value="<?= $alumno->student_id; ?>">
+            <select class="form-control form-control-sm" name="ocupation">
                 <option <?= $alumno->ocupation == 'Estudiante' ? 'selected' : ''; ?> value="Estudiante">Estudio</option>
                 <option <?= $alumno->ocupation == 'Trabajador' ? 'selected' : ''; ?> value="Trabajador">Trabajo</option>
                 <option <?= $alumno->ocupation == 'Ninguno' ? 'selected' : ''; ?> value="Ninguno">Ninguno</option>
@@ -18,13 +17,14 @@
         <label class="col-sm-6">Lugar de Trabajo/Estudio: 
             <input type="tel" 
                    class="form-control form-control-sm"  
-                   name="lugar_trabajo" 
-                   value="<?= $alumno->workplace; ?>">
+                   name="workplace" 
+                   value="<?= $alumno->workplace; ?>"
+                   autocomplete="off">
         </label>
     </div>
     <div class="form-group row">
         <label class="col-sm-6">Nivel de Estudios: 
-            <select class="form-control form-control-sm" id="nivel" name="nivel_estudio">
+            <select class="form-control form-control-sm" id="studies" name="studies">
                 <option value="">Seleccione...</option>
                 <option <?= $alumno->studies == 'Preescolar' ? 'selected' : ''; ?> value="Preescolar">Preescolar</option>
                 <option <?= $alumno->studies == 'Primaria' ? 'selected' : ''; ?> value="Primaria">Primaria</option>
@@ -34,7 +34,7 @@
             </select>
         </label>
         <label class="col-sm-6">Último Grado Estudio: 
-            <select class="form-control form-control-sm" name="grado_estudio">
+            <select class="form-control form-control-sm" name="lastgrade">
                 <option value="">Seleccione...</option>
                 <option <?= $alumno->lastgrade == 'Primer Año' ? 'selected' : ''; ?> value="Primer Año">Primer Año.</option>
                 <option <?= $alumno->lastgrade == 'Segundo Año' ? 'selected' : ''; ?> value="Segundo Año">Segundo Año.</option>
@@ -46,10 +46,12 @@
             </select>
         </label>
     </div>
-
+    <hr class="mt-3"></hr>
     <div class="form-group row">
-        <label class="col-sm-6">Nivel de Estudios: 
-            <select class="form-control form-control-sm" id="cursos" name="curso">
+        <label class="col-12 text-center">Esta inscrito actualmente en:</label>
+        <label class="col-sm-6">Curso: 
+            <select class="form-control form-control-sm" id="course" name="course">
+                <option value="" hidden="">Seleccione..</option>
                 <?php if ($this->cursos): ?>
                     <?php foreach ($this->cursos as $curso): ?>
                         <?php if ($clase->course_id == $curso->course_id): ?>
@@ -59,11 +61,12 @@
                         <?php endif ?>
                     <?php endforeach ?>
                 <?php endif ?>
-                <option value="">Seleccione...</option>
+                <option value="0">- - EN ESPERA - -</option>
             </select>
         </label>
-        <label class="col-sm-6">Último Grado Estudio: 
-            <select class="form-control form-control-sm" name="grado_estudio">
+        <label class="col-sm-6">Grupo: 
+            <select class="form-control form-control-sm" id="groups" name="class">
+                <option value="" hidden="">Seleccione..</option>
                 <?php if ($this->grupos): ?>
                     <?php foreach ($this->grupos as $grupo): ?>
                         <?php if ($clase->class_id == $grupo->class_id): ?>
@@ -78,7 +81,7 @@
     </div>
     <div class="row">
         <div class="col-12 text-center">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <button type="button" id="update_studies" class="btn btn-primary">Actualizar</button>
         </div>
     </div>
 </form>

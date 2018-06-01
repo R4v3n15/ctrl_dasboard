@@ -28,7 +28,7 @@
         $usr_type = (int)Session::get('user_type');?>
     
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0 menu-toggle text-center" 
+        <a id="menu-trigger" class="navbar-brand col-sm-3 col-md-2 mr-0 menu-toggle text-center" 
            href="#menu-toggle"><i class="fa fa-bars"></i> NAATIK SC</a>
         <h6 class="text-secondary">Wellcome: <?= strtoupper($user); ?></h6>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
@@ -105,6 +105,18 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>user">
+                              <span data-feather="user"></span>
+                              Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>register/index">
+                              <span data-feather="user-plus"></span>
+                              Nuevo Usuario
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>importar">
                               <span data-feather="file-text"></span>

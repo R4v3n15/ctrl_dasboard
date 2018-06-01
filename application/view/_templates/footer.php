@@ -21,11 +21,6 @@
     <script src="<?php echo Config::get('URL'); ?>assets/js/main.js"></script>
 
     <script>
-        $(".menu-toggle").click(function(e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("toggled");
-        });
-
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })

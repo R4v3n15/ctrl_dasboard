@@ -240,15 +240,14 @@ class AlumnosController extends Controller
         }
     }
 
-    public function updateStudent(){
-        if (Request::post('student_id') && Request::post('name') && Request::post('surname') && Request::post('lastname') && Request::post('genre') && Request::post('edo_civil')) {
-
-            $this->View->renderJSON(AlumnoModel::updateStudentData(
+    public function actualizarAlumno(){
+        if (Request::post('student') && Request::post('name') && Request::post('surname')) {
+            $this->View->renderJSON(AlumnoModel::updateStudent(
                                         Request::post('student'),
                                         Request::post('name'),
                                         Request::post('surname'),
                                         Request::post('lastname'),
-                                        Request::post('birthdate'),
+                                        Request::post('birthday'),
                                         Request::post('genre'),
                                         Request::post('edo_civil'),
                                         Request::post('cellphone'),
@@ -269,6 +268,48 @@ class AlumnosController extends Controller
                                         Request::post('state'),
                                         Request::post('country')
             ));
+            exit();
+        }
+
+        $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
+    }
+
+    public function actualizarTutor(){
+        if (Request::post('tutor') && Request::post('name') && Request::post('surname')) {
+            $this->View->renderJSON(AlumnoModel::updateTutor(
+                                        Request::post('tutor'),
+                                        Request::post('name'),
+                                        Request::post('surname'),
+                                        Request::post('lastname'),
+                                        Request::post('ocupation'),
+                                        Request::post('relationship'),
+                                        Request::post('phone'),
+                                        Request::post('cellphone'),
+                                        Request::post('relationship_alt'),
+                                        Request::post('phone_alt')
+            ));
+
+        } else {
+            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
+        }
+    }
+
+    public function actualizarEstudios(){
+        if (Request::post('student')) {
+            $clase = null;
+            if (Request::post('class') && (int)Request::post('class') !== 0) {
+                $clase = (int)Request::post('class');
+            }
+            $this->View->renderJSON(AlumnoModel::updateStudies(
+                                        Request::post('student'),
+                                        Request::post('ocupation'),
+                                        Request::post('workplace'),
+                                        Request::post('studies'),
+                                        Request::post('lastgrade'),
+                                        $clase
+            ));
+        } else {
+            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
         }
     }
 
@@ -314,43 +355,6 @@ class AlumnosController extends Controller
 
     public function bajaAlumno(){
         AlumnoModel::checkOutStudent(Request::post('alumno'), Request::post('estado'));
-    }
-
-    public function actualizarDatosTutor(){
-
-        if (Request::post('id_tutor') && Request::post('nombre_tutor') && Request::post('ape_pat') && Request::post('ape_mat')) {
-            AlumnoModel::updateTutorData(
-                Request::post('id_tutor'),
-                Request::post('nombre_tutor'),
-                Request::post('ape_pat'),
-                Request::post('ape_mat'),
-                Request::post('ocupacion'),
-                Request::post('parentesco'),
-                Request::post('tel_casa'),
-                Request::post('tel_celular'),
-                Request::post('familiar'),
-                Request::post('tel_familiar'));
-            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
-        }  else {
-            Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
-        }
-    }
-
-    public function actualizarDatosAcademicos(){
-        if (Request::post('alumno')) {
-            AlumnoModel::updateAcademicData(
-                Request::post('alumno'),
-                Request::post('ocupacion'),
-                Request::post('lugar_trabajo'),
-                Request::post('nivel_estudio'),
-                Request::post('grado_estudio')
-                );
-            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
-        } else {
-            Session::add('feedback_negative', "Falta información para completar el proceso");
-            Redirect::to('alumnos/perfilAlumno/'.Request::post('alumno'));
-        }
     }
 
     public function agregarAlumnoGrupo(){

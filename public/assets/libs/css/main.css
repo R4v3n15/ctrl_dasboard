@@ -33,6 +33,10 @@
   box-shadow: 1px 1px 3px rgba(0,0,0,0.18), 1px 1px 3px rgba(0,0,0,0.18);
 }
 
+.box-shadow {
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.1);
+}
+
 .btn-flat-xs{
     padding-left: 1rem;
     padding-right: 1rem;

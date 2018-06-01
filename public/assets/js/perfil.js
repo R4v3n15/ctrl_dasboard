@@ -28,6 +28,7 @@ var Perfil = {
             url: _root_ + 'alumnos/editarAlumno',
             success: function(data){
                 $('#editar_form').html(data);
+                _this.updateAction();
                 _this.activeData();
             }
         });
@@ -47,23 +48,133 @@ var Perfil = {
         });
     },
 
+    updateAction: function(){
+        let _this = this;
+        // Update datos del alumno
+        $('#update_student').click(function(event) {
+            event.preventDefault();
+            let student = $('#student_id').val(),
+                name    = $('#name').val(),
+                surname = $('#surname').val();
+
+            if (student !== '' && name !== '' && surname !== '') {
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    data: $('#updateStudentForm').serialize(),
+                    url: _root_ + 'alumnos/actualizarAlumno'
+                })
+                .then(function(response){
+                    if (response.success) {
+                        // Message confirmation
+                        _this.getUpdateForm(_this.getActiveForm());
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                    } else {
+                        // Message Notification
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                });
+            } else {
+                $('#general_snack').attr('data-content', 'Campos obligatorios vacios, revise e intente de nuevo');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
+        });
+
+        // Update datos del tutor
+        $('#update_tutor').click(function(event) {
+            event.preventDefault();
+            let tutor   = $('#tutor_id').val(),
+                name    = $('#name').val(),
+                surname = $('#surname').val();
+
+            if (tutor !== '' && name !== '' && surname !== '') {
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    data: $('#updateTutorForm').serialize(),
+                    url: _root_ + 'alumnos/actualizarTutor'
+                })
+                .then(function(response){
+                    if (response.success) {
+                        // Message confirmation
+                        _this.getUpdateForm(_this.getActiveForm());
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                    } else {
+                        // Message Notification
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                });
+            } else {
+                $('#general_snack').attr('data-content', 'Campos obligatorios vacios, revise e intente de nuevo');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
+        });
+
+        // Update datos academicos
+        $('#update_studies').click(function(event) {
+            event.preventDefault();
+            let student = $('#student').val() || undefined;
+
+            if (student !== '' && student !== undefined) {
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    data: $('#updateStudiesForm').serialize(),
+                    url: _root_ + 'alumnos/actualizarEstudios'
+                })
+                .then(function(response){
+                    if (response.success) {
+                        // Message confirmation
+                        _this.getUpdateForm(_this.getActiveForm());
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                    } else {
+                        // Message Notification
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                });
+            } else {
+                $('#general_snack').attr('data-content', 'Error: reporte este problema por favor!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
+        });
+    },
 
 
     activeData: function() {
-        // $('#fecha_inicio').datetimepicker({
-        //     format: 'YYYY-MM-DD',
-        //     defaultDate: $('#birthdate').val()
-        // });
-
-        pikadayResponsive(document.getElementById("bdate"),{
-            classes : "form-control form-control-sm",
-            placeholder: "Fecha de Nacimiento"
-        });
-
+        if ($('#birthday').length) {
+            pikadayResponsive(document.getElementById("birthday"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Nacimiento"
+            });
+        }
+            
         $("#avatar").fileinput({
             showCaption: true,
             browseClass: "btn btn-info btn-sm btn-lg",
             fileType: "image"
+        });
+
+        $("#course").change(function(){
+            if (parseInt($(this).val()) === 0) {
+                $("#groups").attr('disabled', true);
+            } else {
+                $("#groups").attr('disabled', false);
+            }
         });
     },
     

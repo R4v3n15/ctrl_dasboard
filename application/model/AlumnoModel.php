@@ -299,176 +299,6 @@ class AlumnoModel
 
 
 
-
-
-
-
-    public static function studentProfile($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $query = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, 
-                                            s.age, s.genre, s.cellphone, s.avatar, s.status,
-                                            s.created_at, g.class_id 
-                                     FROM students as s, students_groups as g
-                                     WHERE s.student_id = :student
-                                       AND s.student_id = g.student_id 
-                                     LIMIT 1;");
-        $query->execute(array(':student' => $student));
-
-        if ($query->rowCount() > 0) {
-            $alumno = $query->fetch();
-
-            $url_avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT');
-
-            $avatar = $url_avatar . strtolower($alumno->genre) . '.jpg';
-            if (file_exists($url_avatar.$alumno->avatar)) {
-                $avatar = $url_avatar . strtolower($alumno->avatar);
-            }
-
-            $alumno->avatar = $avatar;
-            $alumno->created_at = H::formatDate(date('Y-m-d', strtotime($alumno->created_at)));
-
-            $grupo = null;
-            if ($alumno->class_id !== NULL) {
-                $clase  =  "SELECT cu.course, g.group_name
-                            FROM classes as c, courses as cu, groups as g
-                            WHERE c.class_id  = :clase
-                              AND c.course_id = cu.course_id
-                              AND c.group_id  = g.group_id
-                              AND c.status    = 1
-                            LIMIT 1;";
-                $clase = $database->prepare($clase);
-                $clase->execute(array(':clase' => $alumno->class_id));
-                if ($clase->rowCount() > 0) {
-                    $clase = $clase->fetch();
-                    $grupo = ucwords(strtolower($clase->course)) . ' ' . 
-                             ucwords(strtolower($clase->group_name));
-                }
-            }
-            $alumno->grupo = $grupo;
-
-            $tutor = null;
-            if ($alumno->id_tutor !== 0) {
-                $sql =  $database->prepare("SELECT CONCAT_WS(' ',namet, surnamet, lastnamet) as name,
-                                                   cellphone, phone, relationship,
-                                                   phone_alt
-                                            FROM tutors
-                                            WHERE id_tutor = :tutor
-                                            LIMIT 1;");
-                $sql->execute(array(':tutor' => $alumno->id_tutor));
-                if ($sql->rowCount() > 0) {
-                    $tutor = $sql->fetch();
-                }
-            }
-            $alumno->tutor = $tutor;
-
-            return $alumno;
-        }
-    }
-
-    public static function studentProfileData($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $query = $database->prepare("SELECT *
-                                     FROM students as s, students_details as sd
-                                     WHERE s.student_id = :student
-                                       AND s.student_id = sd.student_id
-                                     LIMIT 1;");
-        $query->execute(array(':student' => $student));
-
-        if ($query->rowCount() > 0) {
-            $alumno = $query->fetch();
-            $address_owner = $alumno->student_id;
-            $owner_type    = 2;        
-
-            $address = null;
-            if ((int)$alumno->id_tutor !== 0) {
-                $address_owner = $alumno->id_tutor;
-                $owner_type    = 1;
-            }
-
-            $_sql = $database->prepare("SELECT id_address, street, st_number, st_between, colony,
-                                                city, zipcode, state, country 
-                                        FROM address 
-                                        WHERE user_id = :user AND user_type = :type;");
-            $_sql->execute(array(':user' => $address_owner, ':type' => $owner_type));
-            
-            if ($_sql->rowCount() > 0) {
-                $address = $_sql->fetch();
-            }
-
-            $alumno->address = $address;
-
-            return $alumno;
-        }
-
-        return null;
-    }
-
-    public static function tutorProfileData($tutor){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        if ((int)$tutor !== 0) {
-            $_sql = $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet,
-                                               job, cellphone, phone, relationship,
-                                               phone_alt, relationship_alt
-                                        FROM tutors
-                                        WHERE id_tutor = :tutor
-                                        LIMIT 1;");
-
-            $_sql->execute(array(':tutor' => $tutor));
-
-            if ($_sql->rowCount() > 0) {
-                H::p($_sql->fetch());
-                exit();
-                return $_sql->fetch();
-            }
-        }
-
-        return null;
-    }
-
-    public static function studiesProfileData($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-
-        $query = $database->prepare("SELECT sd.*, sg.class_id
-                                     FROM students_details as sd, students_groups as sg
-                                     WHERE sd.student_id = :student
-                                       AND sg.student_id = :student
-                                     LIMIT 1;");
-        $query->execute(array(':student' => $student));
-        
-
-        if ($query->rowCount() > 0) {
-            $details = $query->fetch();
-            $clase = null;
-            if ($details->class_id != null) {
-                $_sql = $database->prepare("SELECT c.class_id, c.course_id,
-                                                   c.group_id, cu.course, g.group_name
-                                             FROM classes as c, courses as cu, groups as g
-                                             WHERE c.class_id  = :clase
-                                               AND c.course_id = cu.course_id
-                                               AND c.group_id  = g.group_id
-                                             LIMIT 1;");
-                $_sql->execute(array(':clase' => $details->class_id));
-
-                if ($_sql->rowCount() > 0) {
-                    $clase = $_sql->fetch();
-                }
-            }
-
-            $details->clase = $clase;
-
-            // H::p($details);
-            // exit();
-
-            return $details;
-        }
-
-        return null;
-    }
-
-
-
-
-
     public static function getGroups($course) {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -1242,30 +1072,190 @@ class AlumnoModel
     //////////////////////////////////////////////////////////////////
     //  =  =  =  =  =  = U P D A T E   S T U D E N T  =  =  =  =  = //
     //////////////////////////////////////////////////////////////////
+    
+    public static function studentProfile($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $query = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, 
+                                            s.age, s.genre, s.cellphone, s.avatar, s.status,
+                                            s.created_at, g.class_id 
+                                     FROM students as s, students_groups as g
+                                     WHERE s.student_id = :student
+                                       AND s.student_id = g.student_id 
+                                     LIMIT 1;");
+        $query->execute(array(':student' => $student));
+
+        if ($query->rowCount() > 0) {
+            $alumno = $query->fetch();
+
+            $url_avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT');
+
+            $avatar = $url_avatar . strtolower($alumno->genre) . '.jpg';
+            if (file_exists($url_avatar.$alumno->avatar)) {
+                $avatar = $url_avatar . strtolower($alumno->avatar);
+            }
+
+            $alumno->avatar = $avatar;
+            $alumno->created_at = H::formatDate(date('Y-m-d', strtotime($alumno->created_at)));
+
+            $grupo = null;
+            if ($alumno->class_id !== NULL) {
+                $clase  =  "SELECT cu.course, g.group_name
+                            FROM classes as c, courses as cu, groups as g
+                            WHERE c.class_id  = :clase
+                              AND c.course_id = cu.course_id
+                              AND c.group_id  = g.group_id
+                              AND c.status    = 1
+                            LIMIT 1;";
+                $clase = $database->prepare($clase);
+                $clase->execute(array(':clase' => $alumno->class_id));
+                if ($clase->rowCount() > 0) {
+                    $clase = $clase->fetch();
+                    $grupo = ucwords(strtolower($clase->course)) . ' ' . 
+                             ucwords(strtolower($clase->group_name));
+                }
+            }
+            $alumno->grupo = $grupo;
+
+            $tutor = null;
+            if ($alumno->id_tutor !== 0) {
+                $sql =  $database->prepare("SELECT CONCAT_WS(' ',namet, surnamet, lastnamet) as name,
+                                                   cellphone, phone, relationship,
+                                                   phone_alt
+                                            FROM tutors
+                                            WHERE id_tutor = :tutor
+                                            LIMIT 1;");
+                $sql->execute(array(':tutor' => $alumno->id_tutor));
+                if ($sql->rowCount() > 0) {
+                    $tutor = $sql->fetch();
+                }
+            }
+            $alumno->tutor = $tutor;
+
+            return $alumno;
+        }
+    }
+
+    public static function studentProfileData($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $query = $database->prepare("SELECT *
+                                     FROM students as s, students_details as sd
+                                     WHERE s.student_id = :student
+                                       AND s.student_id = sd.student_id
+                                     LIMIT 1;");
+        $query->execute(array(':student' => $student));
+
+        if ($query->rowCount() > 0) {
+            $alumno = $query->fetch();
+            $address_owner = $alumno->student_id;
+            $owner_type    = 2;        
+
+            $address = null;
+            if ((int)$alumno->id_tutor !== 0) {
+                $address_owner = $alumno->id_tutor;
+                $owner_type    = 1;
+            }
+
+            $_sql = $database->prepare("SELECT id_address, street, st_number, st_between, colony,
+                                                city, zipcode, state, country 
+                                        FROM address 
+                                        WHERE user_id = :user AND user_type = :type;");
+            $_sql->execute(array(':user' => $address_owner, ':type' => $owner_type));
+            
+            if ($_sql->rowCount() > 0) {
+                $address = $_sql->fetch();
+            }
+
+            $alumno->address = $address;
+
+            return $alumno;
+        }
+
+        return null;
+    }
+
+    public static function tutorProfileData($tutor){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        if ((int)$tutor !== 0) {
+            $_sql = $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet,
+                                               job, cellphone, phone, relationship,
+                                               phone_alt, relationship_alt
+                                        FROM tutors
+                                        WHERE id_tutor = :tutor
+                                        LIMIT 1;");
+
+            $_sql->execute(array(':tutor' => $tutor));
+
+            if ($_sql->rowCount() > 0) {
+                return $_sql->fetch();
+            }
+        }
+
+        return null;
+    }
+
+    public static function studiesProfileData($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $query = $database->prepare("SELECT sd.*, sg.class_id
+                                     FROM students_details as sd, students_groups as sg
+                                     WHERE sd.student_id = :student
+                                       AND sg.student_id = :student
+                                     LIMIT 1;");
+        $query->execute(array(':student' => $student));
+        
+
+        if ($query->rowCount() > 0) {
+            $details = $query->fetch();
+            $clase = null;
+            if ($details->class_id != null) {
+                $_sql = $database->prepare("SELECT c.class_id, c.course_id,
+                                                   c.group_id, cu.course, g.group_name
+                                             FROM classes as c, courses as cu, groups as g
+                                             WHERE c.class_id  = :clase
+                                               AND c.course_id = cu.course_id
+                                               AND c.group_id  = g.group_id
+                                             LIMIT 1;");
+                $_sql->execute(array(':clase' => $details->class_id));
+
+                if ($_sql->rowCount() > 0) {
+                    $clase = $_sql->fetch();
+                }
+            }
+
+            $details->clase = $clase;
+
+            // H::p($details);
+            // exit();
+
+            return $details;
+        }
+
+        return null;
+    }
 
 
-    public static function updateTutor($tutor, $name, $surname, $lastname, $ocupation, $phone, $cellphone, $relation, $phone_alt, $relation_alt){
+    public static function updateTutor($tutor, $name, $surname, $lastname, $ocupation, $relation, $phone, $cellphone, $relation_alt, $phone_alt){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
 
-        $name = strtolower(trim($name));
-        $surname = strtolower(trim($surname));
+        $name     = strtolower(trim($name));
+        $surname  = strtolower(trim($surname));
         $lastname = strtolower(trim($lastname));
 
         $database->beginTransaction();
         try{
             $_sql = $database->prepare("UPDATE tutors
-                                        SET namet        = :name,
-                                            surnamet     = :surname,
-                                            lastnamet    = :lastname,
-                                            job          = :job,
-                                            phone        = :phone,
-                                            cellphone    = :cellphone,
-                                            relationship = :relation,
-                                            phone_alt      = :phone_alt,
+                                        SET namet            = :name,
+                                            surnamet         = :surname,
+                                            lastnamet        = :lastname,
+                                            job              = :job,
+                                            phone            = :phone,
+                                            cellphone        = :cellphone,
+                                            relationship     = :relation,
+                                            phone_alt        = :phone_alt,
                                             relationship_alt = :relation_alt
                                         WHERE id_tutor = :tutor");
-            $update = $_sql->execute(array(':name'         => ucwords($name),
+            $update = $_sql->execute(array(':name'          => ucwords($name),
                                             ':surname'      => ucwords($surname),
                                             ':lastname'     => ucwords($lastname),
                                             ':job'          => trim($ocupation),
@@ -1280,23 +1270,21 @@ class AlumnoModel
             $commit = false;
         }
 
-        if (!$commit || !$updateAddress) {
+        if (!$commit) {
             $database->rollBack();
-            return array('updated' => false, 'message' => 'Error al actualizar, intente de nuevo o reporte el problema!');
+            return array('success' => false, 'message' => 'Error al actualizar, intente de nuevo o reporte el problema!');
         }else {
             $database->commit();
-            return array('updated' => true, 'message' => 'Datos del tutor actualizados correctamente!');
+            return array('success' => true, 'message' => 'Datos del tutor actualizados correctamente!');
         }
     }
 
-
-    public static function updateStudent($student, $name, $surname, $lastname, $birthdate, $genre, $edo_civil, $cellphone, $reference, $sickness, $medication, $homestay, $acta, $invoice, $comentario, $address, $street, $number, $between, $colony, $city, $zipcode, $state, $country) {
+    public static function updateStudent($student, $name, $surname, $lastname, $birthday, $genre, $edo_civil, $cellphone, $reference, $sickness, $medication, $homestay, $acta, $invoice, $comment, $address, $street, $number, $between, $colony, $city, $zipcode, $state, $country) {
         $database = DatabaseFactory::getFactory()->getConnection();
         $name     = ucwords(strtolower(trim($name)));
         $surname  = ucwords(strtolower(trim($surname)));
         $lastname = ucwords(strtolower(trim($lastname)));
-        $age      = H::getAge($birthdate);
-        $tutor    = (int)$tutor;
+        $age      = H::getAge($birthday);
 
         $commit   = true;
         $database->beginTransaction();
@@ -1318,7 +1306,7 @@ class AlumnoModel
             $update  =  $_sql->execute(array(':name'      => $name,
                                             ':surname'   => $surname,
                                             ':lastname'  => $lastname,
-                                            ':birthdate' => $birthdate,
+                                            ':birthdate' => $birthday,
                                             ':age'       => $age,
                                             ':genre'     => $genre,
                                             ':edo_civil' => $edo_civil,
@@ -1326,7 +1314,7 @@ class AlumnoModel
                                             ':reference' => $reference,
                                             ':sickness'  => $sickness,
                                             ':medication' => $medication,
-                                            ':comentario' => $comentario,
+                                            ':comentario' => $comment,
                                             ':student' => $student));
 
             if ($update) {
@@ -1336,7 +1324,7 @@ class AlumnoModel
                                                     SET facturacion     = :factura,
                                                         homestay        = :homestay,
                                                         acta_nacimiento = :acta
-                                                    WHERE id_student = :student;");
+                                                    WHERE student_id = :student;");
                 $set_details->execute(array(':factura'  => $invoice,
                                             ':homestay' => $homestay,
                                             ':acta'     => $acta,
@@ -1480,24 +1468,44 @@ class AlumnoModel
 
 
 
-    public static function updateAcademicData($alumno, $ocupacion, $lugar_trabajo, $estudios, $grado){
+    public static function updateStudies($student, $ocupation, $workplace, $studies, $lastgrade, $class){
         $database = DatabaseFactory::getFactory()->getConnection();
-        $sql =  $database->prepare("UPDATE students_details
-                                    SET ocupation  = :ocupacion,
-                                        workplace  = :lugar,
-                                        studies    = :estudios,
-                                        lastgrade  = :grado
-                                    WHERE student_id = :alumno;");
-        $update  =  $sql->execute(array(':ocupacion' => $ocupacion,
-                                        ':lugar'     => $lugar_trabajo,
-                                        ':estudios'  => $estudios,
-                                        ':grado'     => $grado,
-                                        ':alumno'    => $alumno));
+        $commit   = true;
+        $database->beginTransaction();
+        try {
+            $sql =  $database->prepare("UPDATE students_details
+                                        SET ocupation  = :ocupacion,
+                                            workplace  = :lugar,
+                                            studies    = :estudios,
+                                            lastgrade  = :grado
+                                        WHERE student_id = :alumno;");
+            $update  =  $sql->execute(array(':ocupacion' => $ocupation,
+                                            ':lugar'     => $workplace,
+                                            ':estudios'  => $studies,
+                                            ':grado'     => $lastgrade,
+                                            ':alumno'    => $student));
 
-        if ($update) {
-            Session::add('feedback_positive', "Datos Academicos actualizados correctamente");
-        } else {
-            Session::add('feedback_negative', "Error al actualizar, intente de nuevo por favor!");
+            if ($update) {
+                $_sql = $database->prepare("UPDATE students_groups 
+                                            SET class_id = :clase
+                                            WHERE student_id = :student;");
+
+                $commit == $_sql->execute(array(':clase' => $class, ':student' => $student));
+                
+            } else {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se realizo la actualización, intente de nuevo o reporte error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Datos academicos actualizados correctamente!!');
         }
     }
 

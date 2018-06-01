@@ -4,13 +4,13 @@
 ?>
 <h5 class="text-center text-secondary">Datos Del Alumno</h5>
 <hr class="mt-1"></hr>
-<form action="<?= $action; ?>" class="form-horizontal" method="POST">
+<form id="updateStudentForm" class="form-horizontal" method="POST">
     <div class="row">
         <div class="col-12">
             <div class="form-group">
                 <label for="fullname" class="col-sm-12 text-center">Nombre Completo:</label>
                 <div class="input-group">
-                    <input type="hidden" name="student" value="<?= $alumno->student_id; ?>">
+                    <input type="hidden" name="student" id="student_id" value="<?= $alumno->student_id; ?>">
                     <input type="text" 
                           class="form-control form-control-sm text-center" 
                           id="surname" 
@@ -25,7 +25,6 @@
                           id="lastname" 
                           name="lastname" 
                           value="<?= $alumno->lastname; ?>"
-                          pattern="[a-zA-Z\s]{3,60}" 
                           autocomplete="off" required>
 
                    <input type="text" 
@@ -43,11 +42,11 @@
                 <label class="col-12">Fecha de Nacimiento: </label>
                 <div class="col-12">
                     <input type="text" 
-                           id="bdate" 
+                           id="birthday" 
                            class="form-control form-control-sm"
                            placeholder="Fecha de Nacimiento"
                            value="<?= $alumno->birthday; ?>"
-                           name="bdate">
+                           name="birthday">
                 </div>
             </div>
         </div>
@@ -78,7 +77,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-4">
             <div class="form-group row">
                 <label class="col-12">Número Celular: </label>
                 <div class="col-12">
@@ -90,14 +89,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-7">
+        <div class="col-sm-8">
             <div class="form-group row">
                 <label class="col-12">Referencia de Domicilio: </label>
                 <div class="col-12">
                     <input type="tel" 
                            class="form-control form-control-sm"  
                            name="reference" 
-                           value="<?= $alumno->reference; ?>">
+                           value="<?= $alumno->reference; ?>"
+                           placeholder="Referencia para ubicar facilmente el domicilio">
                 </div>
             </div>
         </div>
@@ -115,17 +115,17 @@
                    <input type="text" 
                           class="form-control form-control-sm" 
                           name="street"
-                          placeholder="Calle" 
+                          placeholder="Nombre de Calle" 
                           value="<?= $alumno->address->street; ?>">
                    <input type="text" 
                           class="form-control form-control-sm" 
                           name="number"
-                          placeholder="Número" 
+                          placeholder="Número de calle" 
                           value="<?= $alumno->address->st_number; ?>">
                    <input type="text" 
                           class="form-control form-control-sm" 
                           name="between"
-                          placeholder="Entre" 
+                          placeholder="Entre calles" 
                           value="<?= $alumno->address->st_between; ?>">
                    <input type="text" 
                           class="form-control form-control-sm"  
@@ -231,7 +231,7 @@
             <label class="col-12">¿Requiere Factura?: </label>
             <div class="ml-3 custom-control custom-radio custom-control-inline">
                 <input type="radio" 
-                       id="inlin51" 
+                       id="inlin5" 
                        name="invoice" 
                        class="custom-control-input"
                        <?= $alumno->facturacion == '0' ? 'checked' : ''; ?>
@@ -261,7 +261,7 @@
 
     <div class="row justify-content-center">
         <div class="col-6 text-center">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <button type="button" id="update_student" class="btn btn-primary">Actualizar</button>
         </div>
     </div>
 </form>

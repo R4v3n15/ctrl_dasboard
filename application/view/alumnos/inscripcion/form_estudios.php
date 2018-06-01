@@ -16,7 +16,8 @@
                            class="form-control form-control-sm" 
                            id="lugar_trabajo" 
                            name="lugar_trabajo" 
-                           placeholder="Lugar de trabajo/estudio">
+                           placeholder="Lugar de trabajo/estudio"
+                           autocomplete="off">
                     <input type="hidden" class="form-control" name="alumno" id="student_id">
                 </div>
             </div>

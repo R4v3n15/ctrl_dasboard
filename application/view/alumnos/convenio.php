@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-sm-12 conv_text text-justify">
                         <p><strong>PRIMERA: </strong>
-                            LA INSCRIPCIÓN SERÁ PARA ASISTIR A LAS CLASES DE <u>&nbsp;&nbsp; ADOLESCENTES INICIAL SABADO &nbsp;&nbsp;</u> CON &nbsp; INICIO EL DÍA <u>&nbsp; MIERCOLES 27 DE SEPTIEMBRE DEL AÑO 2017 &nbsp;</u>  EN HORARIO DE <u>&nbsp; 11:00 - 14:00 HRS </u>. LOS DÍAS <u> LUNES, MARTES, MIERCOLES &nbsp;</u> CON UNA DURACION DE <u>&nbsp; 10 &nbsp;</u> SEMANAS, LAS CLASES SE IMPARTIRÁN EN LAS INSTALACIONES DE NA'ATIK
+                            LA INSCRIPCIÓN SERÁ PARA ASISTIR A LAS CLASES DE <u contenteditable="true">&nbsp;&nbsp; ADOLESCENTES INICIAL SABADO &nbsp;&nbsp;</u> CON &nbsp; INICIO EL DÍA <u>&nbsp; MIERCOLES 27 DE SEPTIEMBRE DEL AÑO 2017 &nbsp;</u>  EN HORARIO DE <u>&nbsp; 11:00 - 14:00 HRS </u>. LOS DÍAS <u> LUNES, MARTES, MIERCOLES &nbsp;</u> CON UNA DURACION DE <u>&nbsp; 10 &nbsp;</u> SEMANAS, LAS CLASES SE IMPARTIRÁN EN LAS INSTALACIONES DE NA'ATIK
                         </p>
                     </div>
 

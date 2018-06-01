@@ -3,11 +3,16 @@
     $url_base = Config::get('URL');
 ?>
 <div class="row" id="page-content-wrapper">
-    <main role="main" class="col-md-12 px-3">
+    <main role="main" class="col-md-12 px-3 mb-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
             <h5 class="text-info">Perfil</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
+                    <a href="<?= $url_base; ?>alumnos" 
+                       class="btn btn-sm btn-outline-secondary btn-flat-md"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       title="Volver a Alumnos"><i class="fa fa-arrow-left"></i></a>
                     <button class="btn btn-sm btn-outline-info editar-datos"
                             id="form-1"
                             data-form="1">Alumno</button>
@@ -19,14 +24,18 @@
                             data-form="3">Academicos</button>
                     <a  class="btn btn-sm btn-outline-secondary"
                         href="<?= $url_base; ?>mapa/u/<?= $alumno->student_id; ?>"
-                        data-form="3">Croquis</a>
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Editar Croquis">Croquis</a>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-4">
             <div class="col-sm-3">
-                <div class="card px-0">
-                    <img class="card-img-top px-5" src="<?= $alumno->avatar;?>" alt="avatar" width="100" height="120">
+                <div class="card px-0 box-shadow">
+                    <img class="card-img-top rounded rounded-circle px-5 mt-1"  
+                         src="<?= $alumno->avatar;?>" 
+                         alt="avatar" height="120">
                     <div class="card-title mt-1 pb-0 mb-0">
                         <h5 class="text-center text-info" 
                             id="alumno" 
