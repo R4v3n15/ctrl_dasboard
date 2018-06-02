@@ -614,7 +614,7 @@ class ImportarModel
 
 
 					// Si no cumple la condición, el alumno no tiene tutor
-					if ($tutor_name != 'N/A' && $tutor_surname != 'N/A' && $tutor_lastname != 'N/A') {
+					if ($tutor_name != 'N/A' && $tutor_surname != 'N/A' && $tutor_lastname != 'N/A' && $tutor_name != '----' && $tutor_surname != '----' && $tutor_lastname != '----') {
 						$verifyTutor = $database->prepare("SELECT id_tutor
 														  FROM tutors 
 														  WHERE namet = :name
@@ -740,6 +740,89 @@ class ImportarModel
 								':longitud'   => $longitud
 							));
 						}
+
+						$queryBeca = $database->prepare("SELECT *
+													     FROM naatikdb.scholar
+													     WHERE id_student = :student
+													       AND request = 'si' OR togrant = 'si'
+													     LIMIT 1");
+						$queryBeca->execute(array(':student' => $alumno->id_student));
+
+						if ($queryBeca->rowCount() > 0) {
+							$beca = $queryBeca->fetch();
+							$aplicante = $beca->request == 'si' ? 1 : 0;
+							$becario   = $beca->togrant == 'si' ? 1 : 0;
+							$fecha     = explode('-', $beca->date_scholar);
+							$ciclo     = H::getCiclo($fecha[1]);
+
+							$crearBeca = $database->prepare("INSERT INTO becas(student_id, applicant, granted,
+																				year, ciclo, granted_at)
+																			VALUES(:student, :aplicante, :becario, 
+																					:anio, :ciclo, :f_becario);");
+							$crearBeca->execute(array(':student' => $id_alumno, ':aplicante' => $aplicante, ':becario' => $becario,
+														':anio' => $fecha[0], ':ciclo' => $ciclo, ':f_becario' => $beca->date_scholar));
+						}
+
+
+						$queryPago = $database->prepare("SELECT *
+													     FROM naatikdb.pays
+													     WHERE id_student = :student
+													     LIMIT 1");
+						$queryPago->execute(array(':student' => $alumno->id_student));
+
+						if ($queryPago->rowCount() > 0) {
+							$pagos = $queryPago->fetch();
+
+							$crearPagos =  $database->prepare("INSERT INTO students_pays(student_id, 
+																						 ene,
+																						 feb,
+																						 mar,
+																						 abr,
+																						 may,
+																						 jun,
+																						 jul,
+																						 ago,
+																						 sep,
+																						 oct,
+																						 nov,
+																						 dic,
+																						 year, 
+																						 ciclo,
+																						 comment)
+				                                                     VALUES(:student, 
+						                                                     :ene,
+																			 :feb,
+																			 :mar,
+																			 :abr,
+																			 :may,
+																			 :jun,
+																			 :jul,
+																			 :ago,
+																			 :sep,
+																			 :oct,
+																			 :nov,
+																			 :dic, 
+						                                                     :year, 
+						                                                     :ciclo,
+						                                                 	 :comment);");
+				            $crearPagos->execute(array(':student' => $id_alumno,
+					                                    ':ene'  => $pagos->jan,
+					                                    ':feb'  => $pagos->feb,
+					                                    ':mar'  => $pagos->mar,
+					                                    ':abr'  => $pagos->apr,
+					                                    ':may'  => $pagos->may,
+					                                    ':jun'  => $pagos->jun,
+					                                    ':jul'  => $pagos->jul,
+					                                    ':ago'  => $pagos->aug,
+					                                    ':sep'  => $pagos->sep,
+					                                    ':oct'  => $pagos->oct,
+					                                    ':nov'  => $pagos->nov,
+					                                    ':dic'  => $pagos->dece,
+					                                    ':year'    => $pagos->year_pay,
+					                                    ':ciclo'   => $pagos->ciclo,
+					                                	':comment' => $pagos->comment));
+						}
+
 
 						$queryData = $database->prepare("SELECT *
 													     FROM naatikdb.academic_info
