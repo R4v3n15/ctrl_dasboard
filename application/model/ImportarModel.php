@@ -561,9 +561,9 @@ class ImportarModel
 		$alumno = $_sql->fetch();
 
 		// Evitar Duplicidad
-		$name     = trim(ucwords(strtolower($alumno->name_s)));
-		$surname  = trim(ucwords(strtolower($alumno->surname1_s)));
-		$lastname = trim(ucwords(strtolower($alumno->surname2_s)));
+		$name     = ucwords(strtolower(trim($alumno->name_s)));
+		$surname  = ucwords(strtolower(trim($alumno->surname1_s)));
+		$lastname = ucwords(strtolower(trim($alumno->surname2_s)));
 		$verify = $database->prepare("SELECT student_id
 									  FROM students 
 									  WHERE name     = :name
@@ -622,9 +622,9 @@ class ImportarModel
 															AND lastnamet = :lastname
 														  LIMIT 1;");
 						$verifyTutor->execute(array(
-												':name' => $tutor_name, 
-												':surname' => $tutor_surname, 
-												':lastname' => $tutor_lastname));
+												':name' => ucwords(strtolower($tutor_name)), 
+												':surname' => ucwords(strtolower($tutor_surname)), 
+												':lastname' => ucwords(strtolower($tutor_surname))));
 
 						if ($verifyTutor->rowCount() > 0) {
 							// Ya esta registrado
