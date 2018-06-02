@@ -16,7 +16,7 @@
         <input type="hidden" name="csrf_token" value="<?= Csrf::makeToken(); ?>" />
         <div class="row justify-content-center">
             <div class="col-12 text-center">
-                <!-- <img class="mb-3" src="<?php echo Config::get('URL'); ?>assets/img/logo.png" alt="logo" width="65" height="65"> -->
+                <img class="mb-3" src="<?php echo Config::get('URL'); ?>assets/img/logo.png" alt="logo" width="65" height="65">
             </div>
         </div>
         <div class="form-label-group">
