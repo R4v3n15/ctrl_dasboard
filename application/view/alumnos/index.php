@@ -31,7 +31,7 @@
             <div class="col-12">
                 <?php $this->renderFeedbackMessages(); ?>
             </div>
-            <div class="col-12" id="tabla_alumnos">
+            <div class="col-12 px-0" id="tabla_alumnos">
                 
             </div>
         </div>

@@ -227,7 +227,7 @@
 
     <div class="row justify-content-center">
         <div class="col-12 d-none text-center" id="continue">
-            <a href="#" class="btn btn-sm btn-info btn_forms" id="form_alumno" data-form="alumno">Continuar</a>
+            <a href="#" class="btn btn-sm btn-info btn_forms" id="form_alumno" data-form="alumno">Continuar <i class="fa fa-arrow-right"></i></a>
         </div>
     </div>
 </form> 

@@ -549,7 +549,11 @@ class ImportarModel
 		 return false;
 	}
 
-	public static function importarAlumno($alumno) {
+
+
+
+
+	public static function importarAlumno($student) {
 		$database = DatabaseFactory::getFactory()->getConnection();
 		$commit   = true;
 		$_sql = $database->prepare("SELECT * FROM naatikdb.student WHERE id_student = :student LIMIT 1;");
@@ -577,180 +581,244 @@ class ImportarModel
 			$imported = $update->execute(array(':student' => $alumno->id_student));
 
 			if ($imported) {
-				// Importar Tutor
-				$validarTutor = $database->prepare("SELECT * FROM naatikdb.tutor 
-													WHERE id_tutor = :tutor
-													  AND name_t != 'N/A'
-													  AND name_t NOT LIKE '%---%'
-													  AND surname1_t != 'N/A'
-													  AND surname2_t != 'N/A'
-													LIMIT 1;");
-				$validarTutor->execute(array(':tutor' => $tutor));
+				//  =  =  =  =  =  = Importar Tutor  =  =  =  =  =  =  =
+				$getTutor = $database->prepare("SELECT * FROM naatikdb.tutor WHERE id_tutor = :tutor LIMIT 1;");
+				$getTutor->execute(array(':tutor' => $alumno->id_tutor));
 
 				$tutor_id = null;
-				if ($validarTutor->rowCount() > 0) {
-					$tutor = $validarTutor->fetch();
-					$tutor_name = ucwords(strtolower(trim($tutor->name_t)));
-					$tutor_surname = ucwords(strtolower(trim($tutor->surname1_t)));
-					$tutor_lastname = ucwords(strtolower(trim($tutor->surname2_t)));
+				if ($getTutor->rowCount() > 0) {
+					$tutor = $getTutor->fetch();
+					$tutor_name = trim($tutor->name_t);
+					$tutor_surname = trim($tutor->surname1_t);
+					$tutor_lastname = trim($tutor->surname2_t);
+					$latitud  = 19.57789189450819;
+					$longitud = -88.04557564999999;
 
-					$verify = $database->prepare("SELECT id_tutor
-												  FROM tutors 
-												  WHERE namet = :name
-													AND surnamet = :surname
-													AND lastnamet = :lastname
-												  LIMIT 1;");
-					$verify->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+					$mapa = $database->prepare("SELECT c.lat as latitud, c.long as longitud
+												 FROM naatikdb.croquis as c
+												 WHERE c.idtutor = :tutor LIMIT 1;");
+					$mapa->execute(array(':tutor' => $tutor->id_tutor));
 
-					if ($verify->rowCount() > 0) {
-						$tutor_id = $verify->fetch()->id_tutor;
-					} else {
-						$save_tutor  = "INSERT INTO tutors(namet, surnamet, lastnamet, job, cellphone, phone,
-														   relationship, phone_alt, relationship_alt)
-													VALUES(:name, :surname, :lastname, :job, :cellphone, :phone,
-														   :relation, :phone_alt, :relation_alt);";
-						$query = $database->prepare($save_tutor);
-						$query->execute(array(
-											':name'         => ucwords(strtolower(trim($tutor->name_t))),
-											':surname'      => ucwords(strtolower(trim($tutor->surname1_t))),
-											':lastname'     => ucwords(strtolower(trim($tutor->surname2_t))),
-											':job'          => trim($tutor->job),
-											':cellphone'    => trim($tutor->cellphone_t),
-											':phone'        => trim($tutor->phone),
-											':relation'     => $tutor->relationship,
-											':phone_alt'    => trim($tutor->phone_alt),
-											':relation_alt' => $tutor->relationship_alt
-										));
-						if ($query->rowCount() > 0) {
-							$tutor_id = $database->lastInsertId();
 
-							$sql = $database->prepare("INSERT INTO address(user_id, user_type, street, st_number, st_between, colony,
-														city, zipcode, state, country, latitud, longitud)
-												VALUES(:user, :user_type, :street, :st_number, :st_between, :colony,
-													   :city, :zipcode, :state, :country, :latitud, :longitud);");
+					if ($mapa->rowCount() > 0) {
+						$mapa = $mapa->fetch();
+						$latitud  = $mapa->latitud;
+						$longitud = $mapa->longitud;
+					}
+					$addr = explode(',', $tutor->address_t);
+
+					$street   = trim(str_replace('Calle:', '', $addr[0]));
+					$number   = trim($addr[1]);
+					$between  = trim(str_replace('Entre:', '', $addr[2]));
+					$colony   = trim(str_replace('Col:', '', $addr[3]));
+
+
+					// Si no cumple la condición, el alumno no tiene tutor
+					if ($tutor_name != 'N/A' && $tutor_surname != 'N/A' && $tutor_lastname != 'N/A') {
+						$verifyTutor = $database->prepare("SELECT id_tutor
+														  FROM tutors 
+														  WHERE namet = :name
+															AND surnamet = :surname
+															AND lastnamet = :lastname
+														  LIMIT 1;");
+						$verifyTutor->execute(array(
+												':name' => $tutor_name, 
+												':surname' => $tutor_surname, 
+												':lastname' => $tutor_lastname));
+
+						if ($verifyTutor->rowCount() > 0) {
+							// Ya esta registrado
+							$tutor_id = $verifyTutor->fetch()->id_tutor;
+						} else {
+							// Registrar como nuevo
+							$save_tutor  =  "INSERT INTO tutors(namet, surnamet, lastnamet, job, cellphone, phone,
+															   relationship, phone_alt, relationship_alt)
+														VALUES(:name, :surname, :lastname, :job, :cellphone, :phone,
+															   :relation, :phone_alt, :relation_alt);";
+							$query = $database->prepare($save_tutor);
 							$query->execute(array(
-								':user'       => $user,
-								':user_type'  => $user_type,
-								':street'     => $address['street'],
-								':st_number'  => $address['number'],
-								':st_between' => $address['between'],
-								':colony'     => $address['colony'],
+												':name'         => ucwords(strtolower($tutor_name)),
+												':surname'      => ucwords(strtolower($tutor_surname)),
+												':lastname'     => ucwords(strtolower($tutor_surname)),
+												':job'          => trim($tutor->job),
+												':cellphone'    => trim($tutor->cellphone_t),
+												':phone'        => trim($tutor->phone),
+												':relation'     => $tutor->relationship,
+												':phone_alt'    => trim($tutor->phone_alt),
+												':relation_alt' => $tutor->relationship_alt
+											));
+							if ($query->rowCount() > 0) {
+								$tutor_id = $database->lastInsertId();
+
+								$croquis = $database->prepare("INSERT INTO address(user_id, user_type, street, st_number, 
+																			   st_between, colony, city, zipcode, state, 
+																			   country, latitud, longitud)
+													VALUES(:user, 1, :street, :st_number, :st_between, :colony,
+														   :city, :zipcode, :state, :country, :latitud, :longitud);");
+								$croquis->execute(array(
+									':user'       => $tutor_id,
+									':street'     => $street,
+									':st_number'  => $number,
+									':st_between' => $between,
+									':colony'     => $colony,
+									':city'       => 'Felipe Carrillo Puerto',
+									':zipcode'    => 77200,
+									':state'      => 'Quintana Roo',
+									':country'    => 'México',
+									':latitud'    => $latitud,
+									':longitud'   => $longitud)
+							    );
+							} else {
+								$commit = false;
+							}
+						}
+					}
+				} else {
+					$commit = false;
+				}
+
+				//  =  =  =  =  =  =  Importar Alumno  =  =  =  =  =  =
+				if ($commit) {
+					$txt = array('.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG', '.gif');
+					$avatar_name = str_replace($txt, '', $alumno->photo_s);
+					$avatar = str_replace('default', $alumno->sexo, $avatar_name);
+
+					switch ($alumno->status) {
+						case 'activo':   $estado = 1; break;
+						case 'inactivo': $estado = 1; break;
+						case 'baja':     $estado = 0; break;
+						default: $estado = 2; break;
+					}
+
+					$edad = H::getAge($alumno->birthday);
+					$IDtutor = $tutor_id === null ? 0 : $tutor_id;
+					$sql =  $database->prepare("INSERT INTO students(id_tutor, name, surname, lastname,
+																	 birthday, age, genre, edo_civil,
+																	 cellphone, reference, sickness,
+																	 medication, avatar, comment_s, status)
+															 VALUES(:tutor, :name, :surname, :lastname,
+																	:birthday, :age, :genre, :edo_civil,
+																	:cellphone, :reference, :sickness,
+																	:medication, :avatar, :comment_s, :status);");
+					$sql->execute(array(':tutor'      => $IDtutor,
+										':name'       => $name,
+										':surname'    => $surname,
+										':lastname'   => $lastname,
+										':birthday'   => $alumno->birthday,
+										':age'        => $edad,
+										':genre'      => $alumno->sexo,
+										':edo_civil'  => $alumno->edo_civil,
+										':cellphone'  => trim($alumno->cellphone),
+										':reference'  => trim($alumno->reference),
+										':sickness'   => trim($alumno->sickness),
+										':medication' => trim($alumno->medication),
+										':avatar'     => $avatar,
+										':comment_s'  => $alumno->comment_s,
+										':status'     => $estado));
+					
+					
+					if ($sql->rowCount() > 0) {
+						$id_alumno = $database->lastInsertId();
+
+						if ($tutor_id == null) {
+							$croquis = $database->prepare("INSERT INTO address(user_id, user_type, street, st_number, 
+																		   st_between, colony, city, zipcode, state, 
+																		   country, latitud, longitud)
+												VALUES(:user, 2, :street, :st_number, :st_between, :colony,
+													   :city, :zipcode, :state, :country, :latitud, :longitud);");
+							$croquis->execute(array(
+								':user'       => $id_alumno,
+								':street'     => $street,
+								':st_number'  => $number,
+								':st_between' => $between,
+								':colony'     => $colony,
 								':city'       => 'Felipe Carrillo Puerto',
 								':zipcode'    => 77200,
 								':state'      => 'Quintana Roo',
 								':country'    => 'México',
-								':latitud'    => $address['latitud'],
-								':longitud'   => $address['longitud'])
-						    );
+								':latitud'    => $latitud,
+								':longitud'   => $longitud
+							));
+						}
 
-							if ($query->rowCount() < 1) {
-								return false;
-							}
+						$queryData = $database->prepare("SELECT *
+													     FROM naatikdb.academic_info
+													     WHERE id_student = :student
+													     LIMIT 1");
+						$queryData->execute(array(':student' => $alumno->id_student));
+
+						$queryInfo= $database->prepare("SELECT reg_nacimiento as acta, convenio, facturacion
+														 FROM naatikdb.info_extrast
+														 WHERE id_st = :student
+														 LIMIT 1");
+						$queryInfo->execute(array(':student' => $alumno->id_student));
+
+						if ($queryData->rowCount() > 0 && $queryInfo->rowCount() > 0) {
+							$detalle = $queryData->fetch();
+							$extra   = $queryInfo->fetch();
+
+							//Insert Student Details
+							$details =  $database->prepare("INSERT INTO students_details(student_id, convenio, facturacion,
+																						 homestay, acta_nacimiento, ocupation, 
+																						 workplace, studies, lastgrade, 
+																						 prior_course, prior_comments)
+																	 VALUES(:student, :convenio, :invoice, :homestay,
+																			:acta, :ocupation, :workplace, :studies,
+																			:lastgrade, :prior_course, :prior_comments);");
+							$details->execute(array(':student'         => $id_alumno,
+													':convenio'        => $extra->convenio,
+													':invoice'         => $extra->facturacion,
+													':homestay'        => $alumno->homestay,
+													':acta'            => $extra->acta,
+													':ocupation'       => $detalle->ocupation,
+													':workplace'       => $detalle->workplace,
+													':studies'         => $detalle->studies,
+													':lastgrade'       => $detalle->level,
+													':prior_course'    => 1,
+													':prior_comments'  => $detalle->prev_course
+												));
 							
+
+							$date_start = $detalle->date_init_s;
+							$date_down  = $detalle->date_bajaSt === '0000-00-00' ? NULL : $detalle->date_bajaSt;
+							$date_end   = $detalle->date_egreso === '0000-00-00' ? NULL : $detalle->date_egreso;
+
+							if ($details->rowCount() > 0) {
+								$clases = array('3' => 1, '21' => 2, '23' => 3, '24' => 4, '25' => 5, '26' => 6, '27' => 7, '28' => 8, '29' => 9, '30' => 10, '31' => 11, '32' => 12, '33' => 13, '34' => 14, '35' => 15, '36' => 16, '37' => 17, '38' => 18, '39' => 19, '40' => 20, '42' => 21, '43' => 22, '45' => 23, '46' => 24, '47' => 5);
+
+								$grupo = array_key_exists($detalle->id_classes, $clases) ? $clases[$detalle->id_classes] : null;
+								$groups =  $database->prepare("INSERT INTO students_groups(class_id, student_id, date_begin, 
+																							convenio, status, created_at)
+																		 VALUES(:clase, :student, :date_begin, :convenio, 
+																				 1, :created_at);");
+								$groups->execute(array(':clase'      => $grupo,
+														':student'       => $id_alumno,
+														':convenio'     => $extra->convenio,
+														':date_begin'   => $date_start,
+														':created_at'   => $date_start));
+
+								if ($groups->rowCount() < 1) {
+									$commit = false;
+								}
+							} else {
+								$commit = false;
+							}
 						} else {
 							$commit = false;
+							$message = 'El alumno no tiene informacion academica';
 						}
+					} else {
+						$commit = false;
+						$message = 'Error al guardar al alumno.';
 					}
-				}
-
-
-
-
-
-
-
-
-				// Importar Alumno
-				$txt = array('.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG', '.gif');
-				$avatar_name = str_replace($txt, '', $alumno->photo_s);
-				$avatar = str_replace('default', $alumno->sexo, $avatar_name);
-
-				switch ($alumno->status) {
-					case 'activo':   $estado = 1; break;
-					case 'inactivo': $estado = 1; break;
-					case 'baja':     $estado = 0; break;
-					default: $estado = 2; break;
-				}
-
-				$edad = H::getAge($alumno->birthday);
-				$sql =  $database->prepare("INSERT INTO students(id_tutor, name, surname, lastname,
-																 birthday, age, genre, edo_civil,
-																 cellphone, reference, sickness,
-																 medication, avatar, comment_s, status)
-														 VALUES(:tutor, :name, :surname, :lastname,
-																:birthday, :age, :genre, :edo_civil,
-																:cellphone, :reference, :sickness,
-																:medication, :avatar, :comment_s, :status);");
-				$sql->execute(array(':tutor'      => $tutor,
-									':name'       => $name,
-									':surname'    => $surname,
-									':lastname'   => $lastname,
-									':birthday'   => $alumno->birthday,
-									':age'        => $edad,
-									':genre'      => $alumno->sexo,
-									':edo_civil'  => $alumno->edo_civil,
-									':cellphone'  => trim($alumno->cellphone),
-									':reference'  => trim($alumno->reference),
-									':sickness'   => trim($alumno->sickness),
-									':medication' => trim($alumno->medication),
-									':avatar'     => $avatar,
-									':comment_s'  => $alumno->comment_s,
-									':status'     => $estado));
-				
-				
-				if ($sql->rowCount() > 0) {
-					$id_alumno = $database->lastInsertId();
-
-					//Insert Student Details
-					$detalle = $alumno['academic'];
-					$extra   = $alumno['detail'];
-					$details =  $database->prepare("INSERT INTO students_details(student_id, convenio, facturacion,
-																				 homestay, acta_nacimiento, ocupation, 
-																				 workplace, studies, lastgrade, 
-																				 prior_course, prior_comments)
-															 VALUES(:student, :convenio, :invoice, :homestay,
-																	:acta, :ocupation, :workplace, :studies,
-																	:lastgrade, :prior_course, :prior_comments);");
-					$details->execute(array(':student'         => $id_alumno,
-											':convenio'        => $extra->convenio,
-											':invoice'         => $extra->facturacion,
-											':homestay'        => $alumno['homestay'],
-											':acta'            => $extra->acta,
-											':ocupation'       => $detalle['ocupation'],
-											':workplace'       => $detalle['workplace'],
-											':studies'         => $detalle['studies'],
-											':lastgrade'       => $detalle['level'],
-											':prior_course'    => 1,
-											':prior_comments'  => $detalle['prior_course']));
-					if ($details->rowCount() > 0) {
-						$groups =  $database->prepare("INSERT INTO students_groups(student_id, date_begin, 
-																					convenio, state, created_at)
-																 VALUES(:student, :date_begin, :convenio, 
-																		 1, :created_at);");
-						$groups->execute(array(':student'       => $id_alumno,
-												':convenio'     => $extra->convenio,
-												':date_begin'   => $detalle['date_init'],
-												':created_at'   => $detalle['date_init']));
-						if ($detalle['sep'] !== false) {
-							$sep = $detalle['sep'];
-							$save = $database->prepare("INSERT INTO students_sep(student_id, sep_code, date_register, 
-																				 beca, status)
-																	 VALUES(:student, :sep_code, :date_register,
-																			:beca, 1);");
-							$save->execute(array(':student'       => $id_alumno,
-												 ':sep_code'      => $extra->regis_num,
-												 ':date_register' => $extra->date_incorporate,
-												 ':beca'          => $extra->beca));
-
-						}
-						$commit = true;
-
-					}
-				}
-					
 				} else {
 					$commit = false;
+					$message = "Error al guardar tutor o el alumno no tiene tutor.";
 				}
+			} else {
+				$commit = false;
+				$message = 'Error al importar alumno';
+			}
                        
         } catch (PDOException $e) {
             $commit = false;
@@ -758,12 +826,17 @@ class ImportarModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+            return array(
+	            	'success' => false, 
+	            	'message' => '&#x2718; '.$message);
         }else {
             $database->commit();
-            return array('success' => true, 'message' => '&#x2713; I M P O R T A D O!!');
+            return array('success' => true, 'message' => '&#x2713; IMPORTADO!!');
         }
 	}
+
+
+
 
 
 

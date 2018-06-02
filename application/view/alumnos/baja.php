@@ -5,7 +5,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <button type="button" id="button" class="btn btn-sm btn-info">Send <i class="fa fa-send"></i></button>
+                <!-- <button type="button" id="button" class="btn btn-sm btn-info">Send <i class="fa fa-send"></i></button> -->
                 <table id="example" class="table table-sm table-striped" style="width:100%">
                     <thead>
                         <tr class="bg-info">

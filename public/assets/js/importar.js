@@ -83,17 +83,27 @@ var Import = {
     importStudent: function() {
         let that = this; 
         $('.btn_import').on('click', function(){
-            let alumno = $(this).attr('id');
-            $.ajax({
-                data: { alumno: alumno },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'importar/importarAlumno',
-                success: function(data){
-                    console.log(data);
-                    that.getStuentsList();
-                }
-            });
+            let alumno = parseInt($(this).attr('id'));
+            if (!isNaN(alumno)) {
+                $.ajax({
+                    data: { alumno: alumno },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'importar/importarAlumno',
+                    success: function(response){
+                        if (response.success) {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue');
+                        } else {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red');
+                        }
+                        that.getStuentsList();
+                    }
+                });
+            }
         }); 
     },
 

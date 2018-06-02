@@ -30,7 +30,7 @@
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <a id="menu-trigger" class="navbar-brand col-sm-3 col-md-2 mr-0 menu-toggle text-center" 
            href="#menu-toggle"><i class="fa fa-bars"></i> NAATIK SC</a>
-        <h6 class="text-secondary">Wellcome: <?= strtoupper($user); ?></h6>
+        <h6 class="text-secondary">Bienvenid@: <?= strtoupper($user); ?></h6>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
         <ul class="navbar-nav px-5">
             <li class="nav-item text-nowrap">
@@ -105,6 +105,7 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
+                        <?php if ($usr_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>user">
                               <span data-feather="user"></span>
@@ -129,7 +130,8 @@
                               Repetidos
                             </a>
                         </li>
-                        <?php if (View::active($filename, 'alumnos')): ?>
+                        <?php endif ?>
+                        <?php if (View::active($filename, 'alumnos') && $usr_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>wines">
                               <span data-feather="file-text"></span>
@@ -148,13 +150,13 @@
                               Lista Becados
                             </a>
                         </li>
+                        <?php endif ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>mapa">
                               <span data-feather="file-text"></span>
                               Mapa
                             </a>
                         </li>
-                        <?php endif ?>
                         <?php if (View::active($filename, 'pagos')): ?>
                         <li class="nav-item">
                             <a class="nav-link" id="lista-becarios" href="#">

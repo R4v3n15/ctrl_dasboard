@@ -59,7 +59,7 @@ class ImportarController extends Controller
     }
 
     public function importarAlumno() {
-        echo json_encode(ImportarModel::importStudent(Request::post('alumno')));
+        $this->View->renderJSON(ImportarModel::importarAlumno(Request::post('alumno')));
     }
 
 }

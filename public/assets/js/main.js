@@ -48,7 +48,6 @@ var Main = {
             } else {
                 sessionStorage.setItem('toggledMenu', 1);
             }
-            console.log(toggled)
         });
 
     },

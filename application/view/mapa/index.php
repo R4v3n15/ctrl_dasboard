@@ -1,6 +1,11 @@
 <div class="row" id="page-content-wrapper">
-    <main role="main" class="col-md-12 px-4" id="map">
-        
+    <main role="main" class="col-md-12 px-4">
+        <div class="row">
+          <h6 class="col-md-12 text-center text-warning">[PENDIENTE] Trabajando en Mejoras por Politicas de Google Maps</h6>
+          <div class="col-md-12" id="map" style="height: 80vh">
+                
+            </div>
+        </div>
     </main>
 </div>
 

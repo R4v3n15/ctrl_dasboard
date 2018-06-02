@@ -162,6 +162,7 @@ var Inscripcion = {
                     url: _root_ + 'alumnos/crearTutor'
                 })
                 .then(function(response){
+                    console.log(response);
                     if (response.success) {
                         // Message confirmation
                         localStorage.setItem('tutor_id', response.tutor);
@@ -171,6 +172,11 @@ var Inscripcion = {
                         localStorage.setItem('number', response.number);
                         localStorage.setItem('between', response.between);
                         localStorage.setItem('colony', response.colony);
+
+                        let seguir = '<a href="#" class="btn btn-sm btn-info btn_forms" id="form_alumno" data-form="alumno">Continuar <i class="fa fa-arrow-right"></i></a>';
+                        $('#formulario').addClass('mt-5 text-center').html(seguir);
+                        _this.navigateInscriptionForms();
+
                         $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-green');
@@ -256,6 +262,11 @@ var Inscripcion = {
                     if(response.success){
                         localStorage.setItem('student_id', response.student);
                         localStorage.setItem('student_name', response.name);
+
+                        let seguir = '<a href="#" class="btn btn-sm btn-info btn_forms" id="form_estudios" data-form="estudios">Continuar <i class="fa fa-arrow-right"></i></a>';
+                        $('#formulario').addClass('mt-5 text-center').html(seguir);
+                        _this.navigateInscriptionForms();
+
                         $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-green');
@@ -318,10 +329,11 @@ var Inscripcion = {
                     url: _root_ + 'alumnos/crearEstudios'
                 })
                 .then(function(response){
+                    console.log(response);
                     if (response.success) {
                         let _urlMapa  = _root_ + 'mapa/u/'+response.student,
-                            _urlFin   = _root_ + 'alumno',
-                            _urlNuevo = _root_ + 'alumno/inscribir';
+                            _urlFin   = _root_ + 'alumnos',
+                            _urlNuevo = _root_ + 'alumnos/inscribir';
                         let btnMapa   = '<a href="'+_urlMapa+'" class="btn btn-info mr-2">Agregar Croquis</a>',
                             btnFin    = '<a href="'+_urlFin+'" class="btn btn-success mx-2">Finalizar</a>',
                             btnNuevo  = '<a href="'+_urlNuevo+'" class="btn btn-primary mx-2">Registrar otro alumno</a>';
@@ -332,7 +344,7 @@ var Inscripcion = {
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-green');
 
-                        console.log(localStorage.getItem('student_name'))
+                        sessionStorage.setItem('formNewStudent', 'tutor');
 
                         $('#formulario').addClass('mt-5 text-center').html(btnMapa + btnFin + btnNuevo);
                     } else {

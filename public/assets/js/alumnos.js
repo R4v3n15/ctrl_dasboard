@@ -57,6 +57,7 @@ var Alumnos = {
             url: _root_ + 'alumnos/tablaAlumnos',
             success: function(data){
                 $('#tabla_alumnos').html(data);
+                $('[data-toggle="tooltip"]').tooltip()
                 feather.replace();
                 _this.countStudents();
                 _this.navigationPage(curso);

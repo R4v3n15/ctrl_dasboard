@@ -854,6 +854,17 @@ class AlumnoModel
         $surname  = ucwords(strtolower($surname));
         $lastname = ucwords(strtolower($lastname));
 
+        $validar = $database->prepare("SELECT id_tutor 
+                                        FROM tutors 
+                                        WHERE namet = :name
+                                          AND surnamet = :surname
+                                          AND lastnamet = :lastname
+                                        LIMIT 1;");
+        $validar->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+        if ($validar->rowCount() > 0) {
+            return array('success' => false, 'message' => "Esta tratando de guardar un tutor que ya existe.");
+        }
+
         $database->beginTransaction();
         try{
             $query= $database->prepare("INSERT INTO tutors(namet, surnamet, lastnamet, 
@@ -908,7 +919,6 @@ class AlumnoModel
 
         if (!$commit) {
             $database->rollBack();
-
             return array('success' => false, 'message' => "Error: No se guardó datos del tutor, intente de nuevo o reporte el error.");
         } else {
             $database->commit();
@@ -934,6 +944,17 @@ class AlumnoModel
         $surname  = ucwords(strtolower($surname));
         $lastname = ucwords(strtolower($lastname));
         $tutor    = (int)$tutor;
+
+        $validar = $database->prepare("SELECT student_id
+                                        FROM students
+                                        WHERE name = :name
+                                          AND surname = :surname
+                                          AND lastname = :lastname
+                                        LIMIT 1;");
+        $validar->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
+        if ($validar->rowCount() > 0) {
+            return array('success' => false, 'message' => "Esta tratando de guardar un alumno que ya existe.");
+        }
 
         $database->beginTransaction();
         try{
@@ -961,7 +982,13 @@ class AlumnoModel
 	                                ':comment_s'  => $comment));
 
 	        if ($sql->rowCount() > 0) {
-	            $student = $database->lastInsertId();
+                $select = $database->prepare("SELECT student_id FROM students ORDER BY student_id DESC LIMIT 1;");
+                $select->execute();
+                $student = $database->lastInsertId();
+                if ($select->rowCount() > 0) {
+                    $student = $select->fetch()->student_id;
+                }
+	            
 	            // Crear detalles del alumno
 	            $details =  $database->prepare("INSERT INTO students_details(student_id, facturacion, homestay,
                                                                              acta_nacimiento) 
@@ -1092,7 +1119,7 @@ class AlumnoModel
             $database->commit();
             return array(
 	            		'success' => true,
-	            		'student' => $student,
+	            		'student_id' => $student,
 	            		'message' => 'Registro finalizado');
         }
     }
