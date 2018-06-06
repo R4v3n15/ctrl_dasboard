@@ -195,10 +195,19 @@ class AlumnoModel
                                         </li>';
                                 echo   '<li>
                                             <a  href="javascript:void(0)" 
+                                                class="btnUnsuscribeStudent" 
+                                                data-student="'.$row->id.'"
+                                                data-name="'.$row->nombre.' '.$row->apellido.'">
+                                                <span class="text-warning" data-feather="chevron-right"></span>
+                                                Dar de Baja
+                                            </a>
+                                        </li>';
+                                echo   '<li>
+                                            <a  href="javascript:void(0)" 
                                                 class="btnDeleteStudent" 
                                                 id="'.$row->id.'"
                                                 data-name="'.$row->nombre.' '.$row->apellido.'">
-                                                <span class="text-secondary" data-feather="chevron-right"></span>
+                                                <span class="text-danger" data-feather="chevron-right"></span>
                                                 Eliminar
                                             </a>
                                         </li>';
@@ -221,8 +230,8 @@ class AlumnoModel
                             </button>
                           </td>';
                     echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-warning tekedown_multi">
-                                Dar De Baja
+                            <button type="button" class="btn btn-sm mini btn-warning btnUnsuscribeStudents">
+                                Dar de Baja
                             </button>
                           </td>';
                     echo '<td class="text-center">
@@ -496,9 +505,9 @@ class AlumnoModel
 
 
 
-    public static function tableInactiveStudents(){
+    public static function unsuscribeStudentsTable(){
         $database = DatabaseFactory::getFactory()->getConnection();
-        $students = GeneralModel::allStudentsDown();
+        $students = GeneralModel::allStudentsUnsuscribe();
 
         if ($students !== null) {
 
@@ -546,6 +555,10 @@ class AlumnoModel
                     $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
                 }
                 $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
+                $editar = '<button type="button" 
+                                    class="btn btn-sm btn-warning btnSuscribeStudent"
+                                    data-student="'.$alumno->student_id.'"
+                                    data-name="'.$alumno->name.'">Dar de Alta</button>';
 
                 $info = array(
                     'count' => $counter,
@@ -555,7 +568,8 @@ class AlumnoModel
                     'avatar' => $avatar,
                     'studies' => $alumno->studies.' '.$alumno->lastgrade,
                     'group'   => $grupo,
-                    'tutor'   => $nombre_tutor
+                    'tutor'   => $nombre_tutor,
+                    'options' => $editar
                 );
 
                 array_push($datos, $info);
@@ -568,22 +582,87 @@ class AlumnoModel
         return null;    
     }
 
-    public static function checkOutStudent($alumno, $estado) {
+    public static function unsuscribeStudent($student){
         $database = DatabaseFactory::getFactory()->getConnection();
-        $fecha = H::getTime('Y-m-d');
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $checkout = $database->prepare("UPDATE students
+                                            SET status       = 0
+                                            WHERE student_id = :student;");
+            $update = $checkout->execute(array(':student' => $student));
 
-        $checkout = $database->prepare("UPDATE academic_data
-                                        SET baja = :estado,
-                                            fecha_baja = :fecha
-                                        WHERE student_id = :alumno;");
-        $update = $checkout->execute(array(':estado' => $estado, ':fecha' => $fecha, ':alumno' => $alumno));
-
-        if ($update && $estado === 0) {
-            $state = $database->prepare("UPDATE students_groups SET state = 0 WHERE student_id = :alumno");
-            $state->execute(array(':alumno' => $alumno));
+            if (!$update) {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
         }
 
-        echo $update ? 1 : 0;
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
+        }
+    }
+
+    public static function unsuscribeStudent($students){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = (array)$students;
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $checkout = $database->prepare("UPDATE students
+                                            SET status       = 0
+                                            WHERE student_id = :student;");
+            $update = $checkout->execute(array(':student' => $student));
+
+            if (!$update) {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
+        }
+    }
+
+
+    public static function suscribeStudent($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $checkout = $database->prepare("UPDATE students
+                                            SET status       = 1
+                                            WHERE student_id = :student;");
+            $update = $checkout->execute(array(':student' => $student));
+
+            if (!$update) {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de alta al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de alta correctamente!!');
+        }
     }
 
     public static function getStudentsCheckout(){
@@ -1426,103 +1505,6 @@ class AlumnoModel
             return array('success' => true, 'message' => 'Datos del Alumno actualizados correctamente!');
         }
     }
-
-
-    public static function saveAddress($user, $address, $user_type){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $commit   = true;
-
-        $database->beginTransaction();
-        try{
-            $sql = "INSERT INTO address(user_id, user_type, street, st_number, st_between, colony,
-                                        city, zipcode, state, country, latitud, longitud)
-                                VALUES(:user, :user_type, :street, :st_number, :st_between, :colony,
-                                       :city, :zipcode, :state, :country, :latitud, :longitud);";
-            $query = $database->prepare($sql);
-            $query->execute(array(
-                ':user'       => $user,
-                ':user_type'  => $user_type,
-                ':street'     => $address['street'],
-                ':st_number'  => $address['number'],
-                ':st_between' => $address['between'],
-                ':colony'     => $address['colony'],
-                ':city'       => 'Felipe Carrillo Puerto',
-                ':zipcode'    => 77200,
-                ':state'      => 'Quintana Roo',
-                ':country'    => 'México',
-                ':latitud'    => $address['latitud'],
-                ':longitud'   => $address['longitud']));
-
-            if ($query->rowCount() < 1) {
-                $commit = false;
-            }            
-        } catch (PDOException $e) {
-            $commit = false;
-        }
-
-        if (!$commit) {
-            $database->rollBack();
-            Session::add('feedback_negative','Error al guardar direccion!');
-            exit();
-            return false;
-        }else {
-            $database->commit();
-            return true;
-        }
-    }
-
-    public static function updateAddress($user, $address, $user_type){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $commit   = true;
-
-        $database->beginTransaction();
-        try{
-            $sql = "UPDATE address 
-                    SET street     = :street, 
-                        st_number  = :st_number, 
-                        st_between = :st_between, 
-                        colony     = :colony,
-                        city       = :city, 
-                        zipcode    = :zipcode, 
-                        state      = :state, 
-                        country    = :country, 
-                        latitud    = :latitud, 
-                        longitud   = :longitud
-                    WHERE user_id   = :user 
-                      AND user_type = :user_type;";
-            $query = $database->prepare($sql);
-            $query->execute(array(
-                ':user'       => $user,
-                ':user_type'  => $user_type,
-                ':street'     => $address['street'],
-                ':st_number'  => $address['number'],
-                ':st_between' => $address['between'],
-                ':colony'     => $address['colony'],
-                ':city'       => 'Felipe Carrillo Puerto',
-                ':zipcode'    => 77200,
-                ':state'      => 'Quintana Roo',
-                ':country'    => 'México',
-                ':latitud'    => $address['latitud'],
-                ':longitud'   => $address['longitud']));
-
-            if ($query->rowCount() < 1) {
-                $commit = false;
-            }            
-        } catch (PDOException $e) {
-            $commit = false;
-        }
-
-        if (!$commit) {
-            $database->rollBack();
-            Session::add('feedback_negative','Error al actualizar!');
-            return false;
-        }else {
-            $database->commit();
-            return true;
-        }
-    }
-
-
 
     public static function updateStudies($student, $ocupation, $workplace, $studies, $lastgrade, $class){
         $database = DatabaseFactory::getFactory()->getConnection();

@@ -376,7 +376,15 @@ class AlumnosController extends Controller
     }
 
     public function bajaAlumno(){
-        AlumnoModel::checkOutStudent(Request::post('alumno'), Request::post('estado'));
+        $this->View->renderJSON(AlumnoModel::unsuscribeStudent(Request::post('student')));
+    }
+
+    public function bajaAlumnos(){
+        $this->View->renderJSON(AlumnoModel::unsuscribeStudents(Request::post('students')));
+    }
+
+    public function altaAlumno(){
+        $this->View->renderJSON(AlumnoModel::suscribeStudent(Request::post('student')));
     }
 
     public function agregarAlumnoGrupo(){
@@ -423,7 +431,7 @@ class AlumnosController extends Controller
     }
 
     public function tablaAlumnosBaja(){
-        $this->View->renderJSON(AlumnoModel::tableInactiveStudents());
+        $this->View->renderJSON(AlumnoModel::unsuscribeStudentsTable());
     }
 
     public function eliminados() {

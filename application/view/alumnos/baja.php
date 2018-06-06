@@ -16,6 +16,7 @@
                             <th class="text-center">Sexo</th>
                             <th class="text-center">Grupo</th>
                             <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -27,6 +28,7 @@
                             <th class="text-center">Sexo</th>
                             <th class="text-center">Grupo</th>
                             <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -36,33 +38,36 @@
     </main>
 </div>
 
-<div class="modal fade" id="modalReactiveStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalSuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Dar de Alta</h5>
+                <h5 class="modal-title" id="suscribeTitle">Dar de Alta Alumno</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center">
-                    <div class="col-12 text-center">
-                        <p class="text-center"> 
-                            Dara de alta a:<br> 
-                            <strong id="nombre_alumno"></strong>.<br> 
-                            ¿Desea continuar con esta acción?
-                        </p>
-                <input type="hidden" id="num_alumno">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="hidden" class="form-control text-center" id="suscribe_student" />
+                                <h6 class="text-center">
+                                    ¿Dar de alta a: <br> 
+                                    <strong class="text-info" id="suscribe_name"></strong>?
+                                </h6>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row mb-5">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="reactiveStudent" class="btn btn-primary">Continuar</button>
+                    <button type="button" id="suscribeStudent" class="btn btn-primary">Der de Alta</button>
                 </div>
             </div>
         </div>

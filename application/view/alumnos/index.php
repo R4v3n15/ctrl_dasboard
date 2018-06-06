@@ -154,6 +154,77 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalUnsuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unsuscribeTitle">Dar de Baja Alumno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="hidden" class="form-control text-center" id="unsuscribe_student" />
+                                <h6 class="text-center">
+                                    ¿Está seguro de querer dar de baja a: <br> 
+                                    <strong class="text-info" id="unsuscribe_name"></strong>?
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Der de Baja</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUnsuscribeStudents" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unsuscribeTitle">Dar de Baja Alumnos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="hidden" class="form-control text-center" id="unsuscribe_student" />
+                                <h5 class="text-center" id="unsuscribe_message">
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Der de Baja</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div id="invoice_list" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

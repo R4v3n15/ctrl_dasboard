@@ -265,14 +265,14 @@ class GeneralModel
     //  =   =   =   =   =   = Alumnos De Baja   =   =   =   = //
     ////////////////////////////////////////////////////////////
 
-    public static function allStudentsDown() {
+    public static function allStudentsUnsuscribe() {
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, CONCAT_WS(' ',s.name, s.surname, s.lastname) as name, 
                                                s.age, s.genre, s.avatar, g.class_id,
                                                g.convenio, sd.studies, sd.lastgrade
                                         FROM students as s, students_groups as g, students_details as sd
-                                        WHERE s.status = 2
-                                          AND s.deleted  = 0
+                                        WHERE s.status     = 0
+                                          AND s.deleted    = 0
                                           AND s.student_id = g.student_id
                                           AND s.student_id = sd.student_id;");
         $students->execute();

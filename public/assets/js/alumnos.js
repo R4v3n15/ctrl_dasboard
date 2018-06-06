@@ -66,6 +66,7 @@ var Alumnos = {
 
                 _this.checkAllStudents();
                 _this.changeGroupAllStudentsModal();
+                _this.unsuscribeStudent();
             }
         });
     },
@@ -125,6 +126,38 @@ var Alumnos = {
             $('#extra_message').text('Grupo Actual: '+ grupo);
 
             $('#modalAddToGroup').modal('show');
+        });
+
+        // Dar de baja a un alumno
+        $('.btnUnsuscribeStudent').on('click', function(event){
+            event.preventDefault();
+
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#unsuscribe_student').val(student);
+
+            $('#unsuscribe_name').text(name);
+
+            $('#modalUnsuscribeStudent').modal('show');
+        });
+
+        // Dar de baja a varios alumno a la vez
+        $('.btnUnsuscribeStudents').on('click', function(event){
+            event.preventDefault();
+
+            $.each($('.selected-item'), function(i, item) {
+                _this.vars.alumnos[i] = $(this).val();
+            });
+
+            if (_this.vars.alumnos.length > 0) {
+                $('#unsuscribe_message').html('Dar de baja a: ' + _this.vars.alumnos.length + ' Alumnos seleccionados.');
+                $('#modalUnsuscribeStudents').modal('show');
+            } else {
+                $('#general_snack').attr('data-content', 'Seleccione al menos a un Alumno de la lista!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
         });
     },
 
@@ -240,6 +273,66 @@ var Alumnos = {
                 $('#general_snack').snackbar('show');
                 $('.snackbar').addClass('snackbar-green');
             }
+        });
+    },
+
+    unsuscribeStudent: function(){
+        let _this = this;
+        $('#unsuscribeStudent').on('click', function(event){
+            event.preventDefault();
+
+            let student = $('#unsuscribe_student').val();
+
+            $.ajax({
+                data: { student: student },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'alumnos/bajaAlumno',
+                success: function(response){
+
+                    if (response.success) {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue')
+                    } else {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red')
+                    }
+                    _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                    $('#modalUnsuscribeStudent').modal('hide');
+                }
+            });
+        });
+    },
+
+    unsuscribeStudents: function(){
+        let _this = this;
+        $('#unsuscribeStudents').on('click', function(event){
+            event.preventDefault();
+
+            let student = $('#unsuscribe_student').val();
+
+            $.ajax({
+                data: { students: _this.vars.alumnos },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'alumnos/bajaAlumnos',
+                success: function(response){
+
+                    if (response.success) {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue')
+                    } else {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red')
+                    }
+                    _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                    $('#modalUnsuscribeStudents').modal('hide');
+                }
+            });
         });
     },
 
