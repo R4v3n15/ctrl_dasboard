@@ -609,7 +609,7 @@ class AlumnoModel
         }
     }
 
-    public static function unsuscribeStudent($students){
+    public static function unsuscribeStudents($students){
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = (array)$students;
         $commit   = true;

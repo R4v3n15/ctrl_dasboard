@@ -273,7 +273,7 @@ class ImportarModel
 	public static function importStudents($page) {
 		H::getLibrary('paginadorLib');
 		$paginator  = new \Paginador();
-		$filas      = 25;
+		$filas      = 30;
 		$page       = (int)$page;
 		$database   = DatabaseFactory::getFactory()->getConnection();
 		$query = $database->prepare("SELECT * 
@@ -345,7 +345,7 @@ class ImportarModel
 							echo '<td>'.$alumno->surname.' '.$alumno->lastname.' '.$alumno->name.'</td>';
 							echo '<td>';
 								if (count($alumno->tutor) > 0) {
-									echo $alumno->tutor['name'].' '.$alumno->tutor['surname'];
+									echo $alumno->tutor['name'].' '.$alumno->tutor['surname'].' '.$alumno->tutor['lastname'];
 								} else {
 									echo ' - - - - ';
 								}
@@ -589,8 +589,8 @@ class ImportarModel
 				if ($getTutor->rowCount() > 0) {
 					$tutor = $getTutor->fetch();
 					$tutor_name = trim($tutor->name_t);
-					$tutor_surname = trim($tutor->surname1_t);
-					$tutor_lastname = trim($tutor->surname2_t);
+					$tutor_surname = str_replace('�', 'Ñ',trim($tutor->surname1_t));
+					$tutor_lastname = str_replace('�', 'Ñ',trim($tutor->surname2_t));
 					$latitud  = 19.57789189450819;
 					$longitud = -88.04557564999999;
 

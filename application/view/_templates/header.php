@@ -107,6 +107,12 @@
                     <ul class="nav flex-column mb-2">
                         <?php if ($usr_type === 777): ?>
                         <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>dashboard/admin">
+                              <span data-feather="database"></span>
+                              Administrar BD
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>user">
                               <span data-feather="user"></span>
                               Mi Perfil

@@ -25,6 +25,18 @@ class DashboardController extends Controller
         $this->View->render('dashboard/index');
     }
 
+    public function admin(){
+        $this->View->render('dashboard/admin');
+    }
+
+    public function limpiarDB(){
+        $this->View->renderJSON(GeneralModel::cleanDatabase());
+    }
+
+    public function cargarDB(){
+        $this->View->renderJSON(GeneralModel::feedDatabase());
+    }
+
     public function eventos(){
         $this->View->renderJSON(DashboardModel::calendarEvents());
     }
