@@ -176,7 +176,7 @@ class AlumnoModel
                                             </a>
                                         </li>';
                                 echo    '<li>
-                                            <a href="'.Config::get('URL').'alumnos/convenio">
+                                            <a href="'.Config::get('URL').'alumnos/c/'.$row->id.'">
                                                 <span class="text-primary" data-feather="chevron-right"></span>
                                                 Convenio
                                             </a></li>';

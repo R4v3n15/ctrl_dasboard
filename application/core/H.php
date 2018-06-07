@@ -111,6 +111,7 @@ class H
 
     public static function p($array){
         print("<pre>".print_r($array,true)."</pre>");
+        exit();
     }
 
     public static function f($string){

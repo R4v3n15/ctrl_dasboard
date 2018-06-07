@@ -366,6 +366,11 @@ class AlumnosController extends Controller
         $this->View->render('alumnos/convenio');
     }
 
+    public function c($student){
+        // GeneralModel::getStudentDetail($student);
+        $this->View->render('alumnos/convenio', array('alumno' => GeneralModel::getStudentDetail($student)));
+    }
+
     public function conveniopdf(){
         $this->View->renderWithoutHeaderAndFooter('alumnos/conveniopdf');
     }

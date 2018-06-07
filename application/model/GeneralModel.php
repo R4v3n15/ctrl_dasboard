@@ -2,6 +2,92 @@
 
 class GeneralModel
 {
+    public static function getStudentDetail($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $_sql = $database->prepare("SELECT s.student_id, s.id_tutor, CONCAT_WS(' ', s.name, s.surname, s.lastname) as name, 
+                                           sg.class_id
+                                    FROM students as s, students_groups as sg
+                                    WHERE s.student_id = :student
+                                      AND s.student_id = sg.student_id 
+                                    LIMIT 1;");
+        $_sql->execute(array(':student' => $student));
+
+        $alumno = null;
+        if ($_sql->rowCount() > 0) {
+            $alumno = $_sql->fetch();
+
+            $clase         = null;
+            $c_normal      = null;
+            $c_promocional = null;
+            $c_inscripcion = null;
+            $fecha         = null;
+            $horas         = null;
+            $dias          = null;
+            if ($alumno->class_id !== null) {
+                $getClass = $database->prepare("SELECT co.course, g.group_name, c.schedul_id, 
+                                                       c.costo_normal, c.costo_promocional, c.costo_inscripcion,
+                                                       s.date_init, CONCAT_WS(' - ', s.hour_init, s.hour_end) as horas 
+                                                FROM classes as c, courses as co, groups as g, schedules as s
+                                                WHERE c.class_id   = :clase
+                                                  AND c.course_id  = co.course_id
+                                                  AND c.group_id   = g.group_id
+                                                  AND c.schedul_id = s.schedul_id
+                                                LIMIT 1;");
+                $getClass->execute(array(':clase' => $alumno->class_id));
+
+                if ($getClass->rowCount() > 0) {
+                    $result = $getClass->fetch();
+                    $c_normal      = $result->costo_normal;
+                    $c_promocional = $result->costo_promocional;
+                    $c_inscripcion = $result->costo_inscripcion;
+                    $clase         = ucwords(strtolower($result->course)) . ' ' . ucwords(strtolower($result->group_name));
+                    $fecha         = $result->date_init;
+                    $horas         = $result->horas;
+
+
+                    // Obtener Dias de la clase
+                    $getDays = $database->prepare("SELECT d.day     
+                                                    FROM schedul_days as sd, days as d
+                                                    WHERE sd.schedul_id = :schedul
+                                                      AND sd.day_id     = d.day_id;");
+                    $getDays->execute(array(':schedul' => $result->schedul_id));
+
+                    if ($getDays->rowCount() > 0) {
+                        $dias = $getDays->fetchAll();
+                    }
+                }
+            }
+
+            $alumno->c_normal      = $c_normal;
+            $alumno->c_promocional = $c_promocional;
+            $alumno->c_inscripcion = $c_inscripcion;
+            $alumno->clase         = $clase;
+            $alumno->fecha         = $fecha;
+            $alumno->horas         = $horas;
+            $alumno->dias          = $dias;
+
+            $tutor = null;
+            if ($alumno->id_tutor !== null) {
+                $getTutor = $database->prepare("SELECT CONCAT_WS(' ', namet, surnamet, lastnamet) as name
+                                                FROM tutors
+                                                WHERE id_tutor = :tutor
+                                                LIMIT 1;");
+                $getTutor->execute(array(':tutor' => $alumno->id_tutor));
+
+                if ($getClass->rowCount() > 0) {
+                    $result = $getTutor->fetch();
+                    $tutor  = $result->name;
+                }
+            }
+
+            $alumno->tutor = $tutor;
+        }
+        // H::p($alumno);
+        return $alumno;
+    }
+
+
     ///////////////////////////////////////////////////
     //  =  =  =  =  = Alumnos Activos  =  =  =  =  = //
     ///////////////////////////////////////////////////
