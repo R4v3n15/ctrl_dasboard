@@ -13,28 +13,32 @@
             </div>
         </div>
 
-        <h4>Section title</h4>
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1,003</td>
-                        <td>Integer</td>
-                        <td>nec</td>
-                        <td>odio</td>
-                        <td>Praesent</td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Header</th>
+                                <th>Header</th>
+                                <th>Header</th>
+                                <th>Header</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1,003</td>
+                                <td>Integer</td>
+                                <td>nec</td>
+                                <td>odio</td>
+                                <td>Praesent</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 </div>

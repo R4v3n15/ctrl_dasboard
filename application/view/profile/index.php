@@ -1,15 +1,19 @@
-<div class="container">
-    <div class="well card-green">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1 text-center">
-                <?php $this->renderFeedbackMessages(); ?>
-
-                <div class="card-title">
-                    <h3 class="text-center">Usuarios de Control Escolar</h3>
+<div class="row" id="page-content-wrapper">
+    <main role="main" class="col-md-12 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
+            <h5 class="text-info">Usuarios de Control Escolar</h5>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <button class="btn btn-sm btn-outline-secondary">Share</button>
+                    <button class="btn btn-sm btn-outline-secondary">Export</button>
                 </div>
+            </div>
+        </div>
 
-                <div>
-                    <table class="table table-hover">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
                         <thead>
                         <tr class="info">
                             <th class="text-center">Id</th>
@@ -40,5 +44,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>

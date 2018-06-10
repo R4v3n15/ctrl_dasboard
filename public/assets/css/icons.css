@@ -1,10 +1,10 @@
 .fa.fa-star{
-    font-size: 2.2rem;
+    font-size: 1.2rem;
     color: rgb(220, 220, 220);
 }
 
 .fa.fa-star.checked{
-    font-size: 2.2rem;
+    font-size: 1.2rem;
     color: rgb(230, 250, 10);
 }
 

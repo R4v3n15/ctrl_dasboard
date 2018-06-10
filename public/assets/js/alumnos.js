@@ -10,17 +10,14 @@ var Alumnos = {
         this.changeViewStudent();
         this.addToGroup();
         this.getGroups();
-        this.changeGroupAllStudents()
+        this.changeGroupAllStudents();
 
-        // this.getStudents();
-        // this.defaultGetStudents();
-        // this.activeData();
-        
-        // this.getGroupsByCourse();
-        // this.checkoutStudent();
-        // this.displayStudentsCheckout();
-        // this.confirmDelete();
-        // this.confirmDeleteStudents();
+        this.unsuscribeStudent();
+        this.unsuscribeStudents();
+        this.deleteStudent();
+        this.deleteStudents()
+
+        this.invoiceTable();
     },
 
     setActiveView: function(){
@@ -62,11 +59,9 @@ var Alumnos = {
                 _this.countStudents();
                 _this.navigationPage(curso);
                 _this.addStudentInGroup();
-                _this.changeStudentGroup();
+                _this.openModals();
 
                 _this.checkAllStudents();
-                _this.changeGroupAllStudentsModal();
-                _this.unsuscribeStudent();
             }
         });
     },
@@ -94,6 +89,39 @@ var Alumnos = {
         });
     },
 
+
+    invoiceTable: function(){
+        $('.btnInvoiceList').click(function() {
+            $('#invoice_table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'print'
+                ],
+                "stateSave": true,
+                "lengthMenu": [[20, 50, -1], [20, 50, "Todo"]],
+                "ajax": _root_ + 'alumnos/tablaFacturacion',
+                "columns": [
+                    { "data": "name" },
+                    { "data": "cellphone" },
+                    { "data": "tutor" },
+                    { "data": "phone" },
+                    { "data": "phone2" },
+                    { "data": "phone3" }
+                ],
+                "language": {
+                    "lengthMenu": "Ver _MENU_ filas por página",
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontró resultados",
+                    "info": "_PAGE_ de _PAGES_ páginas",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtrado de _MAX_ resultados)"
+                }
+            });
+
+            $('#modalInvoiceList').modal('show');
+        });
+    },
+
     addStudentInGroup: function() {
         let _this = this;
         $('.add_to_group').on('click', function(event){
@@ -110,8 +138,9 @@ var Alumnos = {
         });
     },
 
-    changeStudentGroup: function(){
+    openModals: function(){
         let _this = this;
+
         $('.change_group').on('click', function(event){
             event.preventDefault();
 
@@ -126,6 +155,25 @@ var Alumnos = {
             $('#extra_message').text('Grupo Actual: '+ grupo);
 
             $('#modalAddToGroup').modal('show');
+        });
+
+        $('#changeAll').click(function(event){
+            event.preventDefault();
+
+            $.each($('.selected-item'), function(i, item) {
+                _this.vars.alumnos[i] = $(this).val();
+            });
+
+            if (_this.vars.alumnos.length > 0) {
+                $('#updateMessage').html('Cambiar de grupo a: ' + _this.vars.alumnos.length + ' Alumnos.');
+                $('#updatecourse').val('');
+                $('#updategroups').val('');
+                $('#modalChangeGroup').modal('show');
+            } else {
+                $('#general_snack').attr('data-content', 'Seleccione al menos a un Alumno!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
         });
 
         // Dar de baja a un alumno
@@ -159,6 +207,38 @@ var Alumnos = {
                 $('.snackbar').addClass('snackbar-green');
             }
         });
+
+        // Eliminar alumno
+        $('.btnDeleteStudent').on('click', function(event){
+            event.preventDefault();
+
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#delete_student').val(student);
+
+            $('#delete_name').text(name);
+
+            $('#modalDeleteStudent').modal('show');
+        });
+
+        // Eliminar alumnos seleccionados
+        $('.btnDeleteStudents').on('click', function(event){
+            event.preventDefault();
+
+            $.each($('.selected-item'), function(i, item) {
+                _this.vars.alumnos[i] = $(this).val();
+            });
+
+            if (_this.vars.alumnos.length > 0) {
+                $('#delete_students').html(_this.vars.alumnos.length);
+                $('#modalDeleteStudents').modal('show');
+            } else {
+                $('#general_snack').attr('data-content', 'Seleccione al menos a un Alumno de la lista!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-green');
+            }
+        });
     },
 
     addToGroup: function() {
@@ -174,25 +254,19 @@ var Alumnos = {
                 data: { alumno: alumno, clase: clase },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumnos/agregarAlumnoGrupo',
-                success: function(data){
-                    if (data !== '0') {
-                        // Close Modal
-                        $('#modalAddToGroup').modal('hide');
-
-                        // Message confirmation
-                        $('#general_snack').attr('data-content', 'Alumno agregado al grupo correctamente!');
+                url: _root_ + 'alumnos/cambiarGrupoAlumno',
+                success: function(response){
+                    if (response.success) {
+                        $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-blue');
                     } else {
-                        // Message Notification
-                        $('#general_snack').attr('data-content', 'No se agregó el alumno al grupo, intente de nuevo!');
+                        $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-red');
                     }
-
-                    //Verificar en que vista y pagina debe mantenerse al usuario
-                    _this.getStudentsTable(_this.getActiveView, _this.vars.currentPage); 
+                    $('#modalAddToGroup').modal('hide');
+                    _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
                 }
             });
         });
@@ -219,28 +293,6 @@ var Alumnos = {
         });
     },
 
-
-    changeGroupAllStudentsModal: function(){
-        let _this = this;
-        $('#changeAll').click(function(event){
-            event.preventDefault();
-
-            $.each($('.selected-item'), function(i, item) {
-                _this.vars.alumnos[i] = $(this).val();
-            });
-
-            if (_this.vars.alumnos.length > 0) {
-                $('#updateMessage').html('Cambiar de grupo a: ' + _this.vars.alumnos.length + ' Alumnos.');
-                $('#updatecourse').val('');
-                $('#updategroups').val('');
-                $('#modalChangeGroup').modal('show');
-            } else {
-                $('#general_snack').attr('data-content', 'Seleccione al menos a un Alumno!');
-                $('#general_snack').snackbar('show');
-                $('.snackbar').addClass('snackbar-green');
-            }
-        });
-    },
 
     changeGroupAllStudents: function(){
         let _this = this;
@@ -311,8 +363,6 @@ var Alumnos = {
         $('#unsuscribeStudents').on('click', function(event){
             event.preventDefault();
 
-            let student = $('#unsuscribe_student').val();
-
             $.ajax({
                 data: { students: _this.vars.alumnos },
                 synch: 'true',
@@ -329,6 +379,7 @@ var Alumnos = {
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-red')
                     }
+                    _this.vars.alumnos = [];
                     _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
                     $('#modalUnsuscribeStudents').modal('hide');
                 }
@@ -402,298 +453,73 @@ var Alumnos = {
         });
     },
 
+    deleteStudent: function(){
+        let _this = this;
+        $('#deleteStudent').on('click', function(event){
+            event.preventDefault();
+
+            let student = $('#delete_student').val();
+
+            if (student !== '' && student !== undefined) {
+                $.ajax({
+                    data: { student: student },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'alumnos/eliminarAlumno',
+                    success: function(response){
+                        if (response.success) {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue')
+                        } else {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red')
+                        }
+                        _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                        $('#modalDeleteStudent').modal('hide');
+                    }
+                });
+            }
+        });
+    },
+
+    deleteStudents: function(){
+        let _this = this;
+        $('#deleteStudents').on('click', function(event){
+            event.preventDefault();
+
+            if (_this.vars.alumnos.length > 0) {
+                $.ajax({
+                    data: { students: _this.vars.alumnos },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'alumnos/eliminarAlumnos',
+                    success: function(response){
+
+                        if (response.success) {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue')
+                        } else {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red')
+                        }
+                        _this.vars.alumnos = [];
+                        _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                        $('#modalDeleteStudents').modal('hide');
+                    }
+                });
+            }
+        });
+    },
+
 
 
     ////////////////////////////////////////////
     // =  =   =  =  = O L D  =  =  =  =  =  = //
     ////////////////////////////////////////////
-
-    setStudentID: function(){
-        let that = this;
-        
-    },
-
-    changeGroupStudent: function(){
-        let that = this;
-        $('.change_group').on('click', function(){;
-            var student = $(this).data('student'),
-                curso   = $(this).data('course'),
-                grupo   = $(this).data('group');
-            $('#alumno_number').val(student);
-            console.log(curso);
-            $("#course_list option[value='" + curso +"']").attr("selected", true);
-            $("#course_list option[value!='" + curso +"']").attr("selected", false);
-            $.ajax({
-                data: { curso: curso },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/obtenerNivelesCurso',
-                success: function(data){
-                    console.log(data);
-                    var option = '';
-                    if (data !== 'null') {
-                        var res = JSON.parse(data);
-                        for (var i = 0; i < res.length; i++) {
-                            var attr = res[i].group_id == grupo ? 'selected' : '';
-                            option = option + '<option '+attr+' value="'+res[i].class_id+'">'+res[i].group_name+'</option>';
-                        }
-                    }
-                    $('#grupos').html(option);
-                }
-            });
-
-            $('#change_group').modal('show');
-        });
-
-        $('.add_to_group').on('click', function(){
-            var student = $(this).data('student');
-            $('#course').val('');
-            $('#groups').val('');
-            $('#alumno_id').val(student);
-            $('#modalAddToGroup').modal('show');
-        });
-    },
-
-    changeStudent: function(alumno, clase) {
-        let that = this;
-        $.ajax({
-            data: { alumno: alumno, clase: clase },
-            synch: 'true',
-            type: 'POST',
-            url: _root_ + 'alumnos/cambiarGrupoAlumno',
-            success: function(data){
-                if (data === '1') {
-                    $('#general_snack').attr('data-content', 'Reasignación de grupo realizado!');
-                    $('#general_snack').snackbar('show');
-                    $('.snackbar').addClass('snackbar-blue');
-                } else {
-                    if (data === '0') {
-                        $('#general_snack').attr('data-content', 'Falto información para cambio de grupo!');
-                        $('#general_snack').snackbar('show');
-                    } else {
-                        $('#general_snack').attr('data-content', 'Error desconocido: no se realizó el cambio!');
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-red');
-                    }
-                }
-
-                $('#change_group').modal('hide');
-                var view = sessionStorage.getItem('st_alive');
-                that.displayStudents(view); 
-            }
-        });
-    },
-
-    //Dar de baja al alumno
-    checkoutStudent: function() {
-        let that = this;
-        $('#check_out').change(function(){
-            var opt          = $("#check_out").prop("checked"),
-                student_id   = $("#check_out").data('id'),
-                student_name = $("#check_out").data('name');
-            if (opt) {
-                $('#alumno_id').val(student_id);
-                $('#student_name').text(student_name);
-                $('#checkout').modal('show');
-            } else {
-                $('#id_alumno').val(student_id);
-                $('#alumno_name').text(student_name);
-                $('#checkin').modal('show');
-            }
-            console.log(opt);
-        });
-
-        $('#checkout_student').click(function(){
-            var alumno = $('#alumno_id').val();
-            $.ajax({
-                data: { alumno: alumno, estado: 1 },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/bajaAlumno',
-                success: function(data){
-                    if (data === '1') {
-                        $('#student_snack').attr('data-content', 'Alumno dado de BAJA correctamente!');
-                    } else {
-                        $('#student_snack').attr('data-content', 'No fue posible dar de baja al alumno!');
-                    }
-                    $('#student_snack').snackbar('show');
-                    $('#checkout').modal('hide');
-                }
-            });
-        });
-
-        $('#checkin_student').click(function(){
-            var alumno = $('#id_alumno').val();
-            $.ajax({
-                data: { alumno: alumno, estado: 0 },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/bajaAlumno',
-                success: function(data){
-                    if (data === '1') {
-                        $('#student_snack').attr('data-content', 'Alumno dado de ALTA correctamente!');
-                    } else {
-                        $('#student_snack').attr('data-content', 'No fue posible dar de ALTA al alumno!');
-                    }
-                    $('#student_snack').snackbar('show');
-                    $('#checkin').modal('hide');
-                }
-            });
-        });
-
-        $('#no_checkout').click(function(){
-            $("#check_out").prop("checked", false);
-        });
-    },
-
-    //Dar de alta alumno
-    checkinStudent: function() {
-        let that = this;
-        $('.checkin_student').click(function(){
-            var student_id   = $(this).data('alumno'),
-                student_name = $(this).data('nombre');
-
-            console.log(student_id, student_name);
-            $('#num_alumno').val(student_id);
-            $('#nombre_alumno').text(student_name);
-            $('#checkin_st').modal('show');
-        });
-
-        $('#checked_student').click(function(){
-            var alumno = $('#num_alumno').val();
-            $.ajax({
-                data: { alumno: alumno, estado: 0 },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/bajaAlumno',
-                success: function(data){
-                    if (data === '1') {
-                        $('#general_snack').attr('data-content', 'Alumno dado de ALTA correctamente!');
-                    } else {
-                        $('#general_snack').attr('data-content', 'No fue posible dar de ALTA al alumno!');
-                    }
-                    $('#general_snack').snackbar('show');
-                    $('#checkin_st').modal('hide');
-                    that.displayStudentsCheckout();
-                }
-            });
-        });
-    },
-
-    getInvoiceListStudents: function(){
-        let that = this;
-
-        $('.invoice_list').click(function() {
-            $.ajax({
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/obtenerListaFactura',
-                success: function(data){
-                    $('#invoice_students_list').html(data);
-                    $('#invoice_list').modal('show');
-                    $('#tbl_invoice').DataTable();
-                }
-            });
-        });
-    },
-
-    //TODO: pendigs
-    deleteStudent: function(){
-        let that = this;
-        $('.btnDeleteStudent').on('click', function(){
-            var alumno_id = $(this).attr('id'),
-                alumno_name = $(this).data('name');
-            $('#alumno_id').val(alumno_id);
-            $('#alumno_name').text(alumno_name);
-            $('#modalDeleteStudent').modal('show');
-        });
-    },
-
-    confirmDelete: function(){
-        let that = this;
-        $('#btnConfirmDeleteStudent').on('click', function(){
-            var alumno = $('#alumno_id').val();
-            $.ajax({
-                data: { alumno: alumno },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/eliminarAlumno',
-                success: function(data){
-                    var response = JSON.parse(data);
-                    if (response === 1) {
-                        console.log(response);
-                        $('#general_snack').attr('data-content', 'Alumno eliminado correctamente!');
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-blue');
-                    } else {
-                        $('#general_snack').attr('data-content', 'No fue posible eliminar al alumno!');
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-red');
-                    }
-                    $('#modalDeleteStudent').modal('hide');
-                    var view = sessionStorage.getItem('st_alive');
-                    that.displayStudents(view);
-                }
-            });
-        });
-    },
-
-    deleteSelectedStudents: function(){
-        let that = this;
-        $('.delete_multi').click(() => {
-            var alumnos = [], j=0;
-            $.each($('.check_one'), function(i, item) {
-                if ($(this).prop("checked")) {
-                    alumnos[j] = $(this).val();
-                    j++;
-                }
-            });
-
-            $("#course_list").val('');
-            $("#grupos").val('');
-
-            if (alumnos.length > 0) {
-                $('#selected_students').text(j);
-                that.vars.alumnos = alumnos;
-                $('#modalDeleteSelectedStudent').modal('show');
-            } else {
-                $('#general_snack').attr('data-content', 'Seleccione al menos a un Alumno!');
-                $('#general_snack').snackbar('show');
-                $('.snackbar').addClass('snackbar-green');
-            }
-        });
-    },
-
-    confirmDeleteStudents: function(clase){
-        let that = this;
-        $('#btnConfirmDeleteStudents').on('click', function(){
-            if (that.vars.alumnos.length > 0) {
-                var alumnos = that.vars.alumnos;
-                $.ajax({
-                    data: { alumnos: alumnos },
-                    synch: 'true',
-                    type: 'POST',
-                    url: _root_ + 'alumnos/eliminarAlumnos',
-                    success: function(data){
-                        var response = JSON.parse(data);
-                        if (response === 1) {
-                            $('#general_snack').attr('data-content', 'Alumnos eliminados correctamente!');
-                            $('#general_snack').snackbar('show');
-                            $('.snackbar').addClass('snackbar-blue');
-                        } else {
-                            $('#general_snack').attr('data-content', 'Error desconocido: Intente de nuevo!');
-                            $('#general_snack').snackbar('show');
-                            $('.snackbar').addClass('snackbar-red');
-                        }
-                        $('#modalDeleteSelectedStudent').modal('hide');
-                        var view = sessionStorage.getItem('st_alive');
-                        that.displayStudents(view); 
-                    }
-                });
-                that.vars.alumnos = [];
-            }
-        });
-    },
 
     activeData: function() {
         $("#avatar").fileinput({

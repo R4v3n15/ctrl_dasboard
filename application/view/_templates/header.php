@@ -25,7 +25,7 @@
     <?php  if (Session::userIsLoggedIn()): 
         $base_url = Config::get('URL'); 
         $user     = Session::get('user_name'); 
-        $usr_type = (int)Session::get('user_type');?>
+        $user_type = (int)Session::get('user_type');?>
     
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <a id="menu-trigger" class="navbar-brand col-sm-3 col-md-2 mr-0 menu-toggle text-center" 
@@ -63,15 +63,18 @@
                                  data-parent="#accordionExample">
                                 <ul class="list-group">
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos">Alumnos</a></li>
+                                    <?php if ($user_type !== 3): ?>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/inscribir">Nuevo</a></li>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/becados">Becados</a></li>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/sep">Sep</a></li>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/baja">Baja</a></li>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/egresados">Egresados</a></li>
                                     <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/eliminados">Eliminados</a></li>
+                                    <?php endif ?>
                                 </ul>
                             </div>
                         </li>
+                        <?php if ($user_type !== 3): ?>
                         <li class="nav-item">
                             <a class="nav-link <?= View::active($filename, 'cursos') ? 'active': '';?>" href="<?= $base_url; ?>curso">
                               <span data-feather="layers"></span>
@@ -96,8 +99,10 @@
                               Pagos
                             </a>
                         </li>
+                        <?php endif ?>
                     </ul>
-
+                    
+                    <?php if ($user_type !== 3): ?>
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                         <span>REPORTES</span>
                         <a class="d-flex align-items-center text-muted">
@@ -105,13 +110,13 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
-                        <?php if ($usr_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>dashboard/admin">
                               <span data-feather="database"></span>
                               Administrar BD
                             </a>
                         </li>
+                        <?php if ($user_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>user">
                               <span data-feather="user"></span>
@@ -137,13 +142,15 @@
                             </a>
                         </li>
                         <?php endif ?>
-                        <?php if (View::active($filename, 'alumnos') && $usr_type === 777): ?>
+                        <?php if (View::active($filename, 'alumnos')): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>wines">
+                            <a class="nav-link btnInvoiceList" href="javascript:void(0)">
                               <span data-feather="file-text"></span>
                               Facturación
                             </a>
                         </li>
+                        <?php endif ?>
+                        <?php if (View::active($filename, 'alumnos') && $user_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                               <span data-feather="file-text"></span>
@@ -178,6 +185,7 @@
                         </li>
                         <?php endif ?>
                     </ul>
+                    <?php endif ?>
                 </div>
             </nav>
         </div>

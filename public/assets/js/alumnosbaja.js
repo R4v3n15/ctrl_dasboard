@@ -8,6 +8,7 @@ var Baja = {
         // this.getStudentsTable();
         this.tables();
         this.suscribeStudent();
+        this.deleteStudent();
     },
 
 
@@ -27,13 +28,13 @@ var Baja = {
         let _this = this;
         let table = $('#example').DataTable({
                         "stateSave": true,
+                        "lengthMenu": [[20, 50, 100], [20, 50, 100]],
                         "ajax": _root_ + 'alumnos/tablaAlumnosBaja',
                         "columns": [
                             { "data": "count" },
                             { "data": "avatar" },
                             { "data": "name" },
                             { "data": "age" },
-                            { "data": "genre" },
                             { "data": "group" },
                             { "data": "tutor" },
                             { "data": "options" }
@@ -60,6 +61,16 @@ var Baja = {
                 
         });
 
+        $('#example tbody').on( 'click', '.btnDeleteStudent', function () {
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#delete_student').val(student);
+            $('#delete_name').text(name);
+            $('#modalDeleteStudent').modal('show');
+                
+        });
+
         // $('#example tbody').on( 'click', 'tr', function () {
         //     $(this).toggleClass('table-info');
         // } );
@@ -76,28 +87,61 @@ var Baja = {
 
             let student = $('#suscribe_student').val();
 
-            $.ajax({
-                data: { student: student },
-                synch: 'true',
-                type: 'POST',
-                url: _root_ + 'alumnos/altaAlumno',
-                success: function(response){
+            if (student !== '' && student !== undefined) {
+                $.ajax({
+                    data: { student: student },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'alumnos/altaAlumno',
+                    success: function(response){
 
-                    if (response.success) {
-                        $('#general_snack').attr('data-content', response.message);
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-blue')
-                    } else {
-                        $('#general_snack').attr('data-content', response.message);
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-red')
+                        if (response.success) {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue')
+                        } else {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red')
+                        }
+                        $('#modalSuscribeStudent').modal('hide');
+                        _this.opts.dataTable.ajax.reload();
                     }
-                    $('#modalSuscribeStudent').modal('hide');
-                    _this.opts.dataTable.ajax.reload();
-                }
-            });
+                });
+            }
         });
     },
+
+    deleteStudent: function(){
+        let _this = this;
+        $('#deleteStudent').on('click', function(event){
+            event.preventDefault();
+
+            let student = $('#delete_student').val();
+
+            if (student !== '' && student !== undefined) {
+                $.ajax({
+                    data: { student: student },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'alumnos/eliminarAlumno',
+                    success: function(response){
+                        if (response.success) {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue')
+                        } else {
+                            $('#general_snack').attr('data-content', response.message);
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red')
+                        }
+                        $('#modalDeleteStudent').modal('hide');
+                        _this.opts.dataTable.ajax.reload();
+                    }
+                });
+            }
+        });
+    }
     
 };
 

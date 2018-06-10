@@ -26,7 +26,7 @@ class AlumnosController extends Controller
 
     public function obtenerGrupos() {
         if(Request::post('curso')){
-            $this->View->renderJSON(AlumnoModel::getGroupsByCourse(Request::post('curso')));
+            $this->View->renderJSON(AlumnoModel::getGroups(Request::post('curso')));
         }
     }
 
@@ -35,11 +35,11 @@ class AlumnosController extends Controller
     }
 
 
+
+    ///////////////////////////////////////////////////////////////
+    //  =  =  =  =  =  = I N S C R I P C I Ó N  =  =  =  =  =  = //
+    ///////////////////////////////////////////////////////////////
     public function inscribir() {
-        // Session::destroy('activo');
-        if (Session::get('activo') == null) {
-            Session::set('activo', 'info_tutor');
-        }
         Registry::set('css',array('fileinput.min&assets/libs/css', 'tpicker.min&assets/libs/css'));
         Registry::set('js', array('mapa&assets/js', 'fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'tpicker&assets/libs/js', 'inscripcion&assets/js'));
         $this->View->render('alumnos/inscribir', array(
@@ -89,7 +89,6 @@ class AlumnosController extends Controller
                                     Request::post('lastname')
         ));
     }
-
 
     public function gruposPorNivel() {
         if(Request::post('curso')){
@@ -204,23 +203,10 @@ class AlumnosController extends Controller
 
     }
 
-    public function cambiarGrupoAlumno(){
-        if (Request::post('alumno') && Request::post('clase') !== "") {
-            $this->View->renderJSON(AlumnoModel::ChangeStudentGroup(Request::post('alumno'), Request::post('clase')));
-        } else {
-            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
-        }
-    }
-
-    public function cambiarGrupoAlumnos(){
-        if (Request::post('alumnos') && Request::post('clase') !== "") {
-            $this->View->renderJSON(AlumnoModel::ChangeStudentsGroup(Request::post('alumnos'), Request::post('grupo')));
-        } else {
-            $this->View->renderJSON(array('success' => false, 'message' => 'Falta información para completar la acción!'));
-        }
-    }
-
-
+    
+    ///////////////////////////////////////////////////////
+    // =  =  = P E R F I L   D E L  A L U M N O  =  =  = //
+    ///////////////////////////////////////////////////////
 
     public function perfil($alumno) {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
@@ -332,47 +318,33 @@ class AlumnosController extends Controller
 
 
 
-
-    public function obtenerAlumnos() {
-        AlumnoModel::students(Request::post('curso'));
-    }
-
-    //Comprobar si existe el alumno en la BD
-    public function existeAlumno() {
-        echo json_encode(AlumnoModel::studentExist(
-            Request::post('name'),
-            Request::post('surname'),
-            Request::post('lastname')
-        ));
-    }
-
-    public function obtenerNivelesCurso() {
-        if(Request::post('curso')){
-            echo json_encode(AlumnoModel::getLevelsByClass(Request::post('curso')));
-        }
-    }
-
-    public function obtenerDiasClase() {
-        if(Request::post('clase')){
-            echo json_encode(CursoModel::getDaysByClass(Request::post('clase')));
-        }
-    }
-
-    public function obtenerAlumnosBaja() {
-        AlumnoModel::getStudentsCheckout();
-    }
-
-    public function convenio(){
-        $this->View->render('alumnos/convenio');
-    }
+    /////////////////////////////////////////////////////////
+    //  =  =  =  =  =  = C O N V E N I O  =  =  =  =  =  = //
+    /////////////////////////////////////////////////////////
 
     public function c($student){
-        // GeneralModel::getStudentDetail($student);
         $this->View->render('alumnos/convenio', array('alumno' => GeneralModel::getStudentDetail($student)));
     }
 
     public function conveniopdf(){
         $this->View->renderWithoutHeaderAndFooter('alumnos/conveniopdf');
+    }
+
+    
+    
+    //////////////////////////////////////////////////////////////
+    //  =  =  =  =  =  =  =  = D E    B A J A  =  =  =  =  =  = //
+    //////////////////////////////////////////////////////////////
+
+    public function baja() {
+        Registry::set('js', array('alumnosbaja&assets/js'));
+        $this->View->render('alumnos/baja', array(
+            'u_type'    => Session::get('user_account_type')
+        ));
+    }
+
+    public function tablaAlumnosBaja(){
+        $this->View->renderJSON(AlumnoModel::unsuscribeStudentsTable());
     }
 
     public function bajaAlumno(){
@@ -387,12 +359,50 @@ class AlumnosController extends Controller
         $this->View->renderJSON(AlumnoModel::suscribeStudent(Request::post('student')));
     }
 
-    public function agregarAlumnoGrupo(){
-        if (Request::post('alumno') && Request::post('clase')) {
-            AlumnoModel::AddStudentToClass(Request::post('alumno'), Request::post('clase'));
+
+    //////////////////////////////////////////////////////////////
+    //  =  =  =  =  =  =  =  E L I M I N A D O S  =  =  =  =  = //
+    //////////////////////////////////////////////////////////////
+
+    public function eliminados() {
+        Registry::set('js', array('alumnoseliminados&assets/js'));
+        $this->View->render('alumnos/eliminados', array(
+            'u_type'    => Session::get('user_account_type')
+        ));
+    }
+
+    public function tablaAlumnosEliminados(){
+        $this->View->renderJSON(AlumnoModel::tableDeletedStudents());
+    }
+
+    public function eliminarAlumno() {
+        if (Request::post('student')) {
+            $this->View->renderJSON(AlumnoModel::deleteStudent(Request::post('student')));
         } else {
-            echo 0;
+            $this->View->renderJSON(
+                            array(
+                                'success' => false, 
+                                'message' => '&#x2718; No se pudo eliminar al alumno, intente de nuevo o reporte el error!')
+            );
         }
+    }
+
+    public function eliminarAlumnos() {
+        if (Request::post('students')) {
+            $this->View->renderJSON(AlumnoModel::deleteStudents(Request::post('students')));
+        } else {
+            $this->View->renderJSON(
+                            array(
+                                'success' => false, 
+                                'message' => '&#x2718; No hay alumnos seleccionados, intente de nuevo!')
+            );
+        }
+    }
+
+
+
+    public function tablaFacturacion() {
+        $this->View->renderJSON(AlumnoModel::getInvoiceTable());
     }
 
     public function obtenerListaFactura() {
@@ -423,46 +433,13 @@ class AlumnosController extends Controller
         ));
     }
 
-    public function baja() {
-        Registry::set('js', array('alumnosbaja&assets/js'));
-        $this->View->render('alumnos/baja', array(
-            'u_type'    => Session::get('user_account_type')
-        ));
-    }
 
-    public function tablaAlumnosBaja(){
-        $this->View->renderJSON(AlumnoModel::unsuscribeStudentsTable());
-    }
 
-    public function eliminados() {
-        Registry::set('js', array('alumnoseliminados&assets/js'));
-        $this->View->render('alumnos/eliminados', array(
-            'u_type'    => Session::get('user_account_type')
-        ));
-    }
 
-    public function tablaAlumnosEliminados(){
-        $this->View->renderJSON(AlumnoModel::tableDeletedStudents());
-    }
 
     public function editUsername() {
         $this->View->render('user/editUsername');
     }
-
-    public function eliminarAlumno() {
-        if (Request::post('alumno')) {
-            echo json_encode(AlumnoModel::deleteStudent(Request::post('alumno')));
-        }
-    }
-
-    public function eliminarAlumnos() {
-        if (Request::post('alumnos')) {
-            echo json_encode(AlumnoModel::deleteStudents((array)Request::post('alumnos')));
-        }
-    }
-
-
-
 
 
     /////////////////////////////////////////////

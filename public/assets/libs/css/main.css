@@ -151,3 +151,15 @@
     position: relative;
     margin-right: 0;
 }
+
+@media (min-width: 992px){
+  .modal-lg {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1200px){
+  .modal-lg {
+    max-width: 1150px;
+  }
+}

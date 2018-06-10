@@ -52,9 +52,9 @@
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-10">
                         <h6 class="text-center text-info" id="extra_message"></h6>
-                        <h5 class="text-center text-secondary">
-                            <small>Seleccione un curso de la lista, luego el grupo.</small>
-                        </h5>
+                        <h6 class="text-center text-secondary">
+                            <small>Seleccione un curso de la lista, luego el grupo. R</small>
+                        </h6>
 
                         <input type="hidden" id="alumno_id" class="form-control">
                         <div class="form-group">
@@ -112,7 +112,7 @@
                 <div class="row justify-content-center">
                     <div class="col-10">
                         <h6 class="text-center text-info" id="updateMessage"></h6>
-                        <h5 class="text-center text-secondary"><small>Seleccione un curso y un grupo.</small></h5>
+                        <h6 class="text-center text-secondary"><small>Seleccione un curso y un grupo.</small></h6>
                         <div class="form-group">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -217,24 +217,110 @@
                     <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Der de Baja</button>
+                    <button type="button" id="unsuscribeStudents" class="btn btn-primary">Der de Baja</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-<div id="invoice_list" class="modal fade">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalDeleteStudent" tabindex="-1" role="dialog" aria-labelledby="deleteTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Facturación</h4>
+                <h5 class="modal-title" id="deleteTitle">Eliminar Alumno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12" id="invoice_students_list">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <input type="hidden" class="form-control text-center" id="delete_student" />
+                        <h6 class="text-center text-secondary">¿Está seguro de querer eliminar a:</h6>
+                        <h5 class="text-center text-info">
+                            <small id="delete_name"></small>?
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="deleteStudent" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDeleteStudents" tabindex="-1" role="dialog" aria-labelledby="reTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reTitle">Eliminar Alumnos Seleccionados</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <h6 class="text-center text-info">
+                            ¿Eliminar a los <strong id="delete_students"></strong> alumnos seleccionados?
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="deleteStudents" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalInvoiceList" tabindex="-1" role="dialog" aria-labelledby="invoiceTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="invoiceTitle">Lista de Facturación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <table id="invoice_table" class="table table-sm table-striped" style="width:100%">
+                            <thead>
+                                <tr class="">
+                                    <th class="text-center">Alumno</th>
+                                    <th class="text-center">Num. Celular</th>
+                                    <th class="text-center">Tutor</th>
+                                    <th class="text-center">Tel. Casa</th>
+                                    <th class="text-center">Tel. Celular</th>
+                                    <th class="text-center">Tel. Alterno</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center">Alumno</th>
+                                    <th class="text-center">Num. Celular</th>
+                                    <th class="text-center">Tutor</th>
+                                    <th class="text-center">Tel. Casa</th>
+                                    <th class="text-center">Tel. Celular</th>
+                                    <th class="text-center">Tel. Alterno</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -242,72 +328,3 @@
     </div>
 </div>
 
-<div id="modalDeleteStudent" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header modal-delete">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Eliminar Alumno</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <input type="hidden" class="form-control text-center" id="alumno_id" />
-                            <p class="text-center text-info">
-                                ¿Está seguro de querer eliminar a: <br> <strong id="alumno_name"></strong>?
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="modal-footer col-md-10 col-md-offset-1 text-center">
-                        <input type="button" 
-                               data-dismiss="modal" 
-                               class="btn btn-sm btn-raised btn-gray left" 
-                               value="CANCELAR">
-                        <input type="button"
-                               id="btnConfirmDeleteStudent" 
-                               class="btn btn-sm btn-raised btn-danger right" 
-                               value="ELIMINAR">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalDeleteSelectedStudent" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header modal-delete">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Eliminar Alumnos</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <input type="hidden" class="form-control text-center" id="alumno_id" />
-                            <p class="text-center text-info">
-                                ¿Está seguro de querer eliminar a los <strong id="selected_students"></strong> alumnos seleccionados?
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="modal-footer col-md-10 col-md-offset-1 text-center">
-                        <input type="button" 
-                               data-dismiss="modal" 
-                               class="btn btn-sm btn-raised btn-gray left" 
-                               value="CANCELAR">
-                        <input type="button" 
-                               class="btn btn-sm btn-raised btn-danger right" 
-                               id="btnConfirmDeleteStudents"
-                               value="ELIMINAR">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

@@ -29,7 +29,9 @@ class AlumnoModel
             $datos = [];
             foreach ($alumnos as $alumno) {
                 $id_grupo = 0;
-                $grupo = '<a href="javascript:void(0)" class="link add_to_group" data-student="'.$alumno->student_id.'"
+                $grupo = '<a href="javascript:void(0)" 
+                             class="link add_to_group badge badge-warning" 
+                             data-student="'.$alumno->student_id.'"
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
@@ -205,7 +207,7 @@ class AlumnoModel
                                 echo   '<li>
                                             <a  href="javascript:void(0)" 
                                                 class="btnDeleteStudent" 
-                                                id="'.$row->id.'"
+                                                data-student="'.$row->id.'"
                                                 data-name="'.$row->nombre.' '.$row->apellido.'">
                                                 <span class="text-danger" data-feather="chevron-right"></span>
                                                 Eliminar
@@ -235,21 +237,15 @@ class AlumnoModel
                             </button>
                           </td>';
                     echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-danger delete_multi">
+                            <button type="button" class="btn btn-sm mini btn-danger btnDeleteStudents">
                                 Eliminar
                             </button>
                           </td>';
                     echo '<td class="text-center">
                           </td>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-secondary invoice_list">
-                                Facturación
-                            </button>
-                          </td>';
-                    echo '<td class="text-center">
-                          </td>';
-                    echo '<td class="text-center">
-                          </td>';
+                    echo '<td class="text-center"></td>';
+                    echo '<td class="text-center"></td>';
+                    echo '<td class="text-center"></td>';
                     echo '</tr>';
                     echo '</tfoot>';
                     }
@@ -286,26 +282,6 @@ class AlumnoModel
         return $counters;
     }
 
-    // Grupos por curso
-    public static function getGroupsByCourse($course) {
-        $database = DatabaseFactory::getFactory()->getConnection();
-
-        $_sql = $database->prepare("SELECT c.class_id, c.group_id, g.group_name
-                                    FROM classes as c, groups as g
-                                    WHERE c.course_id = :course
-                                      AND c.group_id  = g.group_id;");
-        $_sql->execute(array(':course' => $course));
-
-        if($_sql->rowCount() > 0){
-            return $_sql->fetchAll();
-        }
-        return null;
-    }
-
-
-
-
-
     public static function getGroups($course) {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -322,19 +298,65 @@ class AlumnoModel
         return null;
     }
 
-    public static function AddStudentToClass($alumno, $clase){
+
+
+    /////////////////////////////////////////////////////////////////////
+    // =  =  =  =  R E Q U I R E   I N V O I C E   L I S T  =  =  =  = //
+    /////////////////////////////////////////////////////////////////////
+    
+    //->Obtener Alumnos que requieren de factura tras pago de colegiatura
+    public static function getInvoiceTable(){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $update = $database->prepare("UPDATE students_groups 
-                                      SET class_id = :clase 
-                                      WHERE student_id = :alumno;");
-        $update = $update->execute(array(':clase' => $clase, ':alumno' => $alumno));
+        $getAlumnos = "SELECT s.student_id, CONCAT_WS(' ', s.name, s.surname) as name, s.cellphone, s.id_tutor
+                       FROM students as s, students_details as sd
+                       WHERE s.student_id   = sd.student_id
+                         AND sd.facturacion = 1;";
+        $setAlumnos = $database->prepare($getAlumnos);
+        $setAlumnos->execute();
 
-        if ($update) {
-            echo 1;
-        } else {
-            echo 0;
+        $students = [];
+        if ($setAlumnos->rowCount() > 0) {
+            $alumnos = $setAlumnos->fetchAll();
+
+            $count    = 1;
+            foreach ($alumnos as $alumno) {
+                $tutor  = 'N/A';
+                $phone  = 'N/A';
+                $phone2 = 'N/A'; 
+                $phone3 = 'N/A';
+
+                if ($alumno->id_tutor !== '0') {
+                    $getTutor = "SELECT CONCAT_WS(' ', namet, surnamet, lastnamet) as name, cellphone, phone, phone_alt
+                                 FROM tutors
+                                 WHERE id_tutor = :tutor
+                                 LIMIT 1;";
+                    $setTutor = $database->prepare($getTutor);
+                    $setTutor->execute(array(':tutor' => $alumno->id_tutor));
+
+                    if ($setTutor->rowCount() > 0) {
+                        $datos  = $setTutor->fetch();
+                        $tutor  = $datos->name;
+                        $phone  = $datos->phone != ""     ? $datos->phone     : ' N/A';
+                        $phone2 = $datos->cellphone != "" ? $datos->cellphone : ' N/A';
+                        $phone3 = $datos->phone_alt != "" ? $datos->phone_alt : ' N/A';
+                    }
+                }
+
+                $student = array(
+                                'name'      => $alumno->name,
+                                'cellphone' => $alumno->cellphone,
+                                'tutor'     => $tutor,
+                                'phone'     => $phone,
+                                'phone2'    => $phone2,
+                                'phone3'    => $phone3
+
+                );
+                array_push($students, $student);
+                $count++;
+            }
         }
+        return array('data' => $students);
     }
 
     //->Obtener Alumnos que requieren de factura tras pago de colegiatura
@@ -433,16 +455,20 @@ class AlumnoModel
 
 
 
+    //////////////////////////////////////////////////////////////////
+    //  =  =  =  =  =  C H A N G E   G R O U P  =  =  =  =  =  =  = //
+    //////////////////////////////////////////////////////////////////
 
     public static function ChangeStudentGroup($alumno, $clase){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        (int)$clase === 0 ? $clase = NULL : $clase = (int)$clase;
+        (int)$clase === 0 ? $clase = null : $clase = (int)$clase;
         $commit   = true;
         $database->beginTransaction();
         try{
             $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
             $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
+
             if ($save) {
                 $status = 1;
                 if($clase === null){
@@ -450,6 +476,10 @@ class AlumnoModel
                 }
                 $update = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
                 $updated = $update->execute(array(':status' => $status, ':student' => $alumno));
+
+                if (!$updated) {
+                    $commit = false;
+                }
             } else {
                 $commit = false;
             }        
@@ -499,324 +529,6 @@ class AlumnoModel
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
-        }
-    }
-
-
-
-
-    public static function unsuscribeStudentsTable(){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $students = GeneralModel::allStudentsUnsuscribe();
-
-        if ($students !== null) {
-
-            $datos = [];
-            $counter = 1;
-            foreach ($students as $alumno) {
-                $id_grupo = 0;
-                $grupo = 'Sin Grupo';
-
-                if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, CONCAT_WS(' ', cu.course, g.group_name) as grupo
-                                                 FROM classes as c, courses as cu, groups as g
-                                                 WHERE c.class_id  = :clase
-                                                   AND c.status    = 1
-                                                   AND c.course_id = cu.course_id
-                                                   AND c.group_id  = g.group_id
-                                                 LIMIT 1;");
-                    $clase->execute(array(':clase' => $alumno->class_id));
-                    if ($clase->rowCount() > 0) {
-                        $clase = $clase->fetch();
-                        $id_grupo = $clase->class_id;
-                        $grupo = $clase->grupo;
-                    }
-                }
-
-                //-> Tutor del Alumno
-                $id_tutor     = 0;
-                $nombre_tutor = 'N/A';
-                if ($alumno->id_tutor !== NULL) {
-                    $tutor = $database->prepare("SELECT id_tutor, CONCAT_WS(' ', namet, surnamet, lastnamet) as name
-                                                    FROM tutors
-                                                    WHERE id_tutor = :tutor
-                                                 LIMIT 1;");
-                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
-                    if ($tutor->rowCount() > 0) {
-                        $tutor = $tutor->fetch();
-                        $id_tutor = $tutor->id_tutor;
-                        $nombre_tutor = $tutor->name;
-                    }
-                }
-
-                $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar;
-
-                if (!file_exists($url)) {
-                    $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
-                }
-                $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
-                $editar = '<button type="button" 
-                                    class="btn btn-sm btn-warning btnSuscribeStudent"
-                                    data-student="'.$alumno->student_id.'"
-                                    data-name="'.$alumno->name.'">Dar de Alta</button>';
-
-                $info = array(
-                    'count' => $counter,
-                    'name'  => $alumno->name,
-                    'age'   => $alumno->age,
-                    'genre' => $alumno->genre,
-                    'avatar' => $avatar,
-                    'studies' => $alumno->studies.' '.$alumno->lastgrade,
-                    'group'   => $grupo,
-                    'tutor'   => $nombre_tutor,
-                    'options' => $editar
-                );
-
-                array_push($datos, $info);
-                $counter++;
-            }
-
-            return array('data' => $datos);
-        }
-
-        return null;    
-    }
-
-    public static function unsuscribeStudent($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $commit   = true;
-        $database->beginTransaction();
-        try{
-            $checkout = $database->prepare("UPDATE students
-                                            SET status       = 0
-                                            WHERE student_id = :student;");
-            $update = $checkout->execute(array(':student' => $student));
-
-            if (!$update) {
-                $commit = false;
-            }
-                       
-        } catch (PDOException $e) {
-            $commit = false;
-        }
-
-        if (!$commit) {
-            $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
-        }else {
-            $database->commit();
-            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
-        }
-    }
-
-    public static function unsuscribeStudents($students){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $students = (array)$students;
-        $commit   = true;
-        $database->beginTransaction();
-        try{
-            $checkout = $database->prepare("UPDATE students
-                                            SET status       = 0
-                                            WHERE student_id = :student;");
-            $update = $checkout->execute(array(':student' => $student));
-
-            if (!$update) {
-                $commit = false;
-            }
-                       
-        } catch (PDOException $e) {
-            $commit = false;
-        }
-
-        if (!$commit) {
-            $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
-        }else {
-            $database->commit();
-            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
-        }
-    }
-
-
-    public static function suscribeStudent($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $commit   = true;
-        $database->beginTransaction();
-        try{
-            $checkout = $database->prepare("UPDATE students
-                                            SET status       = 1
-                                            WHERE student_id = :student;");
-            $update = $checkout->execute(array(':student' => $student));
-
-            if (!$update) {
-                $commit = false;
-            }
-                       
-        } catch (PDOException $e) {
-            $commit = false;
-        }
-
-        if (!$commit) {
-            $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se dio de alta al alumno, intente de nuevo o reporte el error!');
-        }else {
-            $database->commit();
-            return array('success' => true, 'message' => '&#x2713; Alumno dado de alta correctamente!!');
-        }
-    }
-
-    public static function getStudentsCheckout(){
-        $database = DatabaseFactory::getFactory()->getConnection();
-
-        $sql = "SELECT s.*, ad.studies, ad.last_grade, g.class_id
-                FROM students as s,
-                     academic_data as ad,
-                     groups as g
-                WHERE s.student_id = ad.student_id
-                  AND ad.baja      = 1
-                  AND s.student_id = g.student_id";
-
-        $query = $database->prepare($sql);
-        $query->execute();
-
-        if ($query->rowCount() > 0) {
-            $students = $query->fetchAll();
-
-            $alumos = array();
-            foreach ($students as $row) {
-                $id_tutor = 0;
-                $tutor = '- - -';
-                $curso = '<a class="link adding_group"
-                             data-student="'.$row->student_id.'"
-                             data-toggle="modal"
-                             data-target="#add_to_group"
-                             title="Agregar grupo"><strong>Agregar a Grupo</strong></a>';
-                $clase = 0;
-
-                if ($row->id_tutor !== '0') {
-                    $getTutor = $database->prepare("SELECT id_tutor, namet, surname1, surname2
-                                                    FROM tutors WHERE id_tutor = :tutor
-                                                    LIMIT 1;");
-                    $getTutor->execute(array(':tutor' => $row->id_tutor));
-                    if ($getTutor->rowCount() > 0) {
-                        $info = $getTutor->fetch();
-                        $id_tutor = $info->id_tutor;
-                        $tutor = ucwords(strtolower($info->namet)).' '.ucwords(strtolower($info->surname1));
-                    }
-                }
-
-                if ($row->class_id !== NULL) {
-                    $qry = $database->prepare("SELECT c.id as clase,
-                                                      cu.id as course,
-                                                      l.id as grupo,
-                                                      cu.name,
-                                                      l.level
-                                               FROM classes as c, courses as cu, levels as l
-                                               WHERE c.id = :clase
-                                                 AND c.id_course = cu.id
-                                                 AND c.id_level  = l.id
-                                               LIMIT 1;");
-                    $qry->execute(array(':clase' => $row->class_id));
-
-                    if ($qry->rowCount() > 0) {
-                        $fila = $qry->fetch();
-                        $clase = $fila->clase;
-                        $curso = '<a class="link change_group"
-                                     data-student="'.$row->student_id.'"
-                                     data-group="'.$fila->grupo.'"
-                                     data-course="'.$fila->course.'"
-                                     data-clase="'.$fila->clase.'"
-                                     title="Cambiar grupo">'.$fila->name.' '.$fila->level.'</a>';
-
-                    }
-                }
-
-                $alumnos[$row->student_id] = new stdClass();
-                $alumnos[$row->student_id]->id = $row->student_id;
-                $alumnos[$row->student_id]->name      = ucwords(strtolower($row->name));
-                $alumnos[$row->student_id]->surname   = ucwords(strtolower($row->surname));
-                $alumnos[$row->student_id]->lastname  = ucwords(strtolower($row->lastname));
-                $alumnos[$row->student_id]->avatar    = $row->avatar;
-                $alumnos[$row->student_id]->tutor_id  = $id_tutor;
-                $alumnos[$row->student_id]->tutor     = $tutor;
-                $alumnos[$row->student_id]->birthdays = $row->birthday;
-                $alumnos[$row->student_id]->age   = $row->age;
-                $alumnos[$row->student_id]->genre = $row->genre;
-                $alumnos[$row->student_id]->clase = $clase;
-                $alumnos[$row->student_id]->course= $curso;
-                $alumnos[$row->student_id]->study = $row->studies;
-                $alumnos[$row->student_id]->grade = $row->last_grade;
-            }
-            self::displayStudentsCheckout($alumnos);
-        } else {
-            echo '<h4 class="text-center text-primary subheader">No hay Alumnos de baja.</h4>';
-        }
-    }
-
-    public static function displayStudentsCheckout($alumnos){
-        if (count($alumnos) > 0) {
-            echo '<div class="table-responsive">';
-                echo '<table id="tbl_checkout"
-                             class="table table-bordered table-hover">';
-                    echo '<thead>';
-                        echo '<tr class="info">';
-                            echo '<th class="text-center">Foto</th>';
-                            echo '<th class="text-center">Apellidos</th>';
-                            echo '<th class="text-center">Nombre</th>';
-                            echo '<th class="text-center">Edad</th>';
-                            echo '<th class="text-center">Escolaridad</th>';
-                            echo '<th class="text-center">Grupo</th>';
-                            echo '<th class="text-center">Tutor</th>';
-                            echo '<th class="text-center">Opciones</th>';
-                        echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                        foreach ($alumnos as $row) {
-                            $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT');
-                            $avatar = '<img class="foto-mini" src="'.$url.$row->avatar.'.jpg" alt="avatar">';
-                            echo '<tr class="row_data">';
-                            echo '<td class="text-center">'.$avatar.'</td>';
-                            echo '<td class="text-center txt">'.$row->surname.' '.$row->lastname.'</td>';
-                            echo '<td class="text-center txt">'.$row->name.'</td>';
-                            echo '<td class="text-center txt">'.$row->age.'</td>';
-                            echo '<td class="text-center txt">'.$row->study.'</td>';
-                            echo '<td class="text-center txt">'.$row->course.'</td>';
-                            echo '<td class="text-center txt">'.$row->tutor.'</td>';
-                            echo '<td class="text-center">
-                                    <div class="btn-group">
-
-                                      <a href="javascript:void(0)"
-                                         data-target="#"
-                                         class="btn btn-main btn-xs btn-raised dropdown-toggle"
-                                         data-toggle="dropdown">Más.. &nbsp;&nbsp; <span class="caret"></span></a>
-                                      <ul class="dropdown-menu student">
-                                        <li>
-                                            <a href="'.Config::get('URL').'alumno/perfilAlumno/'.$row->id.'"
-                                               data-student="'.$row->id.'"
-                                               data-tutor="'.$row->tutor_id.'"
-                                               data-clase="'.$row->clase.'">
-                                                <span class="o-blue glyphicon glyphicon-record"></span> Detalles</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)"
-                                               class="checkin_student"
-                                               data-alumno="'.$row->id.'"
-                                               data-nombre="'.$row->name.' '.$row->surname.'">
-                                                    <span class="o-purple glyphicon glyphicon-record"></span>
-                                                    Dar de Alta
-                                            </a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                 </td>';
-                            echo '</tr>';
-                        }
-                    echo '</tbody>';
-                echo '</table>';
-                echo "<br><br><br>";
-            echo '</div>';
-        } else {
-            echo '<h4 class="text-center text-primary subheader">No hay Alumnos de baja.</h4>';
         }
     }
 
@@ -1204,6 +916,189 @@ class AlumnoModel
     }
 
 
+
+    ///////////////////////////////////////////////////////////////////////
+    //  =  =  =   =  U N S U S C R I B E   S T U D E N T   =  =  =  =  = //
+    ///////////////////////////////////////////////////////////////////////
+
+    // TABLA DE ALUMNOS DE BAJA
+    public static function unsuscribeStudentsTable(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = GeneralModel::allStudentsUnsuscribe();
+
+        if ($students !== null) {
+
+            $datos = [];
+            $counter = 1;
+            foreach ($students as $alumno) {
+                $id_grupo = 0;
+                $grupo = 'Sin Grupo';
+
+                if ($alumno->class_id !== NULL) {
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, CONCAT_WS(' ', cu.course, g.group_name) as grupo
+                                                 FROM classes as c, courses as cu, groups as g
+                                                 WHERE c.class_id  = :clase
+                                                   AND c.status    = 1
+                                                   AND c.course_id = cu.course_id
+                                                   AND c.group_id  = g.group_id
+                                                 LIMIT 1;");
+                    $clase->execute(array(':clase' => $alumno->class_id));
+                    if ($clase->rowCount() > 0) {
+                        $clase = $clase->fetch();
+                        $id_grupo = $clase->class_id;
+                        $grupo = $clase->grupo;
+                    }
+                }
+
+                //-> Tutor del Alumno
+                $id_tutor     = 0;
+                $nombre_tutor = 'N/A';
+                if ($alumno->id_tutor !== NULL) {
+                    $tutor = $database->prepare("SELECT id_tutor, CONCAT_WS(' ', namet, surnamet, lastnamet) as name
+                                                    FROM tutors
+                                                    WHERE id_tutor = :tutor
+                                                 LIMIT 1;");
+                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
+                    if ($tutor->rowCount() > 0) {
+                        $tutor = $tutor->fetch();
+                        $id_tutor = $tutor->id_tutor;
+                        $nombre_tutor = $tutor->name;
+                    }
+                }
+
+                $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar;
+
+                if (!file_exists($url)) {
+                    $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
+                }
+                $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
+                $editar = '<button type="button" 
+                                    class="btn btn-sm btn-info btnSuscribeStudent mr-2 text-white"
+                                    data-student="'.$alumno->student_id.'"
+                                    data-name="'.$alumno->name.'"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Alta"><i class="fa fa-user-plus"></i></button>';
+                $eliminar = '<button type="button" 
+                                    class="btn btn-sm btn-danger btnDeleteStudent"
+                                    data-student="'.$alumno->student_id.'"
+                                    data-name="'.$alumno->name.'"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Eliminar"><i class="fa fa-user-times"></i></button>';
+
+                $info = array(
+                    'count' => $counter,
+                    'name'  => $alumno->name,
+                    'age'   => $alumno->age,
+                    'avatar' => $avatar,
+                    'studies' => $alumno->studies.' '.$alumno->lastgrade,
+                    'group'   => $grupo,
+                    'tutor'   => $nombre_tutor,
+                    'options' => $editar . $eliminar
+                );
+
+                array_push($datos, $info);
+                $counter++;
+            }
+
+            return array('data' => $datos);
+        }
+
+        return null;    
+    }
+
+    // DAR DE BAJA ALUMNO
+    public static function unsuscribeStudent($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $checkout = $database->prepare("UPDATE students
+                                            SET status       = 0
+                                            WHERE student_id = :student;");
+            $update = $checkout->execute(array(':student' => $student));
+
+            if (!$update) {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
+        }
+    }
+
+    // DAR DE BAJA ALUMNOS
+    public static function unsuscribeStudents($students){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = (array)$students;
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            foreach ($students as $student) {
+                $checkout = $database->prepare("UPDATE students
+                                                SET status       = 0
+                                                WHERE student_id = :student;");
+                $update = $checkout->execute(array(':student' => $student));
+
+                if (!$update) {
+                    $commit = false;
+                    break;
+                }
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de baja al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de baja correctamente!!');
+        }
+    }
+
+    // DAR DE ALTA ALUMNO
+    public static function suscribeStudent($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $checkout = $database->prepare("UPDATE students
+                                            SET status       = 1
+                                            WHERE student_id = :student;");
+            $update = $checkout->execute(array(':student' => $student));
+
+            if (!$update) {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array('success' => false, 'message' => '&#x2718; No se dio de alta al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno dado de alta correctamente!!');
+        }
+    }
+
+
+
+
     //////////////////////////////////////////////////////////////////
     //  =  =  =  =  =  = U P D A T E   S T U D E N T  =  =  =  =  = //
     //////////////////////////////////////////////////////////////////
@@ -1549,6 +1444,10 @@ class AlumnoModel
 
 
 
+    ///////////////////////////////////////////////////////////////////
+    //  =  =  =  =   =  D E L E T E   S T U D E N T S  =  =  =  =  = //
+    ///////////////////////////////////////////////////////////////////
+
 
     //We don´t erase the student info from de DB, just give a deleted status
     public static function tableDeletedStudents(){
@@ -1628,43 +1527,95 @@ class AlumnoModel
     }
 
     public static function deleteStudent($student){
-        $database = DatabaseFactory::getFactory()->getConnection();
-
+        $database  = DatabaseFactory::getFactory()->getConnection();
+        $commit    = true;
         $timestamp = H::getTime();
-        $query = $database->prepare("UPDATE students 
-                                     SET deleted = 1, 
-                                         deleted_at = :today 
-                                     WHERE student_id = :student;");
-        $deleted = $query->execute(array(':student' => $student, ':today' => $timestamp));
+        $database->beginTransaction();
+        try{
+            $query = $database->prepare("UPDATE students 
+                                         SET deleted = 1, 
+                                             deleted_at = :today 
+                                         WHERE student_id = :student;");
+            $deleted = $query->execute(array(':student' => $student, ':today' => $timestamp));
 
-        if ($deleted) {
-            $update = $database->prepare("UPDATE students_groups 
-                                          SET state = 1, 
-                                              deleted_at = :today 
-                                          WHERE student_id = :student;");
-            $update->execute(array(':student' => $student, ':today' => $timestamp));
-            return 1;
+            if ($deleted) {
+                $update = $database->prepare("UPDATE students_groups 
+                                              SET status = 0
+                                              WHERE student_id = :student;");
+                $update->execute(array(':student' => $student));
+            } else {
+                $commit = false;
+            }
+                       
+        } catch (PDOException $e) {
+            $commit = false;
         }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; No se pudo eliminar al alumno, intente de nuevo o reporte el error!');
+        }else {
+            $database->commit();
+            return array('success' => true, 'message' => '&#x2713; Alumno eliminado correctamente!!');
+        }
+
+        
 
         return 0;
     }
 
     public static function deleteStudents($students){
-        $database = DatabaseFactory::getFactory()->getConnection();
+        $database  = DatabaseFactory::getFactory()->getConnection();
+        $timestamp = H::getTime();
+        $commit    = true;
+        $database->beginTransaction();
+        try {
+            foreach ($students as $student) {
+                $query = $database->prepare("UPDATE students 
+                                             SET deleted = 1, 
+                                                 deleted_at = :today 
+                                             WHERE student_id = :student;");
+                $deleted = $query->execute(array(':student' => $student, ':today' => $timestamp));
+
+                if ($deleted) { //Si no se puede eliminar al alumno
+                    $update = $database->prepare("UPDATE students_groups 
+                                                  SET status = 0
+                                                  WHERE student_id = :student;");
+                    $update->execute(array(':student' => $student));
+                } else {
+                    $commit = false;
+                    break;
+                }
+            }          
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array(
+                    'success' => false, 
+                    'message' => '&#x2718; Es probable que algunos alumnos no se hayan eliminado.'
+                   );
+        }else {
+            $database->commit();
+            return array(
+                    'success' => true, 
+                    'message' => '&#x2713; Alumnos eliminados correctamente!!');
+        }
 
         $success = 1;
-        foreach ($students as $student) {
-            $query = $database->prepare("UPDATE students SET deleted = 1 WHERE student_id = :student;");
-            $deleted = $query->execute(array(':student' => $student));
-
-            if (!$deleted) { //Si no se puede eliminar al alumno
-                $success = 0;
-                return $success;
-            }
-        }
+            
 
         return $success;
     }
+
+
+
+
+
 
     public static function template(){
         $commit   = true;
@@ -1677,10 +1628,16 @@ class AlumnoModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!'
+                    );
         }else {
             $database->commit();
-            return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
+            return array(
+                        'success' => true, 
+                        'message' => '&#x2713; Cambio de grupo realizado correctamente!!'
+                    );
         }
     }
 }

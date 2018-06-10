@@ -1,24 +1,21 @@
 <?php $base_url = Config::get('URL'); ?>
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a href="<?= $base_url; ?>dashboard">Inicio</a></li>
-        <li><a href="<?= $base_url; ?>alumno">Alumnos</a></li>
-        <li><a href="javascript:void(0)" class="active">Calificaciones</a></li>
-        <a style="float: right;" href="javascript:void(0)" class="active">
-            <strong>Alumno: </strong> <?= $this->alumno; ?>
-        </a>
-    </ol>    
-    
-    <div class="well">
-        <?php $this->renderFeedbackMessages(); ?>
-        <div class="row" id="evaluation_template">
-            <div class="col-sm-12 text-center">
-                <a href="<?= $base_url; ?>evaluaciones/evaluar/<?= $this->alumno; ?>" class="btn btn-primary btn-sm">
-                    <i class="glyphicon glyphicon-check o-yellow"></i> Evaluar
-                </a>
+<div class="row" id="page-content-wrapper">
+    <main role="main" class="col-md-12 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
+            <h5 class="text-info">Evaluaciones</h5>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <a href="<?= $base_url; ?>evaluaciones/evaluar/<?= $this->alumno; ?>" 
+                       class="btn btn-sm btn-outline-info">Evaluar</a>
+                </div>
             </div>
-            <div class="clearfix"></div>
-            <div class="col-sm-6">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <?php $this->renderFeedbackMessages(); ?>
+            </div>
+            <div class="col-md-6">
                 <div class="well card">
                     <div class="card-title">
                         <h4 class="text-center">Periodo Enero-Febrero</h4>
@@ -43,7 +40,9 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="reading" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="reading" class="form-control form-control-sm" value="0">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Writing</td>
@@ -51,7 +50,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="writing" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="writing" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Speaking</td>
@@ -59,7 +59,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star checked"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="speaking" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="speaking" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Listening</td>
@@ -67,7 +68,8 @@
                                     <td class="text-center"><span class="fa fa-star checked"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="listening" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="listening" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -90,7 +92,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="read" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="read" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Writing</td>
@@ -98,7 +101,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="write" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="write" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Speaking</td>
@@ -106,7 +110,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="speak" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="speak" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Listening</td>
@@ -114,7 +119,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="listen" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="listen" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Participation.</td>
@@ -122,7 +128,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="attitude" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="attitude" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Teamwork.</td>
@@ -130,7 +137,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="team" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="team" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Homeworks</td>
@@ -138,7 +146,8 @@
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
                                     <td class="text-center"><span class="fa fa-star"></span></td>
-                                    <td class="hidden"><input type="text" id="time" class="form-control" value="0"></td>
+                                    <td class="hidden">
+                                        <input type="text" id="time" class="form-control form-control-sm" value="0"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -150,7 +159,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <div class="well card">
                     <div class="card-title">
                         <h4 class="text-center">Periodo Marzo-Abril</h4>
@@ -165,22 +174,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="col-sm-4">
-                <div class="well card">
-                    <div class="card-title">
-                        <h4 class="text-center">Periodo Mayo-Junio</h4>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="text-center"><strong>Tema:</strong> Verb to Be</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque sit alias iste quisquam porro odio accusantium placeat libero itaque eius, odit molestias corporis pariatur ullam quibusdam harum nulla impedit labore.</p>
-                        <h5 class="text-center"><strong>Fecha de Evaluación:</strong> 20 JUN 2017</h5>
-                    </div>
-                    <div class="card-footer">
-                        <label> Vista Detallada</label>
-                    </div>
-                </div>
-            </div> -->
         </div>
-    </div>
+    </main>
 </div>
