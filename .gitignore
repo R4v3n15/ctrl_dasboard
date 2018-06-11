@@ -3,4 +3,5 @@
 /nbproject/private/
 # don't commit all the dependencies fetched via Composer
 /vendor/
+/application/model/ImportarModel.php
 .phpintel
