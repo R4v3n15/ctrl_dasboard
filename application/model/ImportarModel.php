@@ -1,7 +1,6 @@
 <?php
 class ImportarModel
 {
-	//Nuevo Cambio
 	public static function getClasesList(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $query = $database->prepare("SELECT * 
@@ -30,9 +29,9 @@ class ImportarModel
         		$clase->year, $dias, 
         		$clase->hour_init, $clase->hour_end, 
         		$clase->normal_cost, $clase->promo_cost, $clase->inscription_cost, NULL);
-        	// H::p($dias);
+        	H::p($dias);
         }
-        // exit();
+        exit();
         H::p($clases);
 	}
 
