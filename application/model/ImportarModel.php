@@ -14,14 +14,14 @@ class ImportarModel
 
         $clases = $query->fetchAll();
         foreach ($clases as $clase) {
-        	$dias = self::convertDays($clase->days);
+        	//$dias = self::convertDays($clase->days);
         	switch ((int)$clase->id_course) {
         		case 1: $id_curso = 1; break;
         		case 2: $id_curso = 3; break;
         		case 3: $id_curso = 4; break;
         		case 4: $id_curso = 5; break;
         	}
-        	continue;
+        	//continue;
 
         	CursoModel::addNewClass(
         		$id_curso, $clase->id_group, 
