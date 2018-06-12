@@ -1,7 +1,7 @@
 <?php
 class ImportarModel
 {
-	//Nuevo Cambio remoto para comprobar errores
+	//Nuevo Cambio
 	public static function getClasesList(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $query = $database->prepare("SELECT * 
