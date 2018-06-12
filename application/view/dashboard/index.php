@@ -17,7 +17,7 @@
             <div class="col-12" id="calendar">
                 
             </div>
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <div class="jumbotron jumbotron-fluid box-shadown p-2 m-0">
                     <h6 class="text-danger text-center mb-0">Hello, world!</h6>
                     <hr class="my-0">
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </main>
 </div>

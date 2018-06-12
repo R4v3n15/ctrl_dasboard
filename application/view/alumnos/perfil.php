@@ -2,8 +2,8 @@
     $alumno = $this->alumno; 
     $url_base = Config::get('URL');
 ?>
-<div class="row" id="page-content-wrapper">
-    <main role="main" class="col-md-12 px-3 mb-4">
+<div class="row" id="page-content-wrapper" style="margin-left: 0;">
+    <main role="main" class="col-md-12 pr-3 mb-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
             <h5 class="text-info">Perfil</h5>
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -33,9 +33,11 @@
         <div class="row justify-content-center mb-4">
             <div class="col-sm-3">
                 <div class="card px-0 box-shadow">
-                    <img class="card-img-top rounded rounded-circle px-5 mt-1"  
-                         src="<?= $alumno->avatar;?>" 
-                         alt="avatar" height="120">
+                    <div class="card-img px-4 pt-0 pb-1">
+                        <img class="card-img-top rounded rounded-circle px-5 pt-0 pb-2 mt-1"  
+                             src="<?= $alumno->avatar;?>" 
+                             alt="avatar">
+                    </div>
                     <div class="card-title mt-1 pb-0 mb-0">
                         <h5 class="text-center text-info" 
                             id="alumno" 
