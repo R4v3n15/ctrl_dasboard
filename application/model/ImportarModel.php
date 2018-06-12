@@ -1,8 +1,7 @@
 <?php
-
+// Test Clase ImportarModel
 class ImportarModel
 {
-	// Test de Cambio Locales
 	public static function getClasesList(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $query = $database->prepare("SELECT * 
