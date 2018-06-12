@@ -273,7 +273,7 @@ class ImportarModel
 	public static function importStudents($page) {
 		H::getLibrary('paginadorLib');
 		$paginator  = new \Paginador();
-		$filas      = 25;
+		$filas      = 30;
 		$page       = (int)$page;
 		$database   = DatabaseFactory::getFactory()->getConnection();
 		$query = $database->prepare("SELECT * 
@@ -345,7 +345,7 @@ class ImportarModel
 							echo '<td>'.$alumno->surname.' '.$alumno->lastname.' '.$alumno->name.'</td>';
 							echo '<td>';
 								if (count($alumno->tutor) > 0) {
-									echo $alumno->tutor['name'].' '.$alumno->tutor['surname'];
+									echo $alumno->tutor['name'].' '.$alumno->tutor['surname'].' '.$alumno->tutor['lastname'];
 								} else {
 									echo ' - - - - ';
 								}
@@ -572,7 +572,7 @@ class ImportarModel
 									  LIMIT 1;");
 		$verify->execute(array(':name' => $name, ':surname' => $surname, ':lastname' => $lastname));
 		if ($verify->rowCount() > 0) {
-			return array('success' => true, 'message' => '&#x2713; I M P O R T A D O!!');
+			return array('success' => true, 'message' => '&#x2713; YA   HA SIDO I M P O R T A D O!!');
 		}
 
         $database->beginTransaction();
@@ -589,8 +589,8 @@ class ImportarModel
 				if ($getTutor->rowCount() > 0) {
 					$tutor = $getTutor->fetch();
 					$tutor_name = trim($tutor->name_t);
-					$tutor_surname = trim($tutor->surname1_t);
-					$tutor_lastname = trim($tutor->surname2_t);
+					$tutor_surname = str_replace('�', 'Ñ',trim($tutor->surname1_t));
+					$tutor_lastname = str_replace('�', 'Ñ',trim($tutor->surname2_t));
 					$latitud  = 19.57789189450819;
 					$longitud = -88.04557564999999;
 
@@ -610,7 +610,7 @@ class ImportarModel
 					$street   = trim(str_replace('Calle:', '', $addr[0]));
 					$number   = trim($addr[1]);
 					$between  = trim(str_replace('Entre:', '', $addr[2]));
-					$colony   = trim(str_replace('Col:', '', $addr[3]));
+					$colony   = trim(str_replace('Col.:', '', $addr[3]));
 
 
 					// Si no cumple la condición, el alumno no tiene tutor
@@ -624,7 +624,7 @@ class ImportarModel
 						$verifyTutor->execute(array(
 												':name' => ucwords(strtolower($tutor_name)), 
 												':surname' => ucwords(strtolower($tutor_surname)), 
-												':lastname' => ucwords(strtolower($tutor_surname))));
+												':lastname' => ucwords(strtolower($tutor_lastname))));
 
 						if ($verifyTutor->rowCount() > 0) {
 							// Ya esta registrado
@@ -639,7 +639,7 @@ class ImportarModel
 							$query->execute(array(
 												':name'         => ucwords(strtolower($tutor_name)),
 												':surname'      => ucwords(strtolower($tutor_surname)),
-												':lastname'     => ucwords(strtolower($tutor_surname)),
+												':lastname'     => ucwords(strtolower($tutor_lastname)),
 												':job'          => trim($tutor->job),
 												':cellphone'    => trim($tutor->cellphone_t),
 												':phone'        => trim($tutor->phone),
@@ -744,7 +744,7 @@ class ImportarModel
 						$queryBeca = $database->prepare("SELECT *
 													     FROM naatikdb.scholar
 													     WHERE id_student = :student
-													       AND request = 'si' OR togrant = 'si'
+													       AND togrant = 'si'
 													     LIMIT 1");
 						$queryBeca->execute(array(':student' => $alumno->id_student));
 
@@ -840,6 +840,9 @@ class ImportarModel
 							$detalle = $queryData->fetch();
 							$extra   = $queryInfo->fetch();
 
+							$ultimo_grado = str_replace('AÃ±o', 'Año', $detalle->level);
+							$comentario   = str_replace('InscripciÃ³n','Inscripción',$detalle->prev_course);
+
 							//Insert Student Details
 							$details =  $database->prepare("INSERT INTO students_details(student_id, convenio, facturacion,
 																						 homestay, acta_nacimiento, ocupation, 
@@ -856,9 +859,9 @@ class ImportarModel
 													':ocupation'       => $detalle->ocupation,
 													':workplace'       => $detalle->workplace,
 													':studies'         => $detalle->studies,
-													':lastgrade'       => $detalle->level,
+													':lastgrade'       => $ultimo_grado,
 													':prior_course'    => 1,
-													':prior_comments'  => $detalle->prev_course
+													':prior_comments'  => $comentario
 												));
 							
 
