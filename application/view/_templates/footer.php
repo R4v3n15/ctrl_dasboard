@@ -36,19 +36,5 @@
     <?php if (View::active($filename, 'mapa')): ?>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyHF2SBcSc6_csYijtpiS8tOFrI06zzPs&callback=initMap"></script>
     <?php endif ?>
-
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyBKDQ2gr358d_GZcPVl6CeHAcBYnoXi2ek",
-            authDomain: "apt-passage-173614.firebaseapp.com",
-            databaseURL: "https://apt-passage-173614.firebaseio.com",
-            projectId: "apt-passage-173614",
-            storageBucket: "",
-            messagingSenderId: "803217042956"
-        };
-        firebase.initializeApp(config);
-    </script>
 </body>
 </html>

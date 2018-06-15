@@ -4,36 +4,44 @@
             <h5 class="text-danger">Fuera de Servicio</h5>
         </div>
 
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-md-12 text-center">
-                <h4 class="text-info my-5">
-                    E N &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  M A N T E N I M I E N T O
+                <h4 class="text-info my-2">
+                    C A R D S
                 </h4>
-                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
             </div>
+            
+            <div class="col-md-10 text-center">
+                <div class="row">
+                <?php if ($this->students): ?>
+                    <?php $cont = 1; foreach ($this->students as $student): ?>
+                        <?php $clase = 'info'; if ($cont % 2 == 0): $clase = 'success'; ?><?php endif ?>
+                        <div class="col-3">
+                            <div class="card card-<?= $clase; ?>">
+                                <div class="card-header"></div>
+                                <div class="card-avatar mx-auto">
+                                    <img src="<?= _avatar(); ?>default.jpg" alt="avatar">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title text-center"><?= $student->name; ?> <?= $cont; ?></h6>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item pt-2 pb-1"><strong>Grupo: </strong><?= $student->class_id; ?></li>
+                                        <li class="list-group-item pt-2 pb-1"><strong>Edad: </strong><?= $student->age; ?></li>
+                                        <li class="list-group-item pt-2 pb-1"><strong>Sexo: </strong><?= $student->genre; ?></li>
+                                        <li class="list-group-item pt-2 pb-1"><strong>Tel. </strong><?= $student->cellphone; ?></li>
+                                        <li class="list-group-item pt-2 pb-1"><strong>Tutor:</strong><?= $student->id_tutor; ?></li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="btn btn-primary">Agregar</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php $cont++; endforeach ?>
+                <?php endif ?>
+                </div>
+            </div>
+
         </div>
     </main>
 </div>
-
-
-<?php $user_type = (int)Session::get('user_type'); ?>
-<?php if ($user_type === 777): ?>
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a href="javascript:void(0)">Inicio</a></li>
-        <li><a href="javascript:void(0)">Alumnos</a></li>
-        <li><a href="javascript:void(0)" class="active">Sep</a></li>
-    </ol>    
-    
-    <div class="well card">
-        <?php $this->renderFeedbackMessages(); ?>
-        <h3 class="text-center text-primary">Sep</h3>
-        <div class="row">
-            <div class="col-xs-6 col-xs-offset-3 text-center loader">
-                <h4 class="text-center">Construyendo..</h4>
-                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
-            </div>
-        </div>
-    </div>
-</div>
-<?php endif ?>

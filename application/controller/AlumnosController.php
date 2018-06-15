@@ -423,7 +423,7 @@ class AlumnosController extends Controller
 
     public function sep() {
         $this->View->render('alumnos/sep', array(
-            'user_name' => Session::get('user_name'),
+            'students' => GeneralModel::prospectSepStudents(),
         ));
     }
 
