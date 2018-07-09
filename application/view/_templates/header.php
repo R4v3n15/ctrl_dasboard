@@ -14,6 +14,7 @@
     <!-- <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome.min.css" rel="stylesheet"> -->
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome-all.min.css" rel="stylesheet">
     <link href="<?php echo Config::get('URL'); ?>assets/libs/css/main.css" rel="stylesheet">
+    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/cards.css" rel="stylesheet">
     <link href="<?php echo Config::get('URL'); ?>assets/css/icons.css" rel="stylesheet">
     <?php  
         if(Registry::has('css')){

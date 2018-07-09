@@ -9,31 +9,69 @@
                 <h4 class="text-info my-5">
                     E N &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  M A N T E N I M I E N T O
                 </h4>
-                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
+            </div>
+            <div class="col-3">
+                <div class="card card-info box-shadow">
+                    <div class="card-header"></div>
+                    <div class="card-avatar mx-auto">
+                        <img src="<?= _avatar(); ?>default.jpg" alt="avatar">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card card-success box-shadow">
+                    <div class="card-header"></div>
+                    <div class="card-avatar mx-auto">
+                        <img src="<?= _avatar(); ?>default.jpg" alt="avatar">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card card-purple box-shadow">
+                    <div class="card-header"></div>
+                    <div class="card-avatar mx-auto">
+                        <img src="<?= _avatar(); ?>default.jpg" alt="avatar">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card card-warning box-shadow">
+                    <div class="card-header"></div>
+                    <div class="card-avatar mx-auto">
+                        <a href="#" title="">
+                            <img src="<?= _avatar(); ?>default.jpg" alt="avatar">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 </div>
-
-<?php $user_type = (int)Session::get('user_type'); ?>
-
-<?php if ($user_type === 777): ?>
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a href="javascript:void(0)">Inicio</a></li>
-        <li><a href="javascript:void(0)">Alumnos</a></li>
-        <li><a href="javascript:void(0)" class="active">Egresados</a></li>
-    </ol>    
-    
-    <div class="well card">
-        <?php $this->renderFeedbackMessages(); ?>
-        <h3 class="text-center text-primary">Egresados</h3>
-        <div class="row">
-            <div class="col-xs-6 col-xs-offset-3 text-center loader">
-                <h4 class="text-center">Construyendo..</h4>
-                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
-            </div>
-        </div>
-    </div>
-</div>
-<?php endif ?>
