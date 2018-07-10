@@ -3,7 +3,7 @@
     <hr>
     <div class="row justify-content-center">
         <div class="col-6 text-center">
-            <div class="form-group row justify-content-center">
+            <div class="form-group row justify-content-center" id="toggle-hastutor">
                 <label class="col-sm-5 col-md-4 col-lg-3">¿Tiene Tutor?: </label>
                 <div class="col-sm-7 col-md-8 col-lg-5">
                     <div class="custom-control custom-radio custom-control-inline">
@@ -69,14 +69,14 @@
         <div class="row justify-content-center">
             <div class="col-sm-10 col-md-8 text-center d-none bg-light pb-2 mb-2" id="exist_tutor">
                 <p class="mb-0">¿Este es el tutor que quiere registrar?</p>
-                <label>
+                <label class="mb-0">
                     <strong>Nombre: </strong><span id="tutor-name" class="text-info"></span>
-                </label>
+                </label><br>
                 <label>
                     <strong>Ocupación: </strong><span id="tutor-job"></span>
                 </label><br>
-                <button type="button" id="notUseTutor" class="btn btn-info btn-sm px-3 mr-3">No</button>
-                <button type="button" id="useTutor" class="btn btn-secondary btn-sm px-4">Si</button>
+                <button type="button" id="notUseTutor" class="btn btn-warning btn-sm px-3 mr-3">No</button>
+                <button type="button" id="useTutor" class="btn btn-info btn-sm px-4">Si</button>
             </div>
         </div>
 
@@ -227,7 +227,8 @@
 
     <div class="row justify-content-center">
         <div class="col-12 d-none text-center" id="continue">
-            <a href="#" class="btn btn-sm btn-info btn_forms" id="form_alumno" data-form="alumno">Continuar <i class="fa fa-arrow-right"></i></a>
+        	<a href="#" class="btn btn-sm btn-warning mr-3" id="reset_form"><i class="fa fa-arrow-left"></i> Volver</a>
+            <a href="#" class="btn btn-sm btn-info btn_forms ml-3" id="form_alumno" data-form="alumno">Continuar <i class="fa fa-arrow-right"></i></a>
         </div>
     </div>
 </form> 

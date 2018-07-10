@@ -164,7 +164,7 @@ class AlumnoModel
                     if ($tutor->rowCount() > 0) {
                         $tutor = $tutor->fetch();
                         $id_tutor = $tutor->id_tutor;
-                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet;
+                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet.' '.$tutor->lastnamet;
                     }
                 }
 

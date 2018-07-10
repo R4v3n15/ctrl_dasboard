@@ -52,9 +52,10 @@
                 <strong>Grupo: </strong><span id="student-group"></span><br>
                 <strong>Estado: </strong><span id="student-status"></span>
             </label><br>
+            <label class="text-center">¿Qué desea hacer?</label><br>
             <button type="button" 
-                   class="btn btn-sm btn-warning mr-3" 
-                   id="cancelRegister" 
+                   class="btn btn-sm btn-warning mr-2" 
+                   id="cancelStudentRegister" 
                    data-steep="1"
                    data-toggle="tooltip"
                    data-placement="bottom"
@@ -64,7 +65,7 @@
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="Continuar Registro"  
-                    class="btn btn-secondary btn-sm">Continuar Registro</button>
+                    class="btn btn-secondary btn-sm ml-2">Continuar Registro</button>
         </div>
     </div>
 

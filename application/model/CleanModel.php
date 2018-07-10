@@ -5,7 +5,7 @@ class CleanModel
 	public static function deleteStudent($student){
 		$database = DatabaseFactory::getFactory()->getConnection();
 
-		$select = $database->prepare("SELECT s.student_id, s.id_tutor 
+		$select = $database->prepare("SELECT student_id, id_tutor 
 									  FROM students 
 									  WHERE student_id = :student
 									  LIMIT 1;");
@@ -19,22 +19,22 @@ class CleanModel
         	$delete->execute(array(':student' => $student));
 
             if ($delete->rowCount() > 0) {
-            	$removeD = $database->prepare("DELETE FROM student_details WHERE student_id = :student;");
+            	$removeD = $database->prepare("DELETE FROM students_details WHERE student_id = :student;");
             	$removeD->execute(array(':student' => $student));
-            	$removeE = $database->prepare("DELETE FROM student_evaluations WHERE student_id = :student;");
+            	$removeE = $database->prepare("DELETE FROM students_evaluations WHERE student_id = :student;");
             	$removeE->execute(array(':student' => $student));
-            	$removeG = $database->prepare("DELETE FROM student_groups WHERE student_id = :student;");
+            	$removeG = $database->prepare("DELETE FROM students_groups WHERE student_id = :student;");
             	$removeG->execute(array(':student' => $student));
-            	$removeP = $database->prepare("DELETE FROM student_pays WHERE student_id = :student;");
+            	$removeP = $database->prepare("DELETE FROM students_pays WHERE student_id = :student;");
             	$removeP->execute(array(':student' => $student));
-            	$removeS = $database->prepare("DELETE FROM student_sep WHERE student_id = :student;");
+            	$removeS = $database->prepare("DELETE FROM students_sep WHERE student_id = :student;");
             	$removeS->execute(array(':student' => $student));
 
             	if ((int)$alumno->id_tutor !== 0) {
-                    $_sql = $database->prepare("SELECT s.student_id, s.id_tutor 
+                    $_sql = $database->prepare("SELECT student_id, id_tutor 
                                                   FROM students 
-                                                  WHERE s.id_tutor = :tutor
-                                                   AND s.student_id != :student
+                                                  WHERE id_tutor = :tutor
+                                                   AND student_id != :student
                                                   LIMIT 1;");
                     $_sql->execute(array(':tutor' => $alumno->id_tutor, ':student' => $student));
 
@@ -73,13 +73,13 @@ class CleanModel
 	public static function deleteTutor($tutor){
 		$database = DatabaseFactory::getFactory()->getConnection();
 
-    		$select = $database->prepare("SELECT s.student_id, s.id_tutor 
-    									  FROM students 
-    									  WHERE s.id_tutor = :tutor
-    									  LIMIT 1;");
-    		$select->execute(array(':tutor' => $tutor));
+		$select = $database->prepare("SELECT student_id, id_tutor 
+									  FROM students 
+									  WHERE id_tutor = :tutor
+									  LIMIT 1;");
+		$select->execute(array(':tutor' => $tutor));
 
-		if ($select->rowCount() <= 1) {
+		if ($select->rowCount() === 0) {
 			$clean = $database->prepare("DELETE FROM tutors WHERE id_tutor = :tutor;");
             $clean->execute(array(':tutor' => $tutor));
 

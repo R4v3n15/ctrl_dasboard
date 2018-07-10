@@ -37,7 +37,9 @@ var Inscripcion = {
                 _this.handleFormActions();
 
                 // Process forms
+                _this.resetTutorForm();
                 _this.createTutor();
+                _this.cancelStudentRegister();
                 _this.createStudent();
                 _this.createStudies();
 
@@ -96,6 +98,7 @@ var Inscripcion = {
     },
 
     useTutorData: function(){
+    	let _this = this;
         $('#useTutor').click(function(){
             let tutor = $(this).data('tutor');
             $.ajax({
@@ -117,8 +120,10 @@ var Inscripcion = {
                         localStorage.setItem('colony', response.colony);
 
                         $('#info_tutor').addClass('d-none');
+                        $('#toggle-hastutor').addClass('d-none');
                         $('#continue').removeClass('d-none');
                         $('#exist_tutor').removeClass('border').addClass('d-none');
+
                         _this.navigateInscriptionForms();
                     }
                 }
@@ -132,14 +137,37 @@ var Inscripcion = {
         });
     },
 
+    resetTutorForm: function(){
+    	$('#reset_form').click(function(event) {
+    		event.preventDefault();
+    		if (localStorage.getItem('tutor_id') !== null) {
+	            localStorage.removeItem('tutor_id');
+	            localStorage.removeItem('tutor_name');
+	            localStorage.removeItem('address');
+	            localStorage.removeItem('street');
+	            localStorage.removeItem('number');
+	            localStorage.removeItem('between');
+	            localStorage.removeItem('colony');
+        	}
+
+        	console.log(localStorage.getItem('tutor_id'));
+        	$('#info_tutor').removeClass('d-none');
+        	$('#toggle-hastutor').removeClass('d-none');
+            $('#continue').addClass('d-none');
+            $('#exist_tutor').addClass('border').removeClass('d-none');
+    	});
+    },
+
     studentHasTutor: function() {
         let _this = this;
         $('.has_tutor').click(function(event) {
             if ($(this).val() == 'si') {
                 $('#info_tutor').removeClass('d-none');
+                $('#reset_form').removeClass('d-none');
                 $('#continue').addClass('d-none');
             } else {
                 $('#info_tutor').addClass('d-none');
+                $('#reset_form').addClass('d-none');
                 $('#continue').removeClass('d-none');
                 _this.navigateInscriptionForms();
             }
@@ -162,7 +190,7 @@ var Inscripcion = {
                     url: _root_ + 'alumnos/crearTutor'
                 })
                 .then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     if (response.success) {
                         // Message confirmation
                         localStorage.setItem('tutor_id', response.tutor);
@@ -231,6 +259,22 @@ var Inscripcion = {
                 $('#exist_student').removeClass('border').addClass('d-none');
             }
         });
+
+        $('#dissmiss').click(function(event) {
+        	event.preventDefault();
+        	$('#student-name').text('');
+            $('#student-group').text('');
+            $('#student-status').text('');
+            $('#exist_student').removeClass('border').addClass('d-none');
+        });
+    },
+
+    cancelStudentRegister: function(){
+    	let _this = this;
+        $('#cancelStudentRegister').click(function(event) {
+            event.preventDefault();
+            _this.resetAllResgistration();
+        });
     },
     
     createStudent: function() {
@@ -258,7 +302,7 @@ var Inscripcion = {
                     url: _root_ + 'alumnos/crearAlumno'
                 })
                 .then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     if(response.success){
                         localStorage.setItem('student_id', response.student);
                         localStorage.setItem('student_name', response.name);
@@ -282,7 +326,7 @@ var Inscripcion = {
                                 url: _root_ + 'alumnos/crearAvatar'
                             })
                             .then(function(feeback){
-                                console.log(feeback);
+                                // console.log(feeback);
                                 if(!feeback.success){
                                     setTimeout(function(){
                                         $('#general_snack').attr('data-content', feeback.message);
@@ -329,7 +373,7 @@ var Inscripcion = {
                     url: _root_ + 'alumnos/crearEstudios'
                 })
                 .then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     if (response.success) {
                         let _urlMapa  = _root_ + 'mapa/u/'+response.student,
                             _urlFin   = _root_ + 'alumnos',
@@ -370,27 +414,53 @@ var Inscripcion = {
 
             let steep = $(this).data('steep');
             if (parseInt(steep) === 1) {
-                $.ajax({
-                    synch: 'true',
-                    type: 'POST',
-                    data: {student: form},
-                    url: _root_ + 'clean/student',
-                    success: function(data){
-                        _this.cleanHelperInfo();
-                    }
-                });
-            } else {
-                $.ajax({
-                    synch: 'true',
-                    type: 'POST',
-                    data: {tutor: form},
-                    url: _root_ + 'clean/tutor',
-                    success: function(data){
-                        _this.cleanHelperInfo();
-                    }
-                });
+                if (localStorage.getItem('tutor_id') !== null) {
+		            deleteTutorInfo(localStorage.getItem('tutor_id'));
+		        }
             }
+
+            if (parseInt(steep) === 2) {
+            	let tutor   = localStorage.getItem('tutor_id'),
+            		student = localStorage.getItem('student_id');
+
+            	if (student !== null) {
+		            deleteStudentInfo(student);
+		        }
+
+            	if (tutor !== null) {
+		            deleteTutorInfo(tutor);
+		        }
+            }
+
+            $('.form-control').val('');
+            _this.resetAllResgistration();
         });
+
+        function deleteStudentInfo(student){
+        	$.ajax({
+                synch: 'true',
+                type: 'POST',
+                data: {student: student},
+                url: _root_ + 'clean/student'
+            })
+            .done(function(response){
+            	_this.cleanHelperInfo();
+            	console.log(response.message)
+            });
+        }
+
+        function deleteTutorInfo(tutor){
+        	$.ajax({
+                synch: 'true',
+                type: 'POST',
+                data: {tutor: tutor},
+                url: _root_ + 'clean/tutor'
+            })
+            .done(function(response){
+            	_this.cleanHelperInfo();
+            	console.log(response.message)
+            });
+        }
     },
 
     setHelperInfo: function(){
@@ -425,6 +495,13 @@ var Inscripcion = {
             localStorage.removeItem('student_id');
             localStorage.removeItem('student_name');
         }
+    },
+
+    resetAllResgistration: function() {
+        $('.btn_forms').removeClass('active');
+        sessionStorage.setItem('formNewStudent', 'tutor');
+        $('#form_tutor').addClass('active');
+        this.getInscriptionForm('tutor');
     },
 
     handleFormActions: function() {

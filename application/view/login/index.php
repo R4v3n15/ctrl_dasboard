@@ -39,7 +39,7 @@
             <label for="user_password">Password</label>
         </div>
        
-        <div class="col-12 mb-3">
+        <!-- <div class="col-12 mb-3">
             <div class="custom-control custom-checkbox">
                 <input type="checkbox"
                        name="set_remember_me_cookie" 
@@ -50,7 +50,7 @@
                        id="customCheck1">
                 <label class="custom-control-label" for="customCheck1">Recordar sesión</label>
             </div>
-        </div>
+        </div> -->
         <?php if (!empty($this->redirect)) { ?>
             <input type="hidden" name="redirect" value="<?php echo $this->encodeHTML($this->redirect); ?>" />
         <?php } ?>

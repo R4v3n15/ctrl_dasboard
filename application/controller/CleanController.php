@@ -16,7 +16,7 @@ class CleanController extends Controller
     }
 
     public function tutor() {
-        $this->View->renderJSON(CleanModel::deleteTutor(Request::post('tutor')));
+    	$this->View->renderJSON(CleanModel::deleteTutor(Request::post('tutor')));
     }
 
     public function clase() {
