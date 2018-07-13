@@ -254,20 +254,23 @@ var Alumnos = {
                 data: { alumno: alumno, clase: clase },
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'alumnos/cambiarGrupoAlumno',
-                success: function(response){
-                    if (response.success) {
-                        $('#general_snack').attr('data-content', response.message);
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-blue');
-                    } else {
-                        $('#general_snack').attr('data-content', response.message);
-                        $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-red');
-                    }
-                    $('#modalAddToGroup').modal('hide');
-                    _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                url: _root_ + 'alumnos/cambiarGrupoAlumno'
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red');
                 }
+                $('#modalAddToGroup').modal('hide');
+                _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+            })
+            .fail(function(errno){
+                console.log(errno);
             });
         });
     },

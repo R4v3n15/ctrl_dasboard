@@ -116,7 +116,7 @@ class AlumnoModel
         if ($students !== null) {
             H::getLibrary('paginadorLib');
             $paginate = new \Paginador();
-            $filas    = 20;
+            $filas    = 50;
             $page     = (int)$page;
             $alumnos  = $paginate->paginar($students, $page, $filas);
             $counter  = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
@@ -584,7 +584,8 @@ class AlumnoModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+            return array('success' => false, 
+                         'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');

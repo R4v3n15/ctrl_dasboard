@@ -35,6 +35,25 @@ class AlumnosController extends Controller
     }
 
 
+    public function cambiarGrupoAlumno(){
+        if (Request::post('alumno')) {
+            $this->View->renderJSON(AlumnoModel::ChangeStudentGroup(Request::post('alumno'), Request::post('clase')));
+        } else {
+            $this->View->renderJSON(array('success' => false, 
+                         'message' => '&#x2718; Faltan datos, intente de nuevo o reporte el error!'));
+        }
+    }
+
+    public function cambiarGrupoAlumnos(){
+        if (Request::post('alumnos') && Request::post('clase') !== "") {
+            $this->View->renderJSON(AlumnoModel::ChangeStudentsGroup(Request::post('alumnos'), Request::post('clase')));
+        } else {
+            $this->View->renderJSON(array('success' => false, 
+                         'message' => '&#x2718; Faltan datos, intente de nuevo o reporte el error!'));
+        }
+    }
+
+
 
     ///////////////////////////////////////////////////////////////
     //  =  =  =  =  =  = I N S C R I P C I Ó N  =  =  =  =  =  = //
