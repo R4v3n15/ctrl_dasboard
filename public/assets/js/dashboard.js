@@ -6,6 +6,8 @@ var Dashboard = {
             switch (path[2]) {
                 case 'admin': // admin bd view
                     this.manageDatabase();
+                    this.backupDatabase();
+                    this.importDatabase();
                     break;
                 default: // index
                     this.loadCalendar();
@@ -86,6 +88,80 @@ var Dashboard = {
             });//End Ajax
         });
     },
+
+    backupDatabase: function(){
+        $('#createBackup').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                synch: 'true',
+                url: _root_ + 'dashboard/backDatabase',
+                type: 'POST'
+            })
+            .done(function(response) {
+                console.log(response);
+            })
+            .fail(function() {
+                console.log("error");
+            });
+
+            // $.ajax({
+            //     synch: 'true',
+            //     url: _root_ + 'dashboard/backupDatabase',
+            //     type: 'POST'
+            // })
+            // .done(function(response) {
+            //     let clases = ["bg-info", "bg-success", "bg-warning", "bg-danger"];
+            //     $.each(clases, function(i, v){
+            //        $('#alert').removeClass(v);
+            //     });
+
+            //     if (response.success) {
+            //         $('#alert').addClass("bg-success");
+            //     } else {
+            //         $('#alert').addClass("bg-danger");
+            //     }
+
+            //     $('#alert').addClass("show");
+            //     $('#alertcontent').text(response.message);
+            // })
+            // .fail(function() {
+            //     console.log("error");
+            // });
+            
+        });
+    },
+
+    importDatabase: function(){
+        $('#importDatabase').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                synch: 'true',
+                url: _root_ + 'dashboard/importDatabase',
+                type: 'POST'
+            })
+            .done(function(response) {
+                let clases = ["bg-info", "bg-success", "bg-warning", "bg-danger"];
+                $.each(clases, function(i, v){
+                   $('#alert').removeClass(v);
+                });
+
+                if (response.success) {
+                    $('#alert').addClass("bg-success");
+                } else {
+                    $('#alert').addClass("bg-danger");
+                }
+
+                $('#alert').addClass("show");
+                $('#alertcontent').text(response.message);
+            })
+            .fail(function() {
+                console.log("error");
+            });
+        });
+    }
+    
     
 };
 

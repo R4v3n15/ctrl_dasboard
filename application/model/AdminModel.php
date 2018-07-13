@@ -94,9 +94,6 @@ class AdminModel
     }
 
     public static function createBackupDatabase(){
-        // $backup = DatabaseFactory::getFactory()->backupDatabase();
-        // return $backup;
-        // 
         $db_host = Config::get('DB_HOST'); //Host del Servidor MySQL
         $db_name = Config::get('DB_NAME'); //Nombre de la Base de datos
         $db_user = Config::get('DB_USER'); //Usuario de MySQL

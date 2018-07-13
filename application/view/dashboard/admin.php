@@ -4,13 +4,29 @@
             <h5 class="text-info">Administrar Base de Datos</h5>
         </div>
 
-        <h5>Section title</h5>
         <div class="row justify-content-center">
-            <div class="col-6 text-center">
-                <button type="buttom" class="btn btn-danger" id="cleanDatabase"><i class="fa fa-trash"></i> Limpiar BD</button>
+            <div class="col-md-10 mb-4 px-md-5">
+                <div class="alert alert-dismissible fade" id="alert" role="alert">
+                  <h6 id="alertcontent" class="text-white text-center"></h6>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
             </div>
-            <div class="col-6 text-center">
-                <button type="buttom" class="btn btn-primary" id="feedDatabase"><i class="fa fa-database"></i> Actualizar BD</button>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-3 text-center">
+                <button type="buttom" class="btn btn-info box-shadown" id="createBackup"><i class="fa fa-archive"></i> Respaldar BD</button>
+            </div>
+            <div class="col-3 text-center">
+                <button type="buttom" class="btn btn-warning box-shadown" id="importDatabase"><i class="fa fa-upload"></i> Importar BD</button>
+            </div>
+            <div class="col-3 text-center">
+                <button type="buttom" class="btn btn-danger box-shadown" id="cleanDatabase"><i class="fa fa-trash"></i> Limpiar BD</button>
+            </div>
+            <div class="col-3 text-center">
+                <button type="buttom" class="btn btn-primary box-shadown" id="feedDatabase"><i class="fa fa-database"></i> Actualizar BD</button>
             </div>
         </div>
     </main>

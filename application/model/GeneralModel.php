@@ -266,22 +266,18 @@ class GeneralModel
     
 
     public static function createBackupDatabase(){
-
-        $db_host = Config::get('DB_HOST'); //Host del Servidor MySQL
-        $db_name = Config::get('DB_NAME'); //Nombre de la Base de datos
-        $db_user = Config::get('DB_USER'); //Usuario de MySQL
-        $db_pass = Config::get('DB_PASS'); //Password de Usuario MySQL
+        $host = Config::get('DB_HOST'); //Host del Servidor MySQL
+        $name = Config::get('DB_NAME'); //Nombre de la Base de datos
+        $user = Config::get('DB_USER'); //Usuario de MySQL
+        $pass = Config::get('DB_PASS'); //Password de Usuario MySQL
         $bk_path = Config::get('PATH_BACKUPS'); //Carpeta destino del Backup
 
-        $backup_file = $bk_path . $db_name . '_' .date("Ymd-His") . ".sql";
-        $command = "mysqldump --opt -h $db_host  -u $db_user -p$db_pass $db_name > $backup_file";
+        $backup_file = $bk_path . $name . '_' .date("Ymd-His") . ".sql";
+        echo "<h3>Backing up database to `<code>{$backup_file}</code>`</h3>";
+        $cmd = "C:\\xampp\mysql\bin\mysqldump.exe -h {$host} -u {$user} -p{$pass} {$name} > $backup_file";
          
-        system($command,$output);
-        echo $db_host.'<br>';
-        echo $db_name.'<br>';
-        echo $db_user.'<br>';
-        echo $db_pass.'<br>';
-        echo $output;
+        exec($cmd,$output);
+        var_dump($output);
     }
 
 
@@ -1908,6 +1904,183 @@ class GeneralModel
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Base de Datos actualizada correctamente!!');
+        }
+    }
+
+
+
+    public static function makeBackupDatabase(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $dbname = Config::get('DB_NAME');
+        $path   = Config::get('PATH_BACKUPS'); //Carpeta destino del Backup
+        $backup = $path . $dbname . '_' .date("Ymdhms") . ".sql";
+        $backup = str_replace('/', '\\', $backup);
+        /* Determina si la tabla será vaciada (si existe) cuando restauremos la tabla. */ 
+        $drop = false;
+        $tablas = false; //tablas de la bd
+        // Tipo de compresion: "gz", "bz2", o false (sin comprimir)
+        $compresion = false;
+
+        $tables = $database->prepare("SHOW TABLES;");
+        $tables->execute();
+
+        if ($tables->rowCount() > 0) {
+            $tables = $tables->fetchAll(PDO::FETCH_COLUMN);
+            
+            $info['fecha'] = date('d-m-Y');
+            $info['hora']  = date('h:m:s A');
+            $info['mysqlver'] = $database->getAttribute(PDO::ATTR_SERVER_VERSION);
+            $info['phpver'] = phpversion();
+
+            ob_start();
+            print_r($tables);
+            $representacion = ob_get_contents();
+            ob_end_clean();
+
+            preg_match_all('/(\[\d+\] => .*)\n/', $representacion, $matches);
+            $info['tablas'] = implode("; ", $matches[1]);
+
+            // Text Info
+            $dump  = "-- SQL DUMP \n";
+            $dump .= "-- Servidor: 127.0.0.1 \n";
+            $dump .= "-- Tiempo de generación: {$info['fecha']} a las {$info['hora']} \n";
+            $dump .= "-- Versión del servidor: {$info['mysqlver']} \n";
+            $dump .= "-- Versión de PHP: {$info['phpver']} \n";
+            $dump .= "-- \n\n";
+            $dump .= 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' ."\n";
+            $dump .= 'SET AUTOCOMMIT = 0;' . "\n";
+            $dump .= 'START TRANSACTION;' . "\n";
+            $dump .= 'SET time_zone = "+00:00";' . "\n\n";
+            $dump .= "-- Base de Datos `$dbname` \n";
+            $dump .= "-- \n";
+            $dump .= "CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER ";
+            $dump .= "SET utf8mb4 COLLATE utf8mb4_unicode_ci;\n USE `$dbname`; \n\n";
+            $dump .= "-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
+
+            // Crear las consultas necesarias para el script de respaldo
+            foreach ($tables as $tabla) {
+                $drop_table   = "";
+                $create_table = "";
+                $insert_into  = "";
+
+                /* Se halla query que será capaz vaciar la tabla. */
+                $drop_table = "DROP TABLE IF EXISTS `$tabla`;";
+
+
+                /* Se halla query que será capaz de recrear la estructura de la tabla. */
+                $consulta = $database->prepare("SHOW CREATE TABLE $tabla;");
+                $consulta->execute();
+                $respuesta = $consulta->fetchAll(PDO::FETCH_COLUMN, 1);
+
+                foreach ($respuesta as $value) {
+                    $create_table = $value.";";
+                }
+
+                /* Se halla el query que será capaz de insertar los datos. */
+                $query = $database->prepare("SELECT * FROM $tabla;");
+                $query->execute();
+
+                if ($query->rowCount() > 0) {
+                    $response = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    $cont = 0;
+                    $data = null;
+                    foreach ($response as $fila) {
+                        $columnas = array_keys($fila);
+
+                        if ($cont === 0) {
+                            $insert_into .= "INSERT INTO `$tabla` (`".implode("`, `", $columnas)."`) VALUES\n";
+                        }
+                        
+                        $data = "(";
+                        $i = 0;
+                        foreach ($columnas as $columna) {
+                            $data .= $fila[$columna] == NULL ? 'NULL' : "`".$fila[$columna]."`";
+
+                            $data .= $i+1 < count($columnas) ? ', ' : "";
+
+                            $i++;
+                        }
+
+                        $data .= $cont+1 < count($response) ?  ")," : ");";
+                        
+                        $insert_into .= $data."\n";
+                        $cont++;
+                        
+                    } // end foreach->response
+
+                    unset($data);
+
+                    $dump .= "-- \n";
+                    $dump .= "-- Eliminar tabla `$tabla` existente\n";
+                    $dump .= "-- \n";
+                    $dump .= $drop_table;
+                    $dump .= "\n\n";
+
+                    $dump .= "-- \n";
+                    $dump .= "-- Estructura de la tabla `$tabla` \n";
+                    $dump .= "-- \n";
+                    $dump .= $create_table;
+                    $dump .= "\n\n";
+
+                    $dump .= "-- \n";
+                    $dump .= "-- Volcado de datos para la tabla `$tabla` \n";
+                    $dump .= "-- \n";
+                    $dump .= $insert_into;
+                    $dump .= "\n\n";
+
+                    $dump .= "-- \n";
+                    $dump .= "-- =  =  =  =  End Backup Script  =  =  =  = \n";
+                    $dump .= "-- \n";
+
+                }                    
+            } // end foreach->tables
+
+            
+            $stored = file_put_contents($backup, $dump);
+
+            if ($stored !== false && file_exists($backup)) {
+                return array('success' => true, 'message' => 'Base de datos del sistema guardada correctamente en: '.$backup);
+            } else {
+                return array('success' => false, 'message' => 'Error! No se creo respaldo de la BD, informe al encargado de Sistemas.');
+            }
+        } // end if->tables
+    }
+
+    // TODO: Show sql files availables to restore
+    public static function restoreDatabase(){
+        $host = Config::get('DB_HOST'); //Host del Servidor MySQL
+        $name = Config::get('DB_NAME'); //Nombre de la Base de datos
+        $user = Config::get('DB_USER'); //Usuario de MySQL
+        $pass = Config::get('DB_PASS'); //Password de Usuario MySQL
+        $path = Config::get('PATH_BACKUPS'); //Carpeta destino del Backup
+
+        $files = scandir($path);
+
+        $restore = null;
+        $created_at = 0;
+        foreach ($files as $file) {
+            if ((preg_match('/.sql/',$file)) ) {
+                $root = $path . pathinfo($file)['basename'];
+
+                if (filemtime($root) > $created_at) {
+                    $restore = $root;
+                    $created_at = filemtime($root);
+                }
+            }
+        }
+        // var_dump($restore);
+        // exit();
+
+        $cmd = "C:\\xampp\mysql\bin\mysql.exe -h {$host} -u {$user} -p{$pass} {$name} < $restore";
+         
+        exec($cmd,$output,$worked);
+
+        if ((int)$worked === 0) {
+            return array('success' => true, 'message' => 'Base de datos del sistema restaurado correctamente.');
+        } else {
+            return array('success' => false, 'message' => 'Error al tratar de restaurar la base de datos, notifique al encargado de Sistemas.');
         }
     }
 

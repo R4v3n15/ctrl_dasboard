@@ -40,4 +40,17 @@ class DashboardController extends Controller
     public function eventos(){
         $this->View->renderJSON(DashboardModel::calendarEvents());
     }
+
+    // Funciona-->
+    public function backDatabase() {
+        GeneralModel::createBackupDatabase();
+    }
+
+    public function backupDatabase() {
+        $this->View->renderJSON(GeneralModel::makeBackupDatabase());
+    }
+
+    public function importDatabase() {
+        $this->View->renderJSON(GeneralModel::restoreDatabase());
+    }
 }
