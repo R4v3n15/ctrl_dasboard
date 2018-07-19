@@ -10,6 +10,38 @@
                     E N &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  M A N T E N I M I E N T O
                 </h4>
             </div>
+
+            <div class="col-12">
+                <table id="example" class="table table-sm table-striped" style="width:100%">
+                    <thead>
+                        <tr class="">
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Apellido</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Escolaridad</th>
+                            <th class="text-center">Edad</th>
+                            <th class="text-center">Grupo</th>
+                            <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Apellido</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center">Escolaridad</th>
+                            <th class="text-center">Edad</th>
+                            <th class="text-center">Grupo</th>
+                            <th class="text-center">Tutor</th>
+                            <th class="text-center">Opciones</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
             <div class="col-3">
                 <div class="card card-info box-shadow">
                     <div class="card-header"></div>

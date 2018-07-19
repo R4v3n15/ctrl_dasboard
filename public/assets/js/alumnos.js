@@ -44,7 +44,6 @@ var Alumnos = {
         });
     },
 
-
     getStudentsTable: function(curso, page=0){
         let _this = this;
         $.ajax({
@@ -58,6 +57,8 @@ var Alumnos = {
                 feather.replace();
                 _this.countStudents();
                 _this.navigationPage(curso);
+                _this.activeFilter();
+                _this.startSearch();
                 _this.addStudentInGroup();
                 _this.openModals();
 
@@ -86,6 +87,67 @@ var Alumnos = {
             event.preventDefault();
             _this.vars.currentPage = parseInt($(this).data("students"));
             _this.getStudentsTable(_this.getActiveView(), $(this).data("students"));
+        });
+    },
+
+    activeFilter: function(){
+        $('#filter').change(function(event) {
+            if ($(this).val() !== '') {
+                switch ($(this).val()) {
+                    case 'escuela':
+                    case 'grupo':
+                        $('.extra-field').addClass('d-none');
+                        $('#field').prop('placeholder', 'Nombre del ' + $(this).val());
+                        break;
+                    case 'grado':
+                        $('.extra-field').addClass('d-none');
+                        $('#field').prop('placeholder', 'Grado escolar');
+                        break;
+                    case 'edad':
+                        $('.extra-field').addClass('d-none');
+                        $('#field').prop('placeholder', 'Edad del alumno');
+                        break;
+                    default:
+                        $('.extra-field').removeClass('d-none');
+                        $('#field').prop('placeholder', 'Nombre del ' + $(this).val());
+                        break;
+                }
+            }
+        });
+    },
+
+    startSearch: function(){
+        let _this = this;
+        let filtering = null;
+
+        $('#param').keyup(function() {
+            clearTimeout(filtering)
+            if ($('#param').val() !== '') {
+                filtering = setTimeout(function(){
+                    _this.searchInDB($('#filter').val(), 
+                                     $('#param').val(), 
+                                     $('#param1').val(), 
+                                     $('#param2').val());
+                }, 500)
+            }
+        });
+    },
+
+    searchInDB: function(filtro, param, param1, param2){
+        $.ajax({
+            data: { filtro: filtro, 
+                    param: param,
+                    param1: param1,
+                    param2: param2 },
+            synch: 'true',
+            type: 'POST',
+            url: _root_ + 'alumnos/realizarBusqueda'
+        })
+        .done(function(response){
+            console.log(response)
+        })
+        .fail(function(errno){
+            console.log(errno);
         });
     },
 

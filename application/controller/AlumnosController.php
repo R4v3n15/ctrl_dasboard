@@ -9,7 +9,7 @@ class AlumnosController extends Controller
 
         // Registry::set('css',array('fileinput.min&assets/css','icons&assets/css','mapa&assets/css','alumnos&assets/css'));
         Registry::set('css',array('fileinput.min&assets/libs/css'));
-        Registry::set('js', array('fileinput.min&assets/libs/js', 'alumnos&assets/js'));
+        Registry::set('js', array('fileinput.min&assets/libs/js', 'filtro&assets/js', 'alumnos&assets/js'));
     }
 
     public function index() {
@@ -19,9 +19,41 @@ class AlumnosController extends Controller
         ));
     }
 
+    public function getAlumnos() {
+        $this->View->renderJSON(AlumnoModel::Students(Request::post('curso')));
+    }
 
     public function tablaAlumnos() {
         AlumnoModel::tableStudents(Request::post('curso'), Request::post('page'));
+    }
+
+    public function realizarBusqueda(){
+        switch (Request::post('filtro')) {
+            case 'alumno':
+                $this->View->renderJSON(
+                                GeneralModel::filterStudent(Request::post('param'), 
+                                                            Request::post('param1'), 
+                                                            Request::post('param2')));
+                break;
+            case 'grupo':
+                // code...
+                break;
+            case 'tutor':
+                // code...
+                break;
+            case 'edad':
+                // code...
+                break;
+            case 'escuela':
+                // code...
+                break;
+            case 'grado':
+                // code...
+                break;
+            default:
+                return array('message' => 'Nothing found');
+                break;
+        }
     }
 
     public function obtenerGrupos() {
@@ -447,6 +479,7 @@ class AlumnosController extends Controller
     }
 
     public function egresados() {
+        Registry::set('js', array('alumnosegresados&assets/js'));
         $this->View->render('alumnos/egresados', array(
             'user_name' => Session::get('user_name'),
         ));

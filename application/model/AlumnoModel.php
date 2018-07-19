@@ -20,6 +20,7 @@ class AlumnoModel
         // Si existe al menos 1, se procesa y pasa a la vista
         $datos = [];
         if ($students !== null) {
+            $counter = 1;
             foreach ($students as $alumno) {
                 $id_grupo = 0;
                 $grupo = '<a href="javascript:void(0)" 
@@ -72,20 +73,71 @@ class AlumnoModel
                     $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
                 }
 
+                $photo = '<img class="rounded-circle" src="'.$avatar.'" alt="foto" widt="42" height="42">';
+
+                $options = '<a href="javascript:void(0)"
+                         data-target="#"
+                         class="btn btn-info btn-sm dropdown-toggle"
+                         data-toggle="dropdown">Más.. &nbsp;&nbsp; <span class="caret"></span>
+                      </a>';
+                $options .= '<ul class="dropdown-menu student">';
+                $options .= '<li>
+                            <a href="'.Config::get('URL').'alumnos/perfil/'.$alumno->student_id.'"
+                               data-student="'.$alumno->student_id.'"
+                               data-tutor="'.$id_tutor.'"
+                               data-clase="'.$id_grupo.'"
+                               data-curso="'.$nombre_curso.'">
+                                <span class="text-dark" data-feather="chevron-right"></span>
+                                Perfil
+                            </a>
+                        </li>';
+                $options .=    '<li>
+                            <a href="'.Config::get('URL').'alumnos/c/'.$alumno->student_id.'">
+                                <span class="text-primary" data-feather="chevron-right"></span>
+                                Convenio
+                            </a></li>';
+                $options .=    '<li>
+                            <a href="javascript:void(0)">
+                                <span class="text-info" data-feather="chevron-right"></span>
+                                Cambiar Foto
+                            </a>
+                        </li>';
+                $options .=   '<li>
+                            <a href="'.Config::get('URL').'evaluaciones/index/'.$alumno->student_id.'">
+                                <span class="text-success" data-feather="chevron-right"></span>
+                                Calificaciones
+                            </a>
+                        </li>';
+                $options .=   '<li>
+                            <a  href="javascript:void(0)" 
+                                class="btnUnsuscribeStudent" 
+                                data-student="'.$alumno->student_id.'"
+                                data-name="'.$alumno->name.' '.$alumno->surname.'">
+                                <span class="text-warning" data-feather="chevron-right"></span>
+                                Dar de Baja
+                            </a>
+                        </li>';
+                $options .=   '<li>
+                            <a  href="javascript:void(0)" 
+                                class="btnDeleteStudent" 
+                                data-student="'.$alumno->student_id.'"
+                                data-name="'.$alumno->name.' '.$alumno->surname.'">
+                                <span class="text-danger" data-feather="chevron-right"></span>
+                                Eliminar
+                            </a>
+                        </li>';
+                $options .= '</ul>';
+
                 $info = array(
                     'count'      => $counter,
-                    'student_id' => $alumno->student_id,
-                    'name'       => $alumno->name,
+                    'avatar'     => $photo,
                     'surname'    => $alumno->surname.' '.$alumno->lastname,
-                    'age'        => $alumno->age,
-                    'genre'      => $alumno->genre,
-                    'avatar'     => $avatar,
+                    'name'       => $alumno->name,
                     'studies'    => $alumno->studies.' '.$alumno->lastgrade,
-                    'convenio'   => $alumno->convenio,
-                    'group_id'   => $id_grupo,
+                    'age'        => $alumno->age,
                     'group_name' => $grupo,
-                    'tutor_id'   => $id_tutor,
-                    'tutor_name' => $nombre_tutor
+                    'tutor_name' => $nombre_tutor,
+                    'options'    => $options
                 );
 
                 array_push($datos, $info);
@@ -187,7 +239,7 @@ class AlumnoModel
 
             // Pasa información a la vista
             $paginacion = $paginate->getView('pagination_ajax', 'students');
-            echo $paginacion; 
+            // View::filters('alumnos'); 
             self::viewTableStudents($datos, $course);
             if (count($datos) > 15) {
             	echo $paginacion;

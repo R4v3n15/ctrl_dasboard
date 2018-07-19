@@ -95,7 +95,7 @@ class GeneralModel
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
                                                s.lastname, s.age, s.genre, s.avatar, g.class_id,
-                                               g.convenio, sd.studies, sd.lastgrade
+                                               g.convenio, sd.studies, sd.lastgrade, sd.workplace as school
                                         FROM students as s, students_groups as g, students_details as sd
                                         WHERE s.status = 1
                                           AND s.deleted  = 0
@@ -113,7 +113,7 @@ class GeneralModel
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
                                                s.lastname, s.age, s.genre, s.avatar, g.class_id,
-                                               g.convenio, sd.studies, sd.lastgrade
+                                               g.convenio, sd.studies, sd.lastgrade, sd.workplace as school
                                         FROM students as s, students_groups as g, students_details as sd
                                         WHERE s.status = 2
                                           AND s.deleted  = 0
@@ -131,7 +131,7 @@ class GeneralModel
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
                                                s.lastname, s.age, s.genre, s.avatar, g.class_id,
-                                               g.convenio, sd.studies, sd.lastgrade
+                                               g.convenio, sd.studies, sd.lastgrade, sd.workplace as school
                                         FROM students as s, students_groups as g, students_details as sd, classes as c
                                         WHERE s.status = 1
                                           AND s.deleted  = 0
@@ -181,6 +181,98 @@ class GeneralModel
         $students->execute(array(':course' => $course));
 
         return $students->rowCount();
+    }
+
+
+
+    public static function filter($category, $param){
+        switch ($category) {
+            case 'alumno':
+                self::filterStudent($param, null, null);
+                break;
+            case 'grupo':
+                // code...
+                break;
+            case 'tutor':
+                // code...
+                break;
+            case 'edad':
+                // code...
+                break;
+            case 'escuela':
+                // code...
+                break;
+            case 'grado':
+                // code...
+                break;
+            default:
+                return array('message' => 'Nothing found');
+                break;
+        }
+    }
+
+    // Prevencion de Duplicidad
+    public static function filterStudent($name, $surname=null, $lastname=null){
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $name     = '%'.trim($name).'%';
+        $surname  = $surname  !== null && $surname  !== '' ? '%'.trim($surname).'%' : null;
+        $lastname = $lastname !== null && $lastname !== '' ? '%'.trim($lastname).'%' : null;
+
+        if ($name !== '') {
+            if ($surname === null && $lastname === null ) {
+                // return array('name' => $name, 'surname' => $surname, 'lastname' => $lastname);
+                $search =  $database->prepare("SELECT name, surname, lastname
+                                                FROM students
+                                                WHERE name LIKE :name;");
+                $search->execute(array( ':name' => $name));
+            } else if($surname !== null && $lastname === null){
+                $search =  $database->prepare("SELECT student_id
+                                                FROM students
+                                                WHERE name LIKE :name
+                                                  AND surname LIKE :surname;");
+                $search->execute(array( ':name'     => $name, 
+                                        ':surname'  => $surname));
+            } else {
+                $search =  $database->prepare("SELECT student_id
+                                                FROM students
+                                                WHERE name LIKE :name
+                                                  AND surname LIKE :surname
+                                                  AND lastname LIKE :lastname;");
+                $search->execute(array( ':name'     => $name, 
+                                        ':surname'  => $surname, 
+                                        ':lastname' => $lastname));
+            }
+        } else {
+            if($surname !== null && $lastname === null){
+                $search =  $database->prepare("SELECT student_id
+                                                FROM students
+                                                WHERE name LIKE :name
+                                                  AND surname LIKE :surname;");
+                $search->execute(array( ':name'     => $name, 
+                                        ':surname'  => $surname));
+            } else if($surname === null && $lastname !== null) {
+                $search =  $database->prepare("SELECT student_id
+                                                FROM students
+                                                WHERE name LIKE :name
+                                                  AND surname LIKE :surname
+                                                  AND lastname LIKE :lastname;");
+                $search->execute(array( ':name'     => $name, 
+                                        ':surname'  => $surname, 
+                                        ':lastname' => $lastname));
+            } else {
+                $search =  $database->prepare("SELECT student_id
+                                                FROM students
+                                                WHERE name LIKE :name
+                                                  AND surname LIKE :surname
+                                                  AND lastname LIKE :lastname;");
+                $search->execute(array( ':name'     => $name, 
+                                        ':surname'  => $surname, 
+                                        ':lastname' => $lastname));
+            }
+        }
+
+        return $search->fetchAll();
     }
 
 

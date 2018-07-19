@@ -83,6 +83,11 @@ class View
         require Config::get('PATH_VIEW') . '_templates/' .$filename . '.php';
     }
 
+    public static function filters( $filter )
+    { 
+        require Config::get('PATH_VIEW') . '_filters/' .$filter . '.php';
+    }
+
     /**
      * Renders pure JSON to the browser, useful for API construction
      * @param $data

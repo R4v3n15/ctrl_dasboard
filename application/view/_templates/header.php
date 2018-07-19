@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Control</title>
+    <title>Control Escolar</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -111,6 +111,12 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_url; ?>reportes/alumnos">
+                              <span data-feather="file-text"></span>
+                              Reportes
+                            </a>
+                        </li>
                         <?php if ($user_type === 777): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>dashboard/admin">
