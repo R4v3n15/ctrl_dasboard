@@ -19,6 +19,7 @@
             <div class="col-3 text-center">
                 <button type="buttom" class="btn btn-info box-shadown" id="createBackup"><i class="fa fa-archive"></i> Respaldar BD</button>
             </div>
+            <?php if ($user_type === 777): ?>
             <div class="col-3 text-center">
                 <button type="buttom" class="btn btn-warning box-shadown" id="importDatabase"><i class="fa fa-upload"></i> Importar BD</button>
             </div>
@@ -28,6 +29,7 @@
             <div class="col-3 text-center">
                 <button type="buttom" class="btn btn-primary box-shadown" id="feedDatabase"><i class="fa fa-database"></i> Actualizar BD</button>
             </div>
+            <?php endif ?>
         </div>
     </main>
 </div>
