@@ -102,7 +102,7 @@
         <div class="col-6 col-md-4">
             <div class="form-group">
                <label for="h_inicio" class="col-12">Hora de Inicio: </label>
-               <div class="col-12 bootstrap-timepicker">
+               <div class="col-12">
                   <input type="text"
                          id="timepick" 
                          name="h_inicio" 
@@ -115,7 +115,7 @@
         <div class="col-6 col-md-4">
             <div class="form-group">
                <label for="h_salida" class="col-12 control-label">Hora de Salida: </label>
-               <div class="col-12 bootstrap-timepicker">
+               <div class="col-12">
                   <input type="text"
                          id="timepick2"
                          name="h_salida" 

@@ -2,7 +2,6 @@
 
 class CursoModel
 {
-
     public static function getCourses() {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -307,7 +306,10 @@ class CursoModel
         $query->execute(array(':clase' => $clase));
 
         if($query->rowCount() > 0){
-            return $query->fetch();
+            $clase = $query->fetch();
+
+            $clase->dias = self::getDaysByClass($clase->schedul_id);
+            return $clase;
         }
     }
 
@@ -349,16 +351,22 @@ class CursoModel
 
     public static function getDaysByClass($horario) {
         $database = DatabaseFactory::getFactory()->getConnection();
-        $sql = $database->prepare("SELECT hd.day_id, d.day
-                                   FROM schedul_days as hd, days as d
-                                   WHERE hd.day_id     = d.day_id
-                                     AND hd.schedul_id = :horario;");
-        $sql->execute(array(':horario' => $horario));
+        // Todos los dias de la semana
+        $dias = self::getDays();
 
-        if ($sql->rowCount() > 0) {
-            return $sql->fetchAll();      
+        // Verificar los dias del horario de la clase
+        foreach ($dias as $dia) {
+            $_sql = $database->prepare("SELECT hd.day_id, d.day
+                                        FROM schedul_days as hd, days as d
+                                        WHERE hd.day_id     = d.day_id
+                                          AND d.day_id      = :dia
+                                          AND hd.schedul_id = :horario;");
+            $_sql->execute(array(':dia' => $dia->day_id, ':horario' => $horario));
+
+            $dia->status = $_sql->rowCount() > 0 ? 1 : 0;     
         }
-        return null;
+
+        return $dias;
     }
 
     public static function setTeacher($class, $teacher){

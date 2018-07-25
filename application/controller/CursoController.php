@@ -7,8 +7,12 @@ class CursoController extends Controller
         parent::__construct();
         Auth::checkAuthentication();
 
-        Registry::set('css',array('select2.min&assets/css'));
-        Registry::set('js', array('select2.min&assets/js', 'datepicker&assets/libs/js','timepicker.min&assets/libs/js','cursos&assets/js'));
+        Registry::set('css',array('select2.min&assets/css', 'jquery.timepicker&assets/libs/css', 'pikaday&assets/libs/css'));
+        Registry::set('js', array('select2.min&assets/js', 
+                                  'jquery.timepicker.min&assets/libs/js',
+                                  'moment.min&assets/libs/js', 
+                                  'pikaday.min&assets/libs/js',
+                                  'cursos&assets/js'));
     }
 
     public function index() {
@@ -54,10 +58,9 @@ class CursoController extends Controller
     }
 
     public function formEditarClase() {
+        // H::p(CursoModel::getClass(Request::post('clase')));
         $this->View->renderWithoutHeaderAndFooter('cursos/editarclase', array(
             'clase'     => CursoModel::getClass(Request::post('clase')),
-            'diasclase' => CursoModel::getDaysByClass(Request::post('horario')),
-            'dias'      => CursoModel::getDays(),
             'cursos'    => CursoModel::getCourses(),
             'niveles'   => CursoModel::getGroups(),
             'maestros'  => MaestroModel::getTeachers()

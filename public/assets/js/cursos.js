@@ -377,29 +377,54 @@ var Cursos = {
 
     setAttr: function() {
         let that = this;
-    	$('#date_init').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
+        if ($('#date_init').length) {
+            pikadayResponsive(document.getElementById("date_init"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inicio"
+            });
+        }
 
-        $('#date_end').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
+        if ($('#date_end').length) {
+            pikadayResponsive(document.getElementById("date_end"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Termino"
+            });
+        }
 
-        $('#editdate_init').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
+        if ($('#editdate_init').length) {
+            pikadayResponsive(document.getElementById("editdate_init"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inicio"
+            });
+        }
 
-        $('#editdate_end').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
+        if ($('#editdate_end').length) {
+            pikadayResponsive(document.getElementById("editdate_end"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Terminp"
+            });
+        }
+
+        $("#timepick").timepicker({
+            step:30,
+            minTime:'9:00am',
+            maxTime:'8:00pm'
         });
-        $("#timepick").timepicker();
-        $("#timepick2").timepicker();
-        $("#timepick3").timepicker();
-        $("#timepick4").timepicker();
+        $("#timepick2").timepicker({
+            step:30,
+            minTime:'9:00am',
+            maxTime:'8:00pm'
+        });
+        $("#timepick3").timepicker({
+            step:30,
+            minTime:'9:00am',
+            maxTime:'8:00pm'
+        });
+        $("#timepick4").timepicker({
+            step:30,
+            minTime:'9:00am',
+            maxTime:'8:00pm'
+        });
     },
 
 };

@@ -534,7 +534,12 @@ var Inscripcion = {
         });
 
         // Datepicker fecha de inicio
-        $('#fecha_inicio').datetimepicker({format: 'YYYY-MM-DD'});
+        if ($('#fecha_inicio').length) {
+            pikadayResponsive(document.getElementById("fecha_inicio"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inicio"
+            });
+        }
 
         // Helper para especificar lugar de trabajo
         $('#ocupation').on('change', function(){

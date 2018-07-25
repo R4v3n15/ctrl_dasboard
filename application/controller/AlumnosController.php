@@ -91,8 +91,12 @@ class AlumnosController extends Controller
     //  =  =  =  =  =  = I N S C R I P C I Ó N  =  =  =  =  =  = //
     ///////////////////////////////////////////////////////////////
     public function inscribir() {
-        Registry::set('css',array('fileinput.min&assets/libs/css', 'tpicker.min&assets/libs/css'));
-        Registry::set('js', array('mapa&assets/js', 'fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'tpicker&assets/libs/js', 'inscripcion&assets/js'));
+        Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
+        Registry::set('js', array('mapa&assets/js', 
+                                  'fileinput.min&assets/libs/js', 
+                                  'moment.min&assets/libs/js', 
+                                  'pikaday.min&assets/libs/js',
+                                  'inscripcion&assets/js'));
         $this->View->render('alumnos/inscribir', array(
             'cursos'    => CursoModel::getCourses(),
             'niveles'   => CursoModel::getGroups()
@@ -261,7 +265,10 @@ class AlumnosController extends Controller
 
     public function perfil($alumno) {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
-        Registry::set('js', array('fileinput.min&assets/libs/js', 'moment.min&assets/libs/js', 'pikaday.min&assets/libs/js', 'perfil&assets/js'));
+        Registry::set('js', array('fileinput.min&assets/libs/js', 
+                                  'moment.min&assets/libs/js', '
+                                  pikaday.min&assets/libs/js', 
+                                  'perfil&assets/js'));
         $this->View->render('alumnos/perfil', array(
             'alumno'  => AlumnoModel::studentProfile($alumno)
         ));

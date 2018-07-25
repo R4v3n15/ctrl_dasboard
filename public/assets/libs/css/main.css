@@ -21,7 +21,7 @@
   max-width: 12rem;
 }
 
-.btn, .form-control, .modal-content, .alert, .card, .input-group-prepend, .input-group-text {
+.btn, .form-control, .modal-content, .alert, .card, .input-group-prepend, .input-group-text, .select2 {
 	border-radius: 0;
 }
 

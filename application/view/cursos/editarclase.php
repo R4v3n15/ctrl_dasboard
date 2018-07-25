@@ -114,15 +114,13 @@
                 <div class="col-sm-12">
                     <select name="dias[]" id="days" style="width: 100%;" class="form-control" multiple>
                         <?php  
-                        if ($this->diasclase) {
-                            foreach ($this->diasclase as $key) {
-                                if ((int)$key->stat === 1) {
-                                    echo '<option selected value="'.$key->day_id.'">'.$key->day.'</option>';
+                            foreach ($this->clase->dias as $dia) {
+                                if ($dia->status == 1) {
+                                    echo '<option selected value="'.$dia->day_id.'">'.$dia->day.'</option>';
                                 } else {
-                                    echo '<option value="'.$key->day_id.'">'.$key->day.'</option>';
+                                    echo '<option value="'.$dia->day_id.'">'.$dia->day.'</option>';
                                 }
                             }
-                        }
                         ?>
                     </select>
                 </div>
@@ -133,7 +131,7 @@
         <div class="col-6 col-md-4">
             <div class="form-group">
                <label for="h_inicio" class="col-md-12">Hora de Inicio: </label>
-               <div class="col-md-12 bootstrap-timepicker">
+               <div class="col-md-12">
                   <input type="text"
                          id="timepick3"
                          name="h_inicio" 
@@ -147,7 +145,7 @@
         <div class="col-6 col-md-4">
             <div class="form-group">
                <label for="h_salida" class="col-md-12 control-label">Hora Salida: </label>
-               <div class="col-md-12 bootstrap-timepicker">
+               <div class="col-md-12">
                   <input type="text"
                          id="timepick4"
                          name="h_salida" 
@@ -201,7 +199,7 @@
     </div>
     <div class="row justify-content-center mb-5">
         <div class="col-6 col-md-4 text-center">
-            <button class='btn btn-secondary btn-sm' id="cancel_edit" title='Volver'>
+            <button class='btn btn-secondary' id="cancel_edit" title='Volver'>
                 Cancelar
             </button>
         </div>

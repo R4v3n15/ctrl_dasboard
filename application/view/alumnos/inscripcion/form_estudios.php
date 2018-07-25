@@ -127,9 +127,7 @@
                 <div class="col-12">
                     <input type="text" 
                            id="fecha_inicio" 
-                           class="form-control form-control-sm datetimepicker-input"
-                           data-toggle="datetimepicker" 
-                           data-target="#fecha_inicio"
+                           class="form-control form-control-sm"
                            placeholder="Cuándo inicia el alumno" 
                            name="f_inicio_alumno">
                 </div>
