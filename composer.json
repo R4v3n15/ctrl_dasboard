@@ -14,5 +14,8 @@
     },
     "autoload": {
         "psr-4": { "": ["application/core/", "application/model/"] }
+    },
+    "require": {
+        "symfony/var-dumper": "^3.2"
     }
 }
