@@ -145,7 +145,7 @@ class CursoModel
         H::getLibrary('paginadorLib');
         $paginator = new \Paginador();
         $usr_type  = (int)Session::get('user_type');
-        $filas     = 15;
+        $filas     = 25;
         $page      = (int)$page;
 
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -703,5 +703,24 @@ class CursoModel
         }
     }
 
+    public static function classesToFinish(){
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $_sql = $database->prepare("SELECT c.class_id, c.teacher_id, c.schedul_id, 
+                                           cu.course_id, cu.course,
+                                           g.group_id, g.group_name
+                                    FROM classes as c, courses as cu, groups as g
+                                    WHERE c.course_id  = cu.course_id
+                                      AND c.group_id   = g.group_id
+                                      AND c.status     = 1");
+
+        $_sql->execute();
+
+        if ($_sql->rowCount() > 0) {
+            return $_sql->fetchAll();
+        }
+
+        return null;
+    }
 
 }
