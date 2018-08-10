@@ -76,7 +76,12 @@ class AlumnoModel
                 // var_dump($avatar);
                 // exit();
 
-                $photo = '<img class="rounded-circle btnChangeAvatar" src="'.$avatar.'" alt="foto" widt="42" height="42">';
+                $photo = '<img class="rounded-circle btnChangeAvatar" 
+                               src="'.$avatar.'"
+                               data-student="'.$alumno->student_id.'" 
+                               alt="foto" 
+                               widt="42" 
+                               height="42">';
 
                 $options = '<a href="javascript:void(0)"
                          data-target="#"

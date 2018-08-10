@@ -131,8 +131,7 @@ var Alumnos = {
         });
 
         $('#table_students tbody').on( 'click', '.btnChangeAvatar', function () {
-            let student = $(this).data('student'),
-                name    = $(this).data('name');
+            let student = $(this).data('student');
 
             $('#avatar_student').val(student);
             $('#avatar_file').val('');
