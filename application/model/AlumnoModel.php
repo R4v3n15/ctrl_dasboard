@@ -67,13 +67,16 @@ class AlumnoModel
                     }
                 }
 
-                $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar;
-
-                if (!file_exists($avatar)) {
+                $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar.'.jpg';
+                $realPath = Config::get('PATH_AVATARS_STUDENTS').$alumno->avatar.'.jpg';
+                if (!file_exists($realPath)) {
                     $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
                 }
 
-                $photo = '<img class="rounded-circle" src="'.$avatar.'" alt="foto" widt="42" height="42">';
+                // var_dump($avatar);
+                // exit();
+
+                $photo = '<img class="rounded-circle btnChangeAvatar" src="'.$avatar.'" alt="foto" widt="42" height="42">';
 
                 $options = '<a href="javascript:void(0)"
                          data-target="#"
@@ -87,24 +90,26 @@ class AlumnoModel
                                data-tutor="'.$id_tutor.'"
                                data-clase="'.$id_grupo.'"
                                data-curso="'.$nombre_curso.'">
-                                <span class="text-dark" data-feather="chevron-right"></span>
+                                <i class="ml-1 text-dark fa fa-chevron-right"></i>
                                 Perfil
                             </a>
                         </li>';
                 $options .=    '<li>
                             <a href="'.Config::get('URL').'alumnos/c/'.$alumno->student_id.'">
-                                <span class="text-primary" data-feather="chevron-right"></span>
+                                <i class="ml-1 text-primary fa fa-chevron-right"></i>
                                 Convenio
                             </a></li>';
                 $options .=    '<li>
-                            <a href="javascript:void(0)">
-                                <span class="text-info" data-feather="chevron-right"></span>
+                            <a href="javascript:void(0)"
+                               class="btnChangeAvatar"
+                               data-student="'.$alumno->student_id.'">
+                                <i class="ml-1 text-info fa fa-chevron-right"></i>
                                 Cambiar Foto
                             </a>
                         </li>';
                 $options .=   '<li>
                             <a href="'.Config::get('URL').'evaluaciones/index/'.$alumno->student_id.'">
-                                <span class="text-success" data-feather="chevron-right"></span>
+                                <i class="ml-1 text-success fa fa-chevron-right"></i>
                                 Calificaciones
                             </a>
                         </li>';
@@ -113,7 +118,7 @@ class AlumnoModel
                                 class="btnUnsuscribeStudent" 
                                 data-student="'.$alumno->student_id.'"
                                 data-name="'.$alumno->name.' '.$alumno->surname.'">
-                                <span class="text-warning" data-feather="chevron-right"></span>
+                                <i class="ml-1 text-warning fa fa-chevron-right"></i>
                                 Dar de Baja
                             </a>
                         </li>';
@@ -122,7 +127,7 @@ class AlumnoModel
                                 class="btnDeleteStudent" 
                                 data-student="'.$alumno->student_id.'"
                                 data-name="'.$alumno->name.' '.$alumno->surname.'">
-                                <span class="text-danger" data-feather="chevron-right"></span>
+                                <i class="ml-1 text-danger fa fa-chevron-right"></i>
                                 Eliminar
                             </a>
                         </li>';
@@ -996,7 +1001,7 @@ class AlumnoModel
     	if ($save) {
     		return array('success' => true, 'message' => 'Se guardo correctamente datos del Alumno');
     	}
-    	return array('success' => false, 'message' => 'No se guardo la foto del alumno, subalo mas tarde.');
+    	return array('success' => false, 'message' => 'No se guardo la foto del alumno, intente mas tarde.');
     }
 
     public static function createStudies($student, $ocupation, $workplace, $studies, $lastgrade, $prior_course, $prior_comments, $class_id, $date_start){
@@ -1265,11 +1270,10 @@ class AlumnoModel
         if ($query->rowCount() > 0) {
             $alumno = $query->fetch();
 
-            $url_avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT');
-
-            $avatar = $url_avatar . strtolower($alumno->genre) . '.jpg';
-            if (file_exists($url_avatar.$alumno->avatar)) {
-                $avatar = $url_avatar . strtolower($alumno->avatar);
+            $avatar   = Config::get('URL').Config::get('PATH_AVATAR_STUDENT'). $alumno->avatar . '.jpg';
+            $realPath = Config::get('PATH_AVATARS_STUDENTS').$alumno->avatar.'.jpg';
+            if (!file_exists($realPath)) {
+                $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT'). $alumno->genre . '.jpg';
             }
 
             $alumno->avatar = $avatar;

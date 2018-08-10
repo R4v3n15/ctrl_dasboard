@@ -78,8 +78,12 @@ var Reportes = {
         //       table.cell(cell).invalidate('dom');
         //    } );
         // } ).draw();
+        
+        // regExSearch = '^\\s' + myValue +'\\s*$';
+        // table.column(columnNo).search(regExSearch, true, false).draw();
 
         table.on( 'draw.dt', function () {
+            let regExSearch = '^\\s' + myValue +'\\s*$';
             let PageInfo = $('#example').DataTable().page.info();
             table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
                 cell.innerHTML = i + 1 + PageInfo.start;

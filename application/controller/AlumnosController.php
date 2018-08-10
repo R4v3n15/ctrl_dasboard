@@ -9,7 +9,7 @@ class AlumnosController extends Controller
 
         // Registry::set('css',array('fileinput.min&assets/css','icons&assets/css','mapa&assets/css','alumnos&assets/css'));
         Registry::set('css',array('fileinput.min&assets/libs/css'));
-        Registry::set('js', array('fileinput.min&assets/libs/js', 'filtro&assets/js', 'alumnos&assets/js'));
+        Registry::set('js', array('fileinput.min&assets/libs/js', 'alumnos&assets/js'));
     }
 
     public function index() {
@@ -27,32 +27,23 @@ class AlumnosController extends Controller
         AlumnoModel::tableStudents(Request::post('curso'), Request::post('page'));
     }
 
-    public function realizarBusqueda(){
-        switch (Request::post('filtro')) {
-            case 'alumno':
+    public function cambiarFotoAlumno(){
+        if (Request::post('avatar_student') && $_FILES['avatar_file']['tmp_name'] !== "") {
+            $avatar = 'student_'.(int)Request::post('avatar_student');
+            $upload = FotoModel::createAvatar($avatar);
+            if ($upload) {
+                $this->View->renderJSON(AlumnoModel::createAvatar(Request::post('avatar_student'), $avatar));
+                
+            } else {
                 $this->View->renderJSON(
-                                GeneralModel::filterStudent(Request::post('param'), 
-                                                            Request::post('param1'), 
-                                                            Request::post('param2')));
-                break;
-            case 'grupo':
-                // code...
-                break;
-            case 'tutor':
-                // code...
-                break;
-            case 'edad':
-                // code...
-                break;
-            case 'escuela':
-                // code...
-                break;
-            case 'grado':
-                // code...
-                break;
-            default:
-                return array('message' => 'Nothing found');
-                break;
+                              array('success' => false,
+                                    'message' => "Error: Puede que la foto sea muy pequeña, debe ser minimo de 220x220 px")
+            );
+            }
+        } else {
+            $this->View->renderJSON(
+                            array('success' => false, 
+                                  'message' => 'Error falta información para esta acción, intente de nuevo o notifique el error.'));
         }
     }
 
@@ -266,8 +257,8 @@ class AlumnosController extends Controller
     public function perfil($alumno) {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
         Registry::set('js', array('fileinput.min&assets/libs/js', 
-                                  'moment.min&assets/libs/js', '
-                                  pikaday.min&assets/libs/js', 
+                                  'moment.min&assets/libs/js', 
+                                  'pikaday.min&assets/libs/js', 
                                   'perfil&assets/js'));
         $this->View->render('alumnos/perfil', array(
             'alumno'  => AlumnoModel::studentProfile($alumno)

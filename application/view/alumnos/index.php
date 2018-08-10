@@ -31,6 +31,39 @@
             <div class="col-12">
                 <?php $this->renderFeedbackMessages(); ?>
             </div>
+            <div class="col-12 px-0">
+                <div class="table-responsive">
+                    <table id="table_students" class="table table-sm table-striped" style="width:100%">
+                        <thead>
+                            <tr class="info">
+                                <th class="text-center"> N° </th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Apellidos</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Escolaridad</th>
+                                <th class="text-center">Edad</th>
+                                <th class="text-center">Grupo</th>
+                                <th class="text-center">Tutor</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                        </thead>
+
+                        <tfoot>
+                            <tr class="info">
+                                <th class="text-center"> N° </th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Apellidos</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Escolaridad</th>
+                                <th class="text-center">Edad</th>
+                                <th class="text-center">Grupo</th>
+                                <th class="text-center">Tutor</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
             <div class="col-12 px-0" id="tabla_alumnos">
                 
             </div>
@@ -323,6 +356,41 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalChangeAvatar" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">Cambiar Foto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="frmChangeAvatar" enctype="multipart/form-data">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="avatar">Cambiar foto:</label>
+                                <div class="col-sm-12">
+                                    <input type="hidden" name="avatar_student" id="avatar_student" />
+                                    <input type="file" id="avatar_file" name="avatar_file" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <button type="submit" id="deleteStudent" class="btn btn-info">Cambiar</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

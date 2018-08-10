@@ -59,8 +59,16 @@
 	height: 6rem;
 }
 
-.card-info .card-body{
+.card-img{
+	margin-left: auto;
+    margin-right: auto;
+    display: block;
+	max-height: 180px;
+	max-width: 180px;
+}
 
+.btnChangeAvatar, #changeAvatar{
+	cursor: pointer;
 }
 
 .card-info .card-footer{

@@ -1,7 +1,7 @@
     </div> <!-- END CONTAINER -->
         <span data-toggle=snackbar
               data-content=""
-              data-timeout="4200"
+              data-timeout="4700"
               data-html-allowed="true"
               id="general_snack">
         </span>

@@ -4,6 +4,7 @@ var Perfil = {
         console.log('Profile Initialize');
         this.setActiveForm();
         this.navigateForms();
+        this.updateAvatar();
     },
 
     setActiveForm: function(){
@@ -15,6 +16,46 @@ var Perfil = {
 
     getActiveForm: function(){
         return sessionStorage.getItem('activeForm');
+    },
+
+    updateAvatar: function(){
+        let _this = this;
+        $('#changeAvatar').click(function () {
+            let student = $(this).data('alumno');
+
+            $('#avatar_student').val(student);
+            $('#avatar_file').val('');
+            $('#modalChangeAvatar').modal('show'); 
+        });
+
+        $('#frmChangeAvatar').submit(function(event){
+            event.preventDefault();
+            let formData = new FormData($('#frmChangeAvatar')[0]);
+            console.log('Change Image');
+
+            $.ajax({
+                url: _root_ + 'alumnos/cambiarFotoAlumno',
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    location.reload();
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red')
+                }
+                $('#modalChangeAvatar').modal('hide');
+
+            });
+        });
     },
 
     getUpdateForm: function(activeForm=1) { 
@@ -45,6 +86,15 @@ var Perfil = {
             $(this).addClass('active')
 
             _this.getUpdateForm(form);
+        });
+
+        $('#table_students tbody').on( 'click', '.btnChangeAvatar', function () {
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#avatar_student').val(student);
+            $('#modalChangeAvatar').modal('show');
+                
         });
     },
 

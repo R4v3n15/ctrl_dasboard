@@ -1,13 +1,16 @@
 var Alumnos = {
     vars : {
         alumnos: [],
-        currentPage: 0
+        currentPage: 0,
+        tableView: 1,
+        dataTable: null
     },
 
     initialize: function(){
         console.log('Alumnos Initialize');
         this.setActiveView();
         this.changeViewStudent();
+        this.changeAvatarStudent();
         this.addToGroup();
         this.getGroups();
         this.changeGroupAllStudents();
@@ -15,7 +18,7 @@ var Alumnos = {
         this.unsuscribeStudent();
         this.unsuscribeStudents();
         this.deleteStudent();
-        this.deleteStudents()
+        this.deleteStudents();
 
         this.invoiceTable();
     },
@@ -23,7 +26,9 @@ var Alumnos = {
     setActiveView: function(){
         // Iniciado desde main.js
         let active_view = sessionStorage.getItem('vista_alumnos');
-        this.getStudentsTable($('#'+active_view).data('curso'));
+        this.countStudents();
+        this.studentsTable();
+        // this.getStudentsTable($('#'+active_view).data('curso'));
     },
 
     getActiveView: function(){
@@ -38,10 +43,115 @@ var Alumnos = {
             let _new = $(this).attr('id');
             $('.students_view').removeClass('active');
             sessionStorage.setItem('vista_alumnos', _new);
+            // console.log('view: ', parseInt($('#'+_new).data('curso')));
+            _this.vars.tableView = $('#'+_new).data('curso');
             $('#'+_new).addClass('active');
 
-            _this.setActiveView();
+
+            // _this.setActiveView();
+            _this.vars.dataTable.destroy();
+            _this.studentsTable();
         });
+    },
+
+    studentsTable: function() {
+        let _this = this;
+
+        let table = $('#table_students').DataTable({
+                        "stateSave": true,
+                        "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+                        "ajax": {
+                            'url': _root_ + 'alumnos/getAlumnos',
+                            "type": "POST",
+                            'data': {
+                                'curso': _this.getActiveView()
+                            }
+                        },
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0
+                        } ],
+                        "order": [[ 1, 'asc' ]],
+                        "columns": [
+                            { "data": "count" },
+                            { "data": "avatar" },
+                            { "data": "surname" },
+                            { "data": "name" },
+                            { "data": "studies" },
+                            { "data": "age" },
+                            { "data": "group_name" },
+                            { "data": "tutor_name" },
+                            { "data": "options" }
+                        ],
+                        buttons: [
+                            { "extend": 'print',
+                              "text":'Imprimir <i class="fa fa-print"></i>',
+                              "className": 'btn btn-info btn-sm' }
+                        ],
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ filas",
+                            "search": "Buscar:",
+                            "zeroRecords": "No se encontró resultados",
+                            "info": "_PAGE_ de _PAGES_ páginas",
+                            "infoEmpty": "No records available",
+                            "infoFiltered": "(filtrado de _MAX_ resultados)",
+                            "print": "Imprimir"
+                        }
+                    });
+
+        _this.vars.dataTable = table;
+
+        table.on( 'draw.dt', function () {
+            let PageInfo = $('#table_students').DataTable().page.info();
+            table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                cell.innerHTML = i + 1 + PageInfo.start;
+                table.cell(cell).invalidate('dom');
+            } );
+        } );
+
+        $('#table_students tbody').on( 'click', '.btnSuscribeStudent', function () {
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#suscribe_student').val(student);
+            $('#suscribe_name').text(name);
+            $('#modalSuscribeStudent').modal('show');
+                
+        });
+
+        $('#table_students tbody').on( 'click', '.btnDeleteStudent', function () {
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#delete_student').val(student);
+            $('#delete_name').text(name);
+            $('#modalDeleteStudent').modal('show');
+                
+        });
+
+        $('#table_students tbody').on( 'click', '.btnChangeAvatar', function () {
+            let student = $(this).data('student'),
+                name    = $(this).data('name');
+
+            $('#avatar_student').val(student);
+            $('#avatar_file').val('');
+            $('#modalChangeAvatar').modal('show'); 
+        });
+
+        $('#table_students_wrapper button').removeClass('dt-button');
+
+        // Busqueda Por Categoria
+        // $('.dataTables_filter input').unbind().bind('keyup', function() {
+        //     let colIndex = parseInt($('#select').val());
+        //     table.column( colIndex ).search( this.value ).draw();
+        // });
+
+        // $('#select').change(function() {
+        //     table.columns().search('').draw();
+        // });
+
+        // table.columns().search('').draw();
     },
 
     getStudentsTable: function(curso, page=0){
@@ -515,6 +625,38 @@ var Alumnos = {
             if (curso === 0) {
                 $("#updategroups").attr('disabled', true);
             }
+        });
+    },
+
+    changeAvatarStudent: function(){
+        let _this = this;
+        $('#frmChangeAvatar').submit(function(event){
+            event.preventDefault();
+            let formData = new FormData($('#frmChangeAvatar')[0]);
+            console.log('Change Image');
+
+            $.ajax({
+                url: _root_ + 'alumnos/cambiarFotoAlumno',
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    _this.vars.dataTable.destroy();
+                    _this.studentsTable();
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red')
+                }
+                $('#modalChangeAvatar').modal('hide');
+            });
         });
     },
 

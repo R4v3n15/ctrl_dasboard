@@ -31,12 +31,14 @@
             </div>
         </div>
         <div class="row justify-content-center mb-4">
-            <div class="col-sm-3">
+            <div class="col-md-3">
                 <div class="card px-0 box-shadow">
-                    <div class="card-img px-4 pt-0 pb-1">
-                        <img class="card-img-top rounded rounded-circle px-5 pt-0 pb-2 mt-1"  
-                             src="<?= $alumno->avatar;?>" 
-                             alt="avatar">
+                    <div class="card-img my-2">
+                            <img class="rounded rounded-circle img-fluid"
+                                 id="changeAvatar"
+                                 data-alumno="<?= $alumno->student_id; ?>"
+                                 src="<?= $alumno->avatar;?>"
+                                 alt="avatar">
                     </div>
                     <div class="card-title mt-1 pb-0 mb-0">
                         <h5 class="text-center text-info" 
@@ -77,11 +79,45 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-9" id="editar_form">
+            <div class="col-md-9" id="editar_form">
                 
             </div>
         </div>
     </main>
+</div>
+
+<div class="modal fade" id="modalChangeAvatar" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">Cambiar Foto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="frmChangeAvatar" enctype="multipart/form-data">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="avatar">Cambiar foto:</label>
+                                <div class="col-sm-12">
+                                    <input type="hidden" name="avatar_student" id="avatar_student" />
+                                    <input type="file" id="avatar_file" name="avatar_file" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <button type="submit" id="deleteStudent" class="btn btn-info">Cambiar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="checkout" class="modal fade">
