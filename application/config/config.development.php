@@ -121,7 +121,7 @@ return array(
     'USE_GRAVATAR' => false,
     'GRAVATAR_DEFAULT_IMAGESET' => 'mm',
     'GRAVATAR_RATING' => 'pg',
-    'AVATAR_SIZE' => 220,
+    'AVATAR_SIZE' => 350,
     'AVATAR_JPEG_QUALITY' => 90,
     'AVATAR_DEFAULT_IMAGE_MALE' => 'masculino',
     'AVATAR_DEFAULT_IMAGE_FEMALE' => 'femenino',
