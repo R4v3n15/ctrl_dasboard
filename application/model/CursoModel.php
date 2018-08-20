@@ -49,7 +49,8 @@ class CursoModel
 
     public static function addNewClass($curso, $grupo, $f_inicio, $f_fin, $ciclo, $dias, 
                                        $h_inicio, $h_salida, $c_normal, $c_promocional, 
-                                       $c_inscripcion, $maestro){
+                                       $c_inscripcion, $maestro)
+    {
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit = true;
         $dias  = (array)$dias;
@@ -113,32 +114,30 @@ class CursoModel
                                            ':f_registro'      => $f_registro));
                     if($insert->rowCount() === 0){
                         $commit = false;
-                        Session::add('feedback_negative','Error al crear la clase.');
                     }
                 } else {
                     $commit = false;
-                    Session::add('feedback_negative','Error al insertar los dias.');
                 }
 
             }else { // if boda
                 $commit = false;
-                Session::add('feedback_negative','Error al crear la clase, intente de nuevo por favor.');
             }
 
         }catch (PDOException $e) {
-            Session::add('feedback_negative','Error al crear la clase, intente de nuevo por favor.');
             $commit = false;
         }
 
         if (!$commit) {
             $database->rollBack();
-            return false;
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; Error al crear la clase, intente de nuevo o notifique el error.');
         }else {
             $database->commit();
-            Session::add('feedback_positive','La nueva clase se ha creado correctamente');
-            return true;
+            return array(
+                        'success' => true, 
+                        'message' => '&#x2713; Nueva clase creada correctamente!!');
         }
-
     }
 
     public static function getClases($page) {
@@ -195,7 +194,7 @@ class CursoModel
                 }
 
                 $hora_inicio = date('g:i a', strtotime($clase->hour_init));
-                $hora_salida = date('g:i a', strtotime($clase->hour_end));
+                $hora_salida = date('g:i a', strtotime($clase->hour_end)); 
 
                 $classe[$clase->class_id] = new stdClass();
                 $classe[$clase->class_id]->id         = $clase->class_id;
@@ -206,11 +205,11 @@ class CursoModel
                 $classe[$clase->class_id]->maestro_id = $id_maestro;
                 $classe[$clase->class_id]->maestro    = $maestro;
                 $classe[$clase->class_id]->horario_id = $clase->schedul_id;
-
+                $classe[$clase->class_id]->concluido  = strtotime(H::getTime()) > strtotime($clase->date_end);
 
             }
             $counter = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
-            self::displayClases($classe, $counter);
+            self::renderTablaClases($classe, $counter);
             $paginacion = $paginator->getView('pagination_ajax', 'clases');
             echo '<div class="row" style="padding-top:0;">';
                 echo '<div class="col-sm-12 text-center">';
@@ -222,7 +221,7 @@ class CursoModel
         }
     }
 
-    public static function displayClases($classes, $counter){
+    public static function renderTablaClases($classes, $counter){
         $user_type = (int)Session::get('user_account_type');
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -249,7 +248,34 @@ class CursoModel
                                                   AND hd.schedul_id = :horario;");
                     $days->execute(array(':horario' => $clase->horario_id));
 
-                    echo '<tr>';
+                    $rowClase = 'border-l-success';
+                    $options  = '<button type="button" id="'.$clase->id.'" data-horario="'.$clase->horario_id.'"
+                                        class="btn btn-info updateClase mr-2"
+                                        title="Editar Clase">
+                                            <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" id="'.$clase->id.'" data-name="'.$clase->name.'" 
+                                        class="btn btn-danger deleteClase"
+                                        title="Eliminar Clase">
+                                            <i class="fas fa-trash"></i>
+                                </button>';
+                    if ($clase->concluido) { 
+                        $rowClase =  'border-l-danger';
+
+                        $options  = '<button type="button" id="'.$clase->id.'" data-horario="'.$clase->horario_id.'"
+                                        class="btn btn-success restartClase mr-2"
+                                        title="Reiniciar Clase">
+                                            <i class="fas fa-sync"></i>
+                                    </button>
+                                    <button type="button" data-clase="'.$clase->id.'" data-name="'.$clase->name.'" 
+                                            class="btn btn-warning removeClase"
+                                            title="Quitar de Lista">
+                                                <i class="fas fa-minus"></i>
+                                    </button>';
+                    }
+
+
+                    echo '<tr class="'.$rowClase.'">';
                     echo '<td>'.$counter++.'</td>';
                     echo '<td>'.$clase->name.'</td>';
                     echo '<td>'.$clase->inicia.'</td>';
@@ -262,20 +288,7 @@ class CursoModel
                     echo '<td>'.$clase->horario.'</td>';
                     echo '<td>'.$clase->maestro.'</td>';
                     if ($user_type == 1 || $user_type == 2) {
-                    echo '<td class="text-center">
-                            <button type="button"
-                                    id="'.$clase->id.'"
-                                    data-horario="'.$clase->horario_id.'"
-                                    class="btn btn-info updateClase mr-3">
-                                        <i class="fas fa-edit"></i>
-                            </button>
-                            <button type="button"
-                                    id="'.$clase->id.'"
-                                    data-name="'.$clase->name.'" 
-                                    class="btn btn-danger removeClase">
-                                        <i class="fas fa-trash"></i>
-                            </button>
-                        </td>';
+                    echo '<td class="text-center">'.$options.'</td>';
                     }
                     echo '</tr>';
                 }
@@ -292,7 +305,8 @@ class CursoModel
         $sql = "SELECT cu.course, g.group_name, c.schedul_id,
                        h.year, h.date_init, h.date_end, 
                        h.hour_init, h.hour_end, c.class_id, 
-                       c.course_id, c.group_id, c.teacher_id, c.costo_inscripcion
+                       c.course_id, c.group_id, c.teacher_id, 
+                       c.costo_normal, c.costo_promocional, c.costo_inscripcion
                 FROM classes as c, 
                      courses as cu, 
                      groups as g, 
@@ -319,7 +333,8 @@ class CursoModel
         $sql = "SELECT cu.course, g.group_name, c.schedul_id,
                        h.year, h.date_init, h.date_end, 
                        h.hour_init, h.hour_end, c.class_id, 
-                       c.course_id, c.group_id, c.teacher_id, c.costo_inscripcion
+                       c.course_id, c.group_id, c.teacher_id, 
+                       c.costo_normal, c.costo_promocional, c.costo_inscripcion
                 FROM classes as c, 
                      courses as cu, 
                      groups as g, 
@@ -382,7 +397,8 @@ class CursoModel
     }
 
 
-    public static function updateClass($clase, $curso, $grupo, $horario, $f_inicio, $f_fin, $ciclo, $dias, $h_inicio, $h_salida, $c_inscripcion, $maestro){
+    public static function updateClass($clase, $curso, $grupo, $horario, $f_inicio, $f_fin, $ciclo, $dias, 
+        $h_inicio, $h_salida, $c_inscripcion, $maestro){
 
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit = true;
@@ -479,6 +495,98 @@ class CursoModel
 
     }
 
+    public static function restartClass($id_clase, $curso, $grupo, $horario, $f_inicio, $f_fin, $ciclo, $dias, 
+        $h_inicio, $h_salida, $c_normal, $c_promocional, $c_inscripcion, $maestro){
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $commit = true;
+        $dias  = (array)$dias;
+        $h_inicio = date('H:i', strtotime($h_inicio));
+        $h_salida = date('H:i', strtotime($h_salida));
+
+        $database->beginTransaction();
+        try{
+            //Horario de la clase.
+            $sql = "INSERT INTO schedules(year, date_init, date_end, hour_init, hour_end) 
+                                    VALUES(:ciclo, :f_inicio, :f_fin, :h_inicio, :h_salida);";
+            $query = $database->prepare($sql);
+            $query->execute(array(':ciclo'      => $ciclo, 
+                                  ':f_inicio'   => $f_inicio,
+                                  ':f_fin'      => $f_fin,
+                                  ':h_inicio'   => $h_inicio,
+                                  ':h_salida'   => $h_salida));
+
+            if($query->rowCount() === 1){
+                $horario = $database->lastInsertId();
+
+                foreach ($dias as $dia) {
+                    $day = $database->prepare("INSERT INTO schedul_days(schedul_id, day_id)
+                                                                 VALUES(:horario, :dia)");
+                    $day->execute(array(':horario' => $horario, ':dia' => $dia));
+
+                    if($day->rowCount() === 0){
+                        $commit = false;
+                        break;
+                    }
+                }
+
+                if($commit) {
+                    $f_registro = H::getTime();
+                    $clase = "INSERT INTO classes(course_id, 
+                                                  group_id, 
+                                                  schedul_id, 
+                                                  teacher_id,
+                                                  costo_normal,
+                                                  costo_promocional,
+                                                  costo_inscripcion,
+                                                  status, 
+                                                  created_at)
+                                            VALUES(:curso,
+                                                   :grupo,
+                                                   :horario,
+                                                   :maestro,
+                                                   :c_normal,
+                                                   :c_promocional,
+                                                   :c_inscripcion,
+                                                   1,
+                                                   :f_registro);";
+                    $insert = $database->prepare($clase);
+                    $insert->execute(array(':curso'           => $curso,
+                                           ':grupo'           => $grupo,
+                                           ':horario'         => $horario,
+                                           ':maestro'         => $maestro,
+                                           ':c_normal'        => $c_normal,
+                                           ':c_promocional'   => $c_promocional,
+                                           ':c_inscripcion'   => $c_inscripcion,
+                                           ':f_registro'      => $f_registro));
+                    if($insert->rowCount() > 0){
+                        $commit = self::moveClass($id_clase);
+                    } else {
+                        $commit = false;
+                    }
+                }
+
+            }else { // if boda
+                $commit = false;
+            }
+
+        }catch (PDOException $e) {
+            $commit = false;
+        }
+
+
+        if (!$commit) {
+            $database->rollBack();
+            Session::add('feedback_negative','Surgio un error al tratar de reiniciar la clase, intente de nuevo!');
+            return false;
+        }else {
+            $database->commit();
+            Session::add('feedback_positive','Clase reiniciada correctamente');
+            return true;
+        }
+
+    }
+
     public static function getNumberStudentsByClass($clase) {
         $database = DatabaseFactory::getFactory()->getConnection();
         $count = $database->prepare("SELECT class_id FROM students_groups WHERE class_id = :clase;");
@@ -491,16 +599,19 @@ class CursoModel
         return 0;
     }
 
+    public static function moveClass($clase){
+        $database = DatabaseFactory::getFactory()->getConnection(); 
+        $query = $database->prepare("UPDATE classes SET status = 2 WHERE class_id = :clase");
+
+        return $query->execute(array(':clase' => $clase));
+    }
+
     public static function deleteClass($clase){
         $database = DatabaseFactory::getFactory()->getConnection(); 
         $delete = $database->prepare("DELETE FROM classes WHERE class_id = :clase");
         $delete->execute(array(':clase' => $clase));
 
-        if ($delete->rowCount() > 0) {
-            return true;
-        }
-
-        return false;
+        return $delete->rowCount() > 0;
     }
 
     public static function getCurrentDayCourse($clase, $dias) {

@@ -23,16 +23,17 @@ class AlumnoModel
             $counter = 1;
             foreach ($students as $alumno) {
                 $id_grupo = 0;
+                $nombre_curso = '';
+                $finished = 1;
                 $grupo = '<a href="javascript:void(0)" 
                              class="link add_to_group badge badge-warning" 
                              data-student="'.$alumno->student_id.'"
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.status, cu.course, g.group_name
                                                  FROM classes as c, courses as cu, groups as g
                                                  WHERE c.class_id  = :clase
-                                                   AND c.status    = 1
                                                    AND c.course_id = cu.course_id
                                                    AND c.group_id  = g.group_id
                                                  LIMIT 1;");
@@ -41,6 +42,7 @@ class AlumnoModel
                         $clase = $clase->fetch();
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
+                        $finished = $clase->status;
                         $grupo = '<a class="change_group"
                                      href="javascript:void(0)"
                                      data-student="'.$alumno->student_id.'"
@@ -147,7 +149,8 @@ class AlumnoModel
                     'age'        => $alumno->age,
                     'group_name' => $grupo,
                     'tutor_name' => $nombre_tutor,
-                    'options'    => $options
+                    'options'    => $options,
+                    'finished'   => $finished
                 );
 
                 array_push($datos, $info);

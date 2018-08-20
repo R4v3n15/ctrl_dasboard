@@ -85,9 +85,9 @@ class PagosModel
             // Busqueda
             // View::renderFilters('filters');
             if (date('m') < 8) {
-                self::showPayTableB($datos);
+                self::renderPayTableB($datos);
             } else {
-                // self::showPayTableA($datos);
+                self::renderPayTableA($datos);
             }
             echo $paginacion; 
         } else {
@@ -97,7 +97,7 @@ class PagosModel
         } 
     }
 
-    public static function showPayTableB($alumnos){
+    public static function renderPayTableB($alumnos){
         echo '<div class="table-responsive">';
             echo '<table id="tbl_paylist" class="table table-striped table-sm table-bordered">';
                 echo '<thead>';
@@ -216,7 +216,7 @@ class PagosModel
         echo '</div>';
     }
 
-    public static function showPayTableA($alumnos){
+    public static function renderPayTableA($alumnos){
         echo '<div class="table">';
             echo '<table id="tbl_paylist" class="table table-striped table-sm table-bordered">';
                 echo '<thead>';

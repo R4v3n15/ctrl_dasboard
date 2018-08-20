@@ -29,7 +29,6 @@
 
 .i-yellow{
   padding-right: 6px;
-  font-size: 14px;
   color: rgb(190, 250, 10);
   font-size: 14px;
 }
@@ -38,6 +37,32 @@
   padding-right: 6px;
   color: rgb(250, 20, 40);
   font-size: 14px;
+}
+
+
+.sp-blue{
+  color: rgb(20, 141, 200);
+  font-weight: bold;
+}
+
+.sp-green{
+  color: rgb(20, 200, 140);
+  font-weight: bold;
+}
+
+.sp-purple{
+  color: rgb(103, 20, 220);
+  font-weight: bold;
+}
+
+.sp-yellow{
+  color: rgb(190, 250, 10);
+  font-weight: bold;
+}
+
+.sp-red{
+  color: rgb(250, 20, 40);
+  font-weight: bold;
 }
 
 

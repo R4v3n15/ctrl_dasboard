@@ -84,6 +84,12 @@ var Alumnos = {
                             { "data": "tutor_name" },
                             { "data": "options" }
                         ],
+                        "rowCallback": function( row, data, index ) {
+                            var finished = parseInt(data.finished);
+                            if (finished === 2) {
+                                $(row).addClass('bg-warning')
+                            }
+                        }, 
                         buttons: [
                             { "extend": 'print',
                               "text":'Imprimir <i class="fa fa-print"></i>',

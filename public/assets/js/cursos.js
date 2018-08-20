@@ -14,7 +14,7 @@ var Cursos = {
         this.getFrmNewClass();
         this.confirmDeleteClass();
 		this.selectAttr();
-		this.setAttr();
+		this.initAttributes();
 	},
 
     showClases: function(){
@@ -102,22 +102,38 @@ var Cursos = {
     },
 
     getFrmNewClass: function() {
-        let that = this;
-        $('#addClase').on('click', function(){
+        let _this = this;
+        $('#addClase').on('click', function(event){
+            event.preventDefault();
+            $('#modalAddClasse').modal('show');
+        });
+
+        $('#dias').select2();
+
+        $('#frmCreateClase').submit(function(event){
+            event.preventDefault();
+
             $.ajax({
+                data: $('#frmCreateClase').serialize(),
                 synch: 'true',
                 type: 'POST',
-                url: _root_ + 'curso/formNewClase',
-                success: function(data){
-                    $('#table_result').html(data);
-                    $('#dias').select2();
-                    $('#addClase').hide();
-                    that.setAttr();
+                url: _root_ + 'curso/nuevaClase'
+            })
+            .done(function(response){
+                let callout = $('#alert'), classesAlpha = ["bg-success", "bg-danger", "bg-warning", "bg-info"];
+                $.each(classesAlpha, function(i, v){
+                   callout.removeClass(v);
+                });
 
-                    $('.cancel_new').on('click', function(){
-                        that.getClasses();
-                    });
-                }
+                if (response.success) { callout.addClass('bg-success'); }
+                else { callout.addClass('bg-danger'); }
+
+                $('#alert-content').html(response.message);
+
+                _this.getClasses();
+
+                callout.removeClass('d-none');
+                $('#modalAddClasse').modal('hide');
             });
         });
     },
@@ -132,13 +148,33 @@ var Cursos = {
                 type: 'POST',
                 url: _root_ + 'curso/formEditarClase',
                 success: function(data){
-                    $('#table_result').html(data);
-                    $('#addClase').hide();
+                    $('#frmEditClase').html(data);
+                    $('#modalEditClasse').modal('show');
                     $('#days').select2();
                     that.setAttr();
 
-                    $('#cancel_edit').on('click', function(){
-                        that.getClasses();
+                    // $('#cancel_edit').on('click', function(){
+                    //     that.getClasses();
+                    // });
+                }
+            });
+        });
+
+        $('.restartClase').on('click', function(){
+            $.ajax({
+                data: { clase: $(this).attr('id'),
+                        horario: $(this).data('horario') },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'curso/formReiniciarClase',
+                success: function(data){
+                    $('#frmRestartClase').html(data);
+                    $('#modalRestartClasse').modal('show');
+                    $('#dias_list').select2();
+                    that.setAttr();
+
+                    $('#cancel_restart').on('click', function(){
+                        $('#modalRestartClasse').modal('hide');
                     });
                 }
             });
@@ -217,16 +253,16 @@ var Cursos = {
     },
 
     deleteClase: function() {
-        $('.removeClase').on('click', function(){
-            var clase_id = $(this).attr('id'),
+        $('.deleteClase').on('click', function(event){
+            event.preventDefault();
+            let clase_id = $(this).attr('id'),
                 clase_name = $(this).data('name');
             $.ajax({
                 data: {clase : clase_id },
                 synch: 'true',
                 type: 'POST',
                 url: _root_ + 'curso/obtenerAlumnosClase',
-                success: function(data){
-                    let response = JSON.parse(data);
+                success: function(response){
                     if (response > 0) {
                         $('#warn_msg').html('<b>NOTA:</b> Esta clase tiene '+ response +' alumnos inscritos, todos pasaran a lista de espera si elimina la clase. ¿Desea continuar?');
                     }
@@ -234,7 +270,17 @@ var Cursos = {
             });
             $('#clase_name').text(clase_name);
             $('#delete_clase_id').val(clase_id);
-            $('#deleteClass').modal('show');
+            $('#modalDeleteClass').modal('show');
+        });
+
+        $('.removeClase').on('click', function(event){
+            event.preventDefault();
+            let clase_id = $(this).data('clase'),
+                clase_name = $(this).data('name');
+
+            $('#remove_clase_name').text(clase_name);
+            $('#remove_clase_id').val(clase_id);
+            $('#modalRemoveClass').modal('show');
         });
     },
 
@@ -248,10 +294,7 @@ var Cursos = {
                 synch: 'true',
                 type: 'POST',
                 url: _root_ + 'curso/eliminarClase',
-                success: function(data){
-                    let response = JSON.parse(data);
-                    console.log(response);
-                    $('#deleteClass').modal('hide');
+                success: function(response){
                     if (response) {
                         $('#general_snack').attr('data-content', 'Clase eliminado con éxito!');
                         $('#general_snack').snackbar('show');
@@ -262,10 +305,35 @@ var Cursos = {
                         $('.snackbar').addClass('snackbar-red');
                     }
                     that.getClasses();
+                    $('#modalDeleteClass').modal('hide');
                 }
             });
         });
 
+        $('#btn_remove_class').click(function(event){
+            event.preventDefault();
+            let clase = $('#remove_clase_id').val();
+            $.ajax({
+                data: {clase : clase },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'curso/moverClase',
+                success: function(response){
+                    console.log(response)
+                    if (response) {
+                        $('#general_snack').attr('data-content', 'Clase se movio a lista de terminados correctamente!');
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                    } else {
+                        $('#general_snack').attr('data-content', 'No se pudo mover clase, intente de nuevo!');
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                    $('#modalRemoveClass').modal('hide');
+                    that.getClasses();
+                }
+            });
+        });
     },
 
     newGroup: function(){
@@ -375,34 +443,25 @@ var Cursos = {
         $('#example_length').css('width', '280');
     },
 
-    setAttr: function() {
-        let that = this;
+    initAttributes: function(){
         if ($('#date_init').length) {
             pikadayResponsive(document.getElementById("date_init"),{
                 classes : "form-control form-control-sm",
-                placeholder: "Fecha de Inicio"
+                placeholder: "Fecha de Inicio",
+                properties: 'required'
             });
+
+            $('#date_init-input').prop('autocomplete', 'off');
         }
 
         if ($('#date_end').length) {
             pikadayResponsive(document.getElementById("date_end"),{
                 classes : "form-control form-control-sm",
-                placeholder: "Fecha de Termino"
+                placeholder: "Fecha de Termino",
+                properties: 'required'
             });
-        }
 
-        if ($('#editdate_init').length) {
-            pikadayResponsive(document.getElementById("editdate_init"),{
-                classes : "form-control form-control-sm",
-                placeholder: "Fecha de Inicio"
-            });
-        }
-
-        if ($('#editdate_end').length) {
-            pikadayResponsive(document.getElementById("editdate_end"),{
-                classes : "form-control form-control-sm",
-                placeholder: "Fecha de Terminp"
-            });
+            $('#date_end-input').prop('autocomplete', 'off');
         }
 
         $("#timepick").timepicker({
@@ -415,6 +474,29 @@ var Cursos = {
             minTime:'9:00am',
             maxTime:'8:00pm'
         });
+    },
+
+    setAttr: function() {
+        let that = this;
+
+        if ($('#editdate_init').length) {
+            pikadayResponsive(document.getElementById("editdate_init"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inicio",
+                properties: 'required'
+            });
+            $('#editdate_init-input').prop('autocomplete', 'off');
+        }
+
+        if ($('#editdate_end').length) {
+            pikadayResponsive(document.getElementById("editdate_end"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Terminp",
+                properties: 'required'
+            });
+            $('#editdate_end-input').prop('autocomplete', 'off');
+        }
+
         $("#timepick3").timepicker({
             step:30,
             minTime:'9:00am',

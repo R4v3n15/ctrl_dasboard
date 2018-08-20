@@ -1,118 +1,127 @@
 <?php $base_url = Config::get('URL'); ?>
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a href="<?= $base_url; ?>dashboard">Inicio</a></li>
-        <li><a href="javascript:void(0)" class="active">Pagos</a></li>
-    </ol>    
-    <div class="bs-component well well-content">
-        <div class="row" style="padding: 15px 5px 0 5px;">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label class="col-sm-3">Grupo: </label>
-                    <div class="col-sm-9">
-                        <select class="form-control form-control-sm" id="list">
-                            <option value="6">TODOS</option>
-                            <option value="1">ENGLISH CLUB</option>
-                            <option value="2">PRIMARY</option>
-                            <option value="3">ADOLESCENTES</option>
-                            <option value="4">AVANZADO</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label class="col-sm-2">Año: </label>
-                    <div class="col-sm-9">
-                        <select class="form-control form-control-sm" id="year">
-                            <?php foreach ($this->years as $year): ?>
-                                <option value="<?= $year->year; ?>"><?= $year->year; ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="" class="col-sm-3">Ciclo: </label>
-                    <div class="col-sm-7">
-                        <select class="form-control form-control-sm" id="ciclo">
-                            <option value="" hidden>- - - Seleccione - - -</option>}
-                            <option value="B" <?= date('m') < 8 ? 'selected' : ''; ?>>B</option>
-                            <option value="A" <?= date('m') > 7 ? 'selected' : ''; ?>>A</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="" class="col-sm-3">Mes:</label>
-                    <div class="col-sm-8">
-                        <select class="form-control form-control-sm" id="month">
-                            
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <button type="button" 
-                            class="btn btn-second btn-raised btn-sm"
-                            id="search_list" 
-                            style="margin: 0; padding: 3px 15px;">
-                        <i class="fa fa-search"></i> Buscar
-                    </button>
+<div class="row" id="page-content-wrapper">
+    <main role="main" class="col-12 col-md-12 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
+            <h5 class="text-info">Pagos</h5>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <?php if ($this->cursos): ?>
+                        <?php foreach ($this->cursos as $curso): ?>
+                            <button class="btn btn-sm btn-outline-primary pays_view" 
+                                    id="tabla_<?= $curso->course_id; ?>" 
+                                    data-table="<?= $curso->course_id; ?>">
+                                <?= $curso->course; ?> 
+                                <span class="badge badge-secondary" id="count_<?= $curso->course_id; ?>">0</span>
+                            </button>
+                        <?php endforeach ?>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
-
-        <div id="pay_list">
-            <h5 class="text-center text-info">Lista de Adeudos...</h5> 
-        </div>
-    </div>
+        <div class="row">
+            <div class="col-12" id="tabla_pagos">
+                
+            </div>
+        </div>        
+    </main>
 </div>
 
-<!-- Modal -->
-<div id="modalPayMonth" class="modal fade">
-    <div class="modal-dialog modal-sm">
+<!-- M O D A L -->
+<div class="modal fade" id="modalPayMonth" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Pago Mensual</h4>
+                <h5 class="modal-title" id="ModalCenterTitle">Mensualidad: <span id="month_name"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <input type="hidden" id="alumno_id" class="form-control">
+                <div class="row justify-content-center pb-0">
+                    <div class="col-12 col-md-8">
+                        <p class="text-center">Alumno: <strong id="student_name"></strong></p>
+                        <input type="hidden" id="student_id" class="form-control">
+                        <input type="hidden" id="month_to_pay" class="form-control">
                         <div class="form-group">
-                            <select class="form-control " id="pay_action">
+                            <select class="form-control form-control-sm" id="pay_action">
+                                <option value="" hidden>Seleccione..</option>
                                 <option value="1">Pagar</option>
-                                <option value="2">Becado</option>
                                 <option value="3">No Aplica</option>
+                                <option value="0">Adeudo</option>
                             </select>
                         </div>
+                        <h6 class="text-center text-success mb-0" id="response"></h6>
                     </div>
-                    <div class="col-sm-10 col-sm-offset-1 text-center">
-                        <button type="button" id="add_in_group" class="btn btn-sm btn-second btn-raised">Agregar</button>
-                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="toggle_pay" class="btn btn-sm btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-<div id="invoice_list" class="modal fade">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalAddComment" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
-                <h4 class="modal-title text-center">Facturación</h4>
+                <h5 class="modal-title" id="commentTitle">Agregar Comentario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12" id="invoice_students_list">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <input type="hidden" id="id_alumno" class="form-control">
+                        <div class="form-group row">
+                            <label class="col-12 text-center">Escriba su Comentario:</label>
+                            <div class="col-12">
+                                <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="save_comment" class="btn btn-sm btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="template" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCenterTitle">Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        .....
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-6 text-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-center">
+                    <button type="button" id="add_teacher" class="btn btn-primary">Agregar</button>
                 </div>
             </div>
         </div>

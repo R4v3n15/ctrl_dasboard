@@ -21,7 +21,20 @@
   max-width: 12rem;
 }
 
-.btn, .form-control, .modal-content, .alert, .card, .input-group-prepend, .input-group-text, .select2 {
+.border-l-danger {
+    border-left: 7px solid #ec5840 !important;
+}
+.border-l-warning {
+    border-left: 7px solid #ffae00;
+}
+.border-l-success {
+    border-left: 7px solid #3adb76 !important;
+}
+.border-l-secondary {
+    border-left: 7px solid #777;
+}
+
+.btn, .form-control, .modal-header, .modal-content, .alert, .card, .input-group-prepend, .input-group-text, .select2 {
 	border-radius: 0;
 }
 

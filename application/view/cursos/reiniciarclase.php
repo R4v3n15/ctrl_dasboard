@@ -2,57 +2,8 @@
 <h5 class="text-center">
     CLASE: <strong class="text-info"><?= $this->clase->course.' '.$this->clase->group_name; ?></strong>
 </h5>
-<form action="<?= Config::get('URL'); ?>curso/actualizarClase" id="frm_update_clase" method="POST" class="form-horizontal">
-    <div class="row justify-content-center">
-        <div class="col-sm-6 col-md-6 col-lg-4">
-            <div class="form-group">
-                <label for="curso" class="col-sm-12" >Curso: </label>
-                <div class="col-sm-12">
-                    <select class="form-control"  name="curso" required="true">
-                        <option value="" hidden>Seleccione...</option>
-                        <?php
-                        if ($this->cursos) {
-                            foreach ($this->cursos as $curso) {
-                                if ($this->clase->course_id === $curso->course_id) {
-                                    echo '<option selected value="'.$curso->course_id.'">'.
-                                            $curso->course.
-                                         '</option>';
-                                } else {
-                                    echo '<option value="'.$curso->course_id.'">'.$curso->course.'</option>';
-                                }
-                            }
-                        }
-                        ?>
-                    </select>
-                    <input type="hidden" name="clase_id" value="<?= $this->clase->class_id; ?>">
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-4">
-            <div class="form-group">
-                <label for="grupo" class="col-sm-12 control-label">Grupo: </label>
-                <div class="col-sm-12">
-                    <select class="form-control" id="" name="grupo" required="true">
-                        <option value="" hidden>Seleccione...</option>
-                        <?php  
-                        if ($this->niveles) {
-                            foreach ($this->niveles as $nivel) {
-                                if ($this->clase->group_id == $nivel->group_id ) {
-                                    echo '<option selected value="'.$nivel->group_id.'">'
-                                            .$nivel->group_name.
-                                         '</option>';
-                                } else {
-                                    echo '<option value="'.$nivel->group_id.'">'.$nivel->group_name.'</option>';
-                                }
-                                
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-            </div>
-        </div>
-
+<form action="<?= Config::get('URL'); ?>curso/reiniciarClase" id="frm_update_clase" method="POST" class="form-horizontal">
+    <div class="row">
         <div class="col-sm-6 col-md-6 col-lg-4">
             <div class="form-group">
                 <label for="f_inicio" class="col-sm-12">Fecha de Inicio: </label>
@@ -62,8 +13,10 @@
                            class="form-control"
                            placeholder="Inicia.." 
                            name="f_inicio"
-                           value="<?= $this->clase->date_init; ?>" 
                            required>
+                    <input type="hidden" name="clase_id" value="<?= $this->clase->class_id; ?>">
+                    <input type="hidden" name="curso" value="<?= $this->clase->course_id; ?>">
+                    <input type="hidden" name="grupo" value="<?= $this->clase->group_id; ?>">
                     <input type="hidden" name="horario" value="<?= $this->clase->schedul_id; ?>">
                 </div>
             </div>
@@ -77,7 +30,6 @@
                            class="form-control"
                            placeholder="Finaliza.." 
                            name="f_fin" 
-                           value="<?= $this->clase->date_end; ?>" 
                            required>
                 </div>
             </div>
@@ -87,21 +39,15 @@
             <div class="form-group">
                 <label for="periodo" class="col-sm-12">Periodo: </label>
                 <div class="col-sm-12">
-                    <select class="form-control" name="ciclo" required="true">
-                       <?php $anioAnt=date("Y")-1; $anioNext=date("Y")+1; ?>
+                    <select class="form-control" name="ciclo" required>
+                       <?php $anioAnt=date("Y")-1; $anioNext=date("Y")+1;?>
 
-                       <option <?= $anioNext.' A' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= $anioNext;?> A"><?= $anioNext; ?> A</option>
-                       <option <?= $anioNext.' B' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= $anioNext;?> B"><?= $anioNext; ?> B</option>
-                       <option <?= date("Y").' A' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= date('Y');?> A"><?= date("Y"); ?> A</option>
-                       <option <?= date("Y").' B' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= date('Y');?> B"><?= date("Y"); ?> B</option>
-                       <option <?= $anioAnt.' A' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= $anioAnt;?> A"><?= $anioAnt; ?> A</option>
-                       <option <?= $anioAnt.' B' === $this->clase->year ? 'selected' : '';?> 
-                               value="<?= $anioAnt;?> B"><?= $anioAnt; ?> B</option>
+                       <option value="<?= $anioNext;?> A"><?= $anioNext; ?> A</option>
+                       <option value="<?= $anioNext;?> B"><?= $anioNext; ?> B</option>
+                       <option value="<?= date('Y');?> A"><?= date("Y"); ?> A</option>
+                       <option value="<?= date('Y');?> B"><?= date("Y"); ?> B</option>
+                       <option value="<?= $anioAnt;?> A"><?= $anioAnt; ?> A</option>
+                       <option value="<?= $anioAnt;?> B"><?= $anioAnt; ?> B</option>
                     </select>
                 </div>
             </div>
@@ -110,7 +56,7 @@
             <div class="form-group">
                 <label for="dias" class="col-sm-12 control-label">Dias: </label>
                 <div class="col-sm-12">
-                    <select name="dias[]" id="days" style="width: 100%;" class="form-control" multiple>
+                    <select name="dias[]" id="dias_list" style="width: 100%;" class="form-control" multiple>
                         <?php  
                             foreach ($this->clase->dias as $dia) {
                                 if ($dia->status == 1) {
@@ -156,6 +102,31 @@
 
         <div class="col-sm-6 col-md-6 col-lg-4">
             <div class="form-group">
+               <label class="col-12">Costo Normal: </label>
+               <div class="col-12">
+                  <input type="text" 
+                         class="form-control" 
+                         name="c_normal" 
+                         id="c_normal" 
+                         value="<?= $this->clase->costo_normal; ?>">
+               </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-4">
+            <div class="form-group">
+               <label class="col-12 control-label">Costo Promocional: </label>
+               <div class="col-12">
+                  <input type="text" 
+                         class="form-control" 
+                         name="c_promocional" 
+                         id="c_promocional"
+                         value="<?= $this->clase->costo_promocional; ?>">
+               </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-4">
+            <div class="form-group">
                <label class="col-md-12">Costo Inscripción: </label>
                <div class="col-md-12">
                   <input type="text" 
@@ -195,12 +166,10 @@
     </div>
     <div class="row justify-content-center mb-3">
         <div class="col-6 col-md-4 text-center">
-            <button class='btn btn-secondary' id="cancel_edit" title='Volver'>
-                Cancelar
-            </button>
+            <button class='btn btn-secondary' id="cancel_restart" title='Cancelar'>Cancelar</button>
         </div>
         <div class="col-6 col-md-4 text-center">
-            <input type="submit" id="save_changes" class="btn btn-md btn-primary" value="Actualizar">
+            <input type="submit" id="save_changes" class="btn btn-md btn-success" value="Reiniciar">
         </div>
     </div>
 </form>

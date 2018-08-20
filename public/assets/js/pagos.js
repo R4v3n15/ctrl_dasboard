@@ -72,11 +72,11 @@ var Pagos = {
     },
 
     navigationPage: function(){
-        let that = this;
+        let _this = this;
         $(".page-students").on('click', function(event){
             event.preventDefault();
-            that.vars.currentPage = parseInt($(this).data("students"));
-            that.tablePay(_this.getActiveTable, _this.vars.currentPage);
+            _this.vars.currentPage = parseInt($(this).data("students"));
+            _this.tablePay(_this.getActiveTable, _this.vars.currentPage);
         });
     },
 
