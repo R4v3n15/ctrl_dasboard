@@ -17,6 +17,10 @@ class PagosController extends Controller
         ));
     }
 
+    public function tablaPagos() {
+        $this->View->renderJSON(PagosModel::renderPayTable(Request::post('curso'), Request::post('ciclo')));
+    }
+
     public function getTablaPagos() {
         PagosModel::payTable(Request::post('curso'), Request::post('page'));
     }

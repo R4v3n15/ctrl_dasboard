@@ -72,13 +72,13 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalAddToGroup" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalAddToGroup" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalAddTitle">Agregar Alumno a Grupo</h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title mb-0 text-white" id="modalAddTitle">AGREGAR ALUMNO A GRUPO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -86,7 +86,7 @@
                     <div class="col-12 col-md-10">
                         <h6 class="text-center text-info" id="extra_message"></h6>
                         <h6 class="text-center text-secondary">
-                            <small>Seleccione un curso de la lista, luego el grupo. R</small>
+                            <small>Seleccione un curso de la lista, luego el grupo.</small>
                         </h6>
 
                         <input type="hidden" id="alumno_id" class="form-control">
@@ -119,12 +119,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-6 text-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="add_in_group" class="btn btn-primary">Agregar</button>
+                    <button type="button" id="addToGroup" class="btn btn-primary">Agregar</button>
                 </div>
             </div>
         </div>
@@ -132,11 +132,11 @@
 </div>
 
 
-<div class="modal fade" id="modalChangeGroup" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalChangeGroup" tabindex="-1" role="dialog" aria-labelledby="modalChgTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Cambiar de Grupo</h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title mb-0 text-white" id="modalChgTitle">CAMBIAR DE GRUPO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -187,7 +187,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalUnsuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalUnsuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="mdlTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -223,7 +223,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalUnsuscribeStudents" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalUnsuscribeStudents" tabindex="-1" role="dialog" aria-labelledby="MdTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

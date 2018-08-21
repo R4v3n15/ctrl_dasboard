@@ -27,11 +27,11 @@
 </div>
 
 <!-- M O D A L -->
-<div class="modal fade" id="modalPayMonth" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalPayMonth" tabindex="-1" role="dialog" aria-labelledby="ModalPayTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Mensualidad: <span id="month_name"></span></h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title my-0 text-white" id="ModalPayTitle">MENSUALIDAD DE <span id="month_name"></span></h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -66,11 +66,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalAddComment" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalAddComment" tabindex="-1" role="dialog" aria-labelledby="commentTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="commentTitle">Agregar Comentario</h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title my-0 text-white" id="commentTitle">AGREGAR COMENTARIO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>

@@ -148,7 +148,7 @@ class CursoModel
         $page      = (int)$page;
 
         $database = DatabaseFactory::getFactory()->getConnection();
-        $sql = "SELECT c.class_id, c.teacher_id, c.schedul_id, cu.course_id, cu.course,
+        $sql = "SELECT c.class_id, c.teacher_id, c.schedul_id, cu.course_id, cu.course, cu.status,
                        g.group_id, g.group_name, h.year, h.date_init, h.date_end, h.hour_init, h.hour_end
                 FROM classes as c, courses as cu, 
                      groups as g, schedules as h
@@ -159,11 +159,11 @@ class CursoModel
 
         if ($usr_type === 3) {
             $user = Session::get('user_id');
-            $sql .= " AND c.teacher_id = :user ORDER BY cu.course_id ASC;";
+            $sql .= " AND c.teacher_id = :user ORDER BY cu.course_id ASC, cu.status ASC;";
             $query = $database->prepare($sql);
             $query->execute(array(':user' => $user));
         } else {
-            $sql .= " ORDER BY cu.course_id ASC;";
+            $sql .= " ORDER BY cu.course_id ASC, cu.status ASC;";
             $query = $database->prepare($sql);
             $query->execute();
         }
@@ -196,6 +196,8 @@ class CursoModel
                 $hora_inicio = date('g:i a', strtotime($clase->hour_init));
                 $hora_salida = date('g:i a', strtotime($clase->hour_end)); 
 
+                // $limitDate = strtotime($clase->date_end . ' + 7 days');
+
                 $classe[$clase->class_id] = new stdClass();
                 $classe[$clase->class_id]->id         = $clase->class_id;
                 $classe[$clase->class_id]->name       = $clase->course.' '.$clase->group_name;
@@ -205,7 +207,7 @@ class CursoModel
                 $classe[$clase->class_id]->maestro_id = $id_maestro;
                 $classe[$clase->class_id]->maestro    = $maestro;
                 $classe[$clase->class_id]->horario_id = $clase->schedul_id;
-                $classe[$clase->class_id]->concluido  = strtotime(H::getTime()) > strtotime($clase->date_end);
+                $classe[$clase->class_id]->concluido  = strtotime(H::getTime()) > strtotime($clase->date_end . ' + 1 days');
 
             }
             $counter = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;

@@ -24,26 +24,28 @@ class AlumnoModel
             foreach ($students as $alumno) {
                 $id_grupo = 0;
                 $nombre_curso = '';
-                $finished = 1;
+                $finished = false;
                 $grupo = '<a href="javascript:void(0)" 
-                             class="link add_to_group badge badge-warning" 
+                             class="link btnSetGroup badge badge-warning" 
                              data-student="'.$alumno->student_id.'"
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.status, cu.course, g.group_name
-                                                 FROM classes as c, courses as cu, groups as g
-                                                 WHERE c.class_id  = :clase
-                                                   AND c.course_id = cu.course_id
-                                                   AND c.group_id  = g.group_id
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.status, 
+                                                        cu.course, g.group_name, h.date_end
+                                                 FROM classes as c, courses as cu, groups as g, schedules as h
+                                                 WHERE c.class_id   = :clase
+                                                   AND c.course_id  = cu.course_id
+                                                   AND c.group_id   = g.group_id
+                                                   AND c.schedul_id = h.schedul_id
                                                  LIMIT 1;");
                     $clase->execute(array(':clase' => $alumno->class_id));
                     if ($clase->rowCount() > 0) {
                         $clase = $clase->fetch();
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
-                        $finished = $clase->status;
-                        $grupo = '<a class="change_group"
+                        $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 3 days');
+                        $grupo = '<a class="btnChangeGroup"
                                      href="javascript:void(0)"
                                      data-student="'.$alumno->student_id.'"
                                      data-class="'.$clase->class_id.'"
@@ -162,259 +164,259 @@ class AlumnoModel
     }
 
 
-    public static function tableStudents($course, $page){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $students = null;
+    // public static function tableStudents($course, $page){
+    //     $database = DatabaseFactory::getFactory()->getConnection();
+    //     $students = null;
 
-        // Obtener Lista de Alumnos
-        switch ($course) {
-            case 'all': 
-                    $students = GeneralModel::allStudents(); break;
-            case 'standby': 
-                    $students = GeneralModel::standbyStudents(); break;
-            default: 
-                    $curso = (int)$course;
-                    $students = GeneralModel::studentsByCourse($curso); break;
-        }
+    //     // Obtener Lista de Alumnos
+    //     switch ($course) {
+    //         case 'all': 
+    //                 $students = GeneralModel::allStudents(); break;
+    //         case 'standby': 
+    //                 $students = GeneralModel::standbyStudents(); break;
+    //         default: 
+    //                 $curso = (int)$course;
+    //                 $students = GeneralModel::studentsByCourse($curso); break;
+    //     }
 
-        // Si existe al menos 1, se procesa y pasa a la vista
-        if ($students !== null) {
-            H::getLibrary('paginadorLib');
-            $paginate = new \Paginador();
-            $filas    = 50;
-            $page     = (int)$page;
-            $alumnos  = $paginate->paginar($students, $page, $filas);
-            $counter  = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
+    //     // Si existe al menos 1, se procesa y pasa a la vista
+    //     if ($students !== null) {
+    //         H::getLibrary('paginadorLib');
+    //         $paginate = new \Paginador();
+    //         $filas    = 50;
+    //         $page     = (int)$page;
+    //         $alumnos  = $paginate->paginar($students, $page, $filas);
+    //         $counter  = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
 
-            $datos = [];
-            foreach ($alumnos as $alumno) {
-                $id_grupo = 0;
-                $grupo = '<a href="javascript:void(0)" 
-                             class="link add_to_group badge badge-warning" 
-                             data-student="'.$alumno->student_id.'"
-                             title="Agregar grupo">Agregar a Grupo</a>';
+    //         $datos = [];
+    //         foreach ($alumnos as $alumno) {
+    //             $id_grupo = 0;
+    //             $grupo = '<a href="javascript:void(0)" 
+    //                          class="link add_to_group badge badge-warning" 
+    //                          data-student="'.$alumno->student_id.'"
+    //                          title="Agregar grupo">Agregar a Grupo</a>';
 
-                if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
-                                                 FROM classes as c, courses as cu, groups as g
-                                                 WHERE c.class_id  = :clase
-                                                   AND c.status    = 1
-                                                   AND c.course_id = cu.course_id
-                                                   AND c.group_id  = g.group_id
-                                                 LIMIT 1;");
-                    $clase->execute(array(':clase' => $alumno->class_id));
-                    if ($clase->rowCount() > 0) {
-                        $clase = $clase->fetch();
-                        $id_grupo = $clase->class_id;
-                        $nombre_curso = ucwords(strtolower($clase->course));
-                        $grupo = '<a class="change_group"
-                                     href="javascript:void(0)"
-                                     data-student="'.$alumno->student_id.'"
-                                     data-class="'.$clase->class_id.'"
-                                     data-course="'.$clase->course_id.'"
-                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
-                    }
-                }
+    //             if ($alumno->class_id !== NULL) {
+    //                 $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
+    //                                              FROM classes as c, courses as cu, groups as g
+    //                                              WHERE c.class_id  = :clase
+    //                                                AND c.status    = 1
+    //                                                AND c.course_id = cu.course_id
+    //                                                AND c.group_id  = g.group_id
+    //                                              LIMIT 1;");
+    //                 $clase->execute(array(':clase' => $alumno->class_id));
+    //                 if ($clase->rowCount() > 0) {
+    //                     $clase = $clase->fetch();
+    //                     $id_grupo = $clase->class_id;
+    //                     $nombre_curso = ucwords(strtolower($clase->course));
+    //                     $grupo = '<a class="change_group"
+    //                                  href="javascript:void(0)"
+    //                                  data-student="'.$alumno->student_id.'"
+    //                                  data-class="'.$clase->class_id.'"
+    //                                  data-course="'.$clase->course_id.'"
+    //                                  data-group="'.$nombre_curso.' '.$clase->group_name.'"
+    //                                  title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+    //                 }
+    //             }
 
-                //-> Tutor del Alumno
-                $id_tutor     = 0;
-                $nombre_tutor = '- - - -';
-                if ($alumno->id_tutor !== NULL) {
-                    $tutor = $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
-                                                    FROM tutors
-                                                    WHERE id_tutor = :tutor
-                                                 LIMIT 1;");
-                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
-                    if ($tutor->rowCount() > 0) {
-                        $tutor = $tutor->fetch();
-                        $id_tutor = $tutor->id_tutor;
-                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet.' '.$tutor->lastnamet;
-                    }
-                }
+    //             //-> Tutor del Alumno
+    //             $id_tutor     = 0;
+    //             $nombre_tutor = '- - - -';
+    //             if ($alumno->id_tutor !== NULL) {
+    //                 $tutor = $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
+    //                                                 FROM tutors
+    //                                                 WHERE id_tutor = :tutor
+    //                                              LIMIT 1;");
+    //                 $tutor->execute(array(':tutor' => $alumno->id_tutor));
+    //                 if ($tutor->rowCount() > 0) {
+    //                     $tutor = $tutor->fetch();
+    //                     $id_tutor = $tutor->id_tutor;
+    //                     $nombre_tutor = $tutor->namet.' '.$tutor->surnamet.' '.$tutor->lastnamet;
+    //                 }
+    //             }
 
-                $datos[$counter] = new stdClass();
-                $datos[$counter]->count    = $counter;
-                $datos[$counter]->id       = $alumno->student_id;
-                $datos[$counter]->nombre   = $alumno->name;
-                $datos[$counter]->apellido = $alumno->surname.' '.$alumno->lastname;
-                $datos[$counter]->edad     = $alumno->age;
-                $datos[$counter]->sexo     = $alumno->genre;
-                $datos[$counter]->avatar   = $alumno->avatar;
-                $datos[$counter]->estudios = $alumno->studies.' '.$alumno->lastgrade;
-                $datos[$counter]->convenio = $alumno->convenio;
-                $datos[$counter]->id_grupo = $id_grupo;
-                $datos[$counter]->grupo    = $grupo;
-                $datos[$counter]->id_tutor = $id_tutor;
-                $datos[$counter]->tutor    = $nombre_tutor;
-                $counter++;
-            }
+    //             $datos[$counter] = new stdClass();
+    //             $datos[$counter]->count    = $counter;
+    //             $datos[$counter]->id       = $alumno->student_id;
+    //             $datos[$counter]->nombre   = $alumno->name;
+    //             $datos[$counter]->apellido = $alumno->surname.' '.$alumno->lastname;
+    //             $datos[$counter]->edad     = $alumno->age;
+    //             $datos[$counter]->sexo     = $alumno->genre;
+    //             $datos[$counter]->avatar   = $alumno->avatar;
+    //             $datos[$counter]->estudios = $alumno->studies.' '.$alumno->lastgrade;
+    //             $datos[$counter]->convenio = $alumno->convenio;
+    //             $datos[$counter]->id_grupo = $id_grupo;
+    //             $datos[$counter]->grupo    = $grupo;
+    //             $datos[$counter]->id_tutor = $id_tutor;
+    //             $datos[$counter]->tutor    = $nombre_tutor;
+    //             $counter++;
+    //         }
 
-            // Pasa información a la vista
-            $paginacion = $paginate->getView('pagination_ajax', 'students');
-            // View::filters('alumnos'); 
-            self::viewTableStudents($datos, $course);
-            if (count($datos) > 15) {
-            	echo $paginacion;
-            }
-        } else {
-            echo '<h4 class="text-center text-secondary my-3">
-                    No hay alumnos en esta lista.
-                  </h4>';
-        }      
-    }
+    //         // Pasa información a la vista
+    //         $paginacion = $paginate->getView('pagination_ajax', 'students');
+    //         // View::filters('alumnos'); 
+    //         self::viewTableStudents($datos, $course);
+    //         if (count($datos) > 15) {
+    //         	echo $paginacion;
+    //         }
+    //     } else {
+    //         echo '<h4 class="text-center text-secondary my-3">
+    //                 No hay alumnos en esta lista.
+    //               </h4>';
+    //     }      
+    // }
 
-    public static function viewTableStudents($alumnos, $curso){
-        $u_type = Session::get('user_account_type');
-        $show = $u_type === '1' || $u_type === '2'; //-> true or false
-        if (count($alumnos) > 0) {
-            $check_all = '&nbsp;&nbsp;<div class="custom-control custom-checkbox ml-4">
-                            <input type="checkbox" class="custom-control-input check_all" id="checkAll">
-                            <label class="custom-control-label" for="checkAll"><i class="fa fa-arrow-up"></i></label>
-                          </div>';
-            echo '<div class="table-responsive">';
-                echo '<table id="tbl_students_'.$curso.'"
-                             class="table table-striped table-sm table-bordered">';
-                    echo '<thead>';
-                        echo '<tr class="info">';
-                            echo '<th class="text-center"> N° </th>';
-                            echo '<th class="text-center">Foto</th>';
-                            echo '<th class="text-center">Apellidos</th>';
-                            echo '<th class="text-center">Nombre</th>';
-                            echo '<th class="text-center">Escolaridad</th>';
-                            echo '<th class="text-center">Edad</th>';
-                            echo '<th class="text-center">Grupo</th>';
-                            echo '<th class="text-center">Tutor</th>';
-                            echo '<th class="text-center">Opciones</th>';
-                        echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                        $c = 1;
-                        foreach ($alumnos as $row) {
-                            $r = $row->count < 10 ? '&nbsp;&nbsp;'.$row->count : $row->count;
-                            $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$row->avatar;
-                            $check = '<b>'.$r.'</b>';
+    // public static function viewTableStudents($alumnos, $curso){
+    //     $u_type = Session::get('user_account_type');
+    //     $show = $u_type === '1' || $u_type === '2'; //-> true or false
+    //     if (count($alumnos) > 0) {
+    //         $check_all = '&nbsp;&nbsp;<div class="custom-control custom-checkbox ml-4">
+    //                         <input type="checkbox" class="custom-control-input check_all" id="checkAll">
+    //                         <label class="custom-control-label" for="checkAll"><i class="fa fa-arrow-up"></i></label>
+    //                       </div>';
+    //         echo '<div class="table-responsive">';
+    //             echo '<table id="tbl_students_'.$curso.'"
+    //                          class="table table-striped table-sm table-bordered">';
+    //                 echo '<thead>';
+    //                     echo '<tr class="info">';
+    //                         echo '<th class="text-center"> N° </th>';
+    //                         echo '<th class="text-center">Foto</th>';
+    //                         echo '<th class="text-center">Apellidos</th>';
+    //                         echo '<th class="text-center">Nombre</th>';
+    //                         echo '<th class="text-center">Escolaridad</th>';
+    //                         echo '<th class="text-center">Edad</th>';
+    //                         echo '<th class="text-center">Grupo</th>';
+    //                         echo '<th class="text-center">Tutor</th>';
+    //                         echo '<th class="text-center">Opciones</th>';
+    //                     echo '</tr>';
+    //                 echo '</thead>';
+    //                 echo '<tbody>';
+    //                     $c = 1;
+    //                     foreach ($alumnos as $row) {
+    //                         $r = $row->count < 10 ? '&nbsp;&nbsp;'.$row->count : $row->count;
+    //                         $url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$row->avatar;
+    //                         $check = '<b>'.$r.'</b>';
 
-                            if (!file_exists($url)) {
-                            	$url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($row->sexo).'.jpg';
-                            }
-                            $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
-                            $convenio = $row->convenio == "0" ?
-                                            '<i data-toggle="tooltip" title="Convenio Pendiente" class="fa fa-file"></i>' :
-                                                '';
-                            if ($show) {
-                                $check = '<div class="custom-control custom-checkbox">
-                                            <span class="mr-4">'.$convenio.'</span>
-                                            <input type="checkbox" class="custom-control-input check-item" id="customCheck'.$c.'" value="'.$row->id.'">
-                                            <label class="custom-control-label" for="customCheck'.$c.'">'.$r.'</label>
-                                        </div>';
-                            }
-                            echo '<tr class="active">';
-                            echo '<td class="text-center">'.$check.'</td>';
-                            echo '<td class="text-center">'.$avatar.'</td>';
-                            echo '<td class="text-center txt">'.$row->apellido.'</td>';
-                            echo '<td class="text-center txt">'.$row->nombre.'</td>';
-                            echo '<td class="text-center txt">'.$row->estudios.'</td>';
-                            echo '<td class="text-center txt">'.$row->edad.'</td>';
-                            echo '<td class="text-center txt">'.$row->grupo.'</td>';
-                            echo '<td class="text-center txt">'.$row->tutor.'</td>';
-                            echo '<td class="text-center">';
-                            echo '<div class="btn-group">';
-                                echo '<a href="javascript:void(0)"
-                                         data-target="#"
-                                         class="btn btn-info btn-sm dropdown-toggle"
-                                         data-toggle="dropdown">Más.. &nbsp;&nbsp; <span class="caret"></span>
-                                      </a>';
-                                echo '<ul class="dropdown-menu student">';
-                                if ($show) {
-                                echo '<li>
-                                            <a href="'.Config::get('URL').'alumnos/perfil/'.$row->id.'"
-                                               data-student="'.$row->id.'"
-                                               data-tutor="'.$row->id_tutor.'"
-                                               data-clase="'.$row->id_grupo.'"
-                                               data-curso="'.$curso.'">
-                                                <span class="text-dark" data-feather="chevron-right"></span>
-                                                Perfil
-                                            </a>
-                                        </li>';
-                                echo    '<li>
-                                            <a href="'.Config::get('URL').'alumnos/c/'.$row->id.'">
-                                                <span class="text-primary" data-feather="chevron-right"></span>
-                                                Convenio
-                                            </a></li>';
-                                echo    '<li>
-                                            <a href="javascript:void(0)">
-                                                <span class="text-info" data-feather="chevron-right"></span>
-                                                Cambiar Foto
-                                            </a>
-                                        </li>';
-                                }
-                                echo   '<li>
-                                            <a href="'.Config::get('URL').'evaluaciones/index/'.$row->id.'">
-                                                <span class="text-success" data-feather="chevron-right"></span>
-                                                Calificaciones
-                                            </a>
-                                        </li>';
-                                echo   '<li>
-                                            <a  href="javascript:void(0)" 
-                                                class="btnUnsuscribeStudent" 
-                                                data-student="'.$row->id.'"
-                                                data-name="'.$row->nombre.' '.$row->apellido.'">
-                                                <span class="text-warning" data-feather="chevron-right"></span>
-                                                Dar de Baja
-                                            </a>
-                                        </li>';
-                                echo   '<li>
-                                            <a  href="javascript:void(0)" 
-                                                class="btnDeleteStudent" 
-                                                data-student="'.$row->id.'"
-                                                data-name="'.$row->nombre.' '.$row->apellido.'">
-                                                <span class="text-danger" data-feather="chevron-right"></span>
-                                                Eliminar
-                                            </a>
-                                        </li>';
-                                echo '</ul>';
-                            echo '</div>';
-                            echo '</td>';
-                            echo '</tr>';
-                            $c++;
-                        }
-                    echo '</tbody>';
-                    if ($u_type === '1' || $u_type === '2') {
-                    echo '<tfoot>';
-                    echo '<tr>';
-                    echo '<td class="text-center">'.$check_all.'</td>';
-                    echo '<td class="text-center">
-                          </td>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-info" id="changeAll">
-                                Cambiar de Grupo
-                            </button>
-                          </td>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-warning btnUnsuscribeStudents">
-                                Dar de Baja
-                            </button>
-                          </td>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-sm mini btn-danger btnDeleteStudents">
-                                Eliminar
-                            </button>
-                          </td>';
-                    echo '<td class="text-center">
-                          </td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '</tr>';
-                    echo '</tfoot>';
-                    }
-                echo '</table>';
-            echo '</div>';
-        } else {
-            echo '<h4 class="text-center text-naatik subheader">No hay Alumnos inscritos en este nivel.</h4>';
-        }
-    }
+    //                         if (!file_exists($url)) {
+    //                         	$url = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($row->sexo).'.jpg';
+    //                         }
+    //                         $avatar = '<img class="rounded-circle" src="'.$url.'" alt="foto" widt="42" height="42">';
+    //                         $convenio = $row->convenio == "0" ?
+    //                                         '<i data-toggle="tooltip" title="Convenio Pendiente" class="fa fa-file"></i>' :
+    //                                             '';
+    //                         if ($show) {
+    //                             $check = '<div class="custom-control custom-checkbox">
+    //                                         <span class="mr-4">'.$convenio.'</span>
+    //                                         <input type="checkbox" class="custom-control-input check-item" id="customCheck'.$c.'" value="'.$row->id.'">
+    //                                         <label class="custom-control-label" for="customCheck'.$c.'">'.$r.'</label>
+    //                                     </div>';
+    //                         }
+    //                         echo '<tr class="active">';
+    //                         echo '<td class="text-center">'.$check.'</td>';
+    //                         echo '<td class="text-center">'.$avatar.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->apellido.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->nombre.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->estudios.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->edad.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->grupo.'</td>';
+    //                         echo '<td class="text-center txt">'.$row->tutor.'</td>';
+    //                         echo '<td class="text-center">';
+    //                         echo '<div class="btn-group">';
+    //                             echo '<a href="javascript:void(0)"
+    //                                      data-target="#"
+    //                                      class="btn btn-info btn-sm dropdown-toggle"
+    //                                      data-toggle="dropdown">Más.. &nbsp;&nbsp; <span class="caret"></span>
+    //                                   </a>';
+    //                             echo '<ul class="dropdown-menu student">';
+    //                             if ($show) {
+    //                             echo '<li>
+    //                                         <a href="'.Config::get('URL').'alumnos/perfil/'.$row->id.'"
+    //                                            data-student="'.$row->id.'"
+    //                                            data-tutor="'.$row->id_tutor.'"
+    //                                            data-clase="'.$row->id_grupo.'"
+    //                                            data-curso="'.$curso.'">
+    //                                             <span class="text-dark" data-feather="chevron-right"></span>
+    //                                             Perfil
+    //                                         </a>
+    //                                     </li>';
+    //                             echo    '<li>
+    //                                         <a href="'.Config::get('URL').'alumnos/c/'.$row->id.'">
+    //                                             <span class="text-primary" data-feather="chevron-right"></span>
+    //                                             Convenio
+    //                                         </a></li>';
+    //                             echo    '<li>
+    //                                         <a href="javascript:void(0)">
+    //                                             <span class="text-info" data-feather="chevron-right"></span>
+    //                                             Cambiar Foto
+    //                                         </a>
+    //                                     </li>';
+    //                             }
+    //                             echo   '<li>
+    //                                         <a href="'.Config::get('URL').'evaluaciones/index/'.$row->id.'">
+    //                                             <span class="text-success" data-feather="chevron-right"></span>
+    //                                             Calificaciones
+    //                                         </a>
+    //                                     </li>';
+    //                             echo   '<li>
+    //                                         <a  href="javascript:void(0)" 
+    //                                             class="btnUnsuscribeStudent" 
+    //                                             data-student="'.$row->id.'"
+    //                                             data-name="'.$row->nombre.' '.$row->apellido.'">
+    //                                             <span class="text-warning" data-feather="chevron-right"></span>
+    //                                             Dar de Baja
+    //                                         </a>
+    //                                     </li>';
+    //                             echo   '<li>
+    //                                         <a  href="javascript:void(0)" 
+    //                                             class="btnDeleteStudent" 
+    //                                             data-student="'.$row->id.'"
+    //                                             data-name="'.$row->nombre.' '.$row->apellido.'">
+    //                                             <span class="text-danger" data-feather="chevron-right"></span>
+    //                                             Eliminar
+    //                                         </a>
+    //                                     </li>';
+    //                             echo '</ul>';
+    //                         echo '</div>';
+    //                         echo '</td>';
+    //                         echo '</tr>';
+    //                         $c++;
+    //                     }
+    //                 echo '</tbody>';
+    //                 if ($u_type === '1' || $u_type === '2') {
+    //                 echo '<tfoot>';
+    //                 echo '<tr>';
+    //                 echo '<td class="text-center">'.$check_all.'</td>';
+    //                 echo '<td class="text-center">
+    //                       </td>';
+    //                 echo '<td class="text-center">
+    //                         <button type="button" class="btn btn-sm mini btn-info" id="changeAll">
+    //                             Cambiar de Grupo
+    //                         </button>
+    //                       </td>';
+    //                 echo '<td class="text-center">
+    //                         <button type="button" class="btn btn-sm mini btn-warning btnUnsuscribeStudents">
+    //                             Dar de Baja
+    //                         </button>
+    //                       </td>';
+    //                 echo '<td class="text-center">
+    //                         <button type="button" class="btn btn-sm mini btn-danger btnDeleteStudents">
+    //                             Eliminar
+    //                         </button>
+    //                       </td>';
+    //                 echo '<td class="text-center">
+    //                       </td>';
+    //                 echo '<td class="text-center"></td>';
+    //                 echo '<td class="text-center"></td>';
+    //                 echo '<td class="text-center"></td>';
+    //                 echo '</tr>';
+    //                 echo '</tfoot>';
+    //                 }
+    //             echo '</table>';
+    //         echo '</div>';
+    //     } else {
+    //         echo '<h4 class="text-center text-naatik subheader">No hay Alumnos inscritos en este nivel.</h4>';
+    //     }
+    // }
 
     // Numero de alumno por grupo
     public static function countStudents(){
@@ -444,13 +446,16 @@ class AlumnoModel
 
     public static function getGroups($course) {
         $database = DatabaseFactory::getFactory()->getConnection();
+        $fecha = H::getTime('Y-m-d');
 
         $_sql = $database->prepare("SELECT c.class_id, c.group_id, g.group_name
-					                FROM classes as c, groups as g
+					                FROM classes as c, groups as g, schedules as h
 					                WHERE c.course_id = :course
 					                  AND c.group_id  = g.group_id
-					                  AND c.status = 1;");
-        $_sql->execute(array(':course' => $course));
+                                      AND c.schedul_id = h.schedul_id
+					                  AND c.status = 1
+                                      AND h.date_end > :today;");
+        $_sql->execute(array(':today' => $fecha, ':course' => $course));
 
         if($_sql->rowCount() > 0){
             return $_sql->fetchAll();
@@ -627,14 +632,14 @@ class AlumnoModel
         $database->beginTransaction();
         try{
             $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
-            $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
+            $save   = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
 
             if ($save) {
                 $status = 1;
                 if($clase === null){
                     $status = 2;
                 }
-                $update = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
+                $update  = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
                 $updated = $update->execute(array(':status' => $status, ':student' => $alumno));
 
                 if (!$updated) {

@@ -9,15 +9,106 @@ var Pagos = {
         this.defaultActiveView();
         this.activeView();
         this.changePayTable();
-
         this.savePayment();
         this.saveComment();
-
         this.reportsViews();
 
+
         // Test Functions
-        // this.defaultValues();
-        // this.sarchList();
+        // this.studentsTable();
+    },
+
+
+    studentsTable: function() {
+        let _this = this;
+        let columnas = null;
+
+        if (_ciclo == 'A') {
+            columnas = [
+                            { "data": "count" },
+                            { "data": "name" },
+                            { "data": "surname" },
+                            { "data": "info" },
+                            { "data": "aug" },
+                            { "data": "sep" },
+                            { "data": "oct" },
+                            { "data": "nov" },
+                            { "data": "dec" },
+                            { "data": "opt" }
+                        ];
+        } else {
+            columnas = [
+                            { "data": "count" },
+                            { "data": "name" },
+                            { "data": "surname" },
+                            { "data": "info" },
+                            { "data": "jan" },
+                            { "data": "feb" },
+                            { "data": "mar" },
+                            { "data": "apr" },
+                            { "data": "may" },
+                            { "data": "jun" },
+                            { "data": "jul" },
+                            { "data": "opt" }
+                        ];
+        }
+
+        let table = $('#tabla_pagos').DataTable({
+                        "stateSave": true,
+                        "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+                        "ajax": {
+                            'url': _root_ + 'pagos/tablaPagos',
+                            "type": "POST",
+                            'data': {
+                                'curso': 1,
+                                'ciclo': _ciclo
+                            }
+                        },
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0
+                        } ],
+                        "order": [[ 1, 'asc' ]],
+                        "columns": columnas,
+                        "buttons": [
+                            { "extend": 'print',
+                              "text":'Imprimir <i class="fa fa-print"></i>',
+                              "className": 'btn btn-info btn-sm' }
+                        ],
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ filas",
+                            "search": "Buscar:",
+                            "zeroRecords": "No se encontró resultados",
+                            "info": "_PAGE_ de _PAGES_ páginas",
+                            "infoEmpty": "No records available",
+                            "infoFiltered": "(filtrado de _MAX_ resultados)"
+                        }
+                    });
+
+
+        this.countStudents();
+        this.vars.dataTable = table;
+
+        table.on( 'draw.dt', function () {
+            let PageInfo = $('#tabla_pagos').DataTable().page.info();
+            table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                cell.innerHTML = i + 1 + PageInfo.start;
+                table.cell(cell).invalidate('dom');
+            } );
+        } );
+
+
+        $('#tabla_pagos tbody').on( 'click', '.btnChangeAvatar', function () {
+            let student = $(this).data('student');
+
+            $('#avatar_student').val(student);
+            $('#avatar_file').val('');
+            $('#modalChangeAvatar').modal('show'); 
+        });
+
+        $('#tabla_pagos_wrapper button').removeClass('dt-button');
+
     },
 
     defaultActiveView: function() {
@@ -188,7 +279,11 @@ var Pagos = {
             success: function(data){
                 // console.log(data);
                 $.each(data, function(i, value){
-                    $('#'+i).text(value);
+                    if (parseInt(value) > 0) {
+                        $('#'+i).text(value);
+                    } else {
+                        $('#'+i).parent().addClass('d-none');
+                    }
                 });
             }
         });

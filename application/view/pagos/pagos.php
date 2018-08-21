@@ -19,8 +19,40 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12" id="tabla_pagos">
-                
+            <div class="col-12 px-0">
+                <div class="table-responsive">
+                    <table id="tabla_pagos" class="table table-sm table-striped" style="width:100%">
+                        <thead>
+                            <tr class="info">
+                                <th class="text-center"> N° </th>
+                                <th class="text-center">Alumno</th>
+                                <th class="text-center">Datos</th>
+                                <th class="text-center">AGO</th>
+                                <th class="text-center">SEP</th>
+                                <th class="text-center">OCT</th>
+                                <th class="text-center">NOV</th>
+                                <th class="text-center">DIC</th>
+                                <th class="text-center">Comentario</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                        </thead>
+
+                        <tfoot>
+                            <tr class="info">
+                                <th class="text-center"> N° </th>
+                                <th class="text-center">Alumno</th>
+                                <th class="text-center">Datos</th>
+                                <th class="text-center">AGO</th>
+                                <th class="text-center">SEP</th>
+                                <th class="text-center">OCT</th>
+                                <th class="text-center">NOV</th>
+                                <th class="text-center">DIC</th>
+                                <th class="text-center">Comentario</th>
+                                <th class="text-center">Opciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>        
     </main>

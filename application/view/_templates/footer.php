@@ -7,7 +7,7 @@
         </span>
         <div class="footer"></div>
     <script>
-        var _ciclo = "<?= date('Y').H::getCiclo(date('m'));  ?>";
+        var _ciclo = "<?= H::getCiclo(date('m')); ?>";
         var _root_ = "<?= Config::get('URL');  ?>";
     </script>
     <script src="<?php echo Config::get('URL'); ?>assets/libs/js/modernizr.min.js"></script>

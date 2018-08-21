@@ -2,6 +2,147 @@
 
 class PagosModel
 {
+    public static function renderPayTable($course, $ciclo){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $curso = (int)$course;
+        $students = GeneralModel::studentsByCourse($curso);
+
+        $datos = [];
+        if ($students !== null) {
+            $counter  = 1;
+
+            foreach ($students as $alumno) {
+                $id_grupo = 0;
+                $grupo = '';
+
+                if ($alumno->class_id !== NULL) {
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
+                                                 FROM classes as c, courses as cu, groups as g
+                                                 WHERE c.class_id  = :clase
+                                                   AND c.status    = 1
+                                                   AND c.course_id = cu.course_id
+                                                   AND c.group_id  = g.group_id
+                                                 LIMIT 1;");
+                    $clase->execute(array(':clase' => $alumno->class_id));
+                    if ($clase->rowCount() > 0) {
+                        $clase = $clase->fetch();
+                        $id_grupo = $clase->class_id;
+                        $nombre_curso = ucwords(strtolower($clase->course));
+                        $grupo = '<a class="change_group"
+                                     href="javascript:void(0)"
+                                     data-student="'.$alumno->student_id.'"
+                                     data-class="'.$clase->class_id.'"
+                                     data-course="'.$clase->course_id.'"
+                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
+                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                    }
+                } else {
+                    continue;
+                }
+
+                //-> Tutor del Alumno
+                $id_tutor     = 0;
+                $nombre_tutor = '- - - -';
+                if ($alumno->id_tutor !== NULL) {
+                    $tutor= $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
+                                                FROM tutors
+                                                WHERE id_tutor = :tutor
+                                                LIMIT 1;");
+                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
+                    if ($tutor->rowCount() > 0) {
+                        $tutor = $tutor->fetch();
+                        $id_tutor = $tutor->id_tutor;
+                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet;
+                    }
+                }
+
+
+                $pagos = self::studentPayList($alumno->student_id);
+                if ($ciclo === "A") {
+                    $ago=0; $sep=0; $oct=0; $nov=0; $dic=0; $beca='';
+                    if ($pagos !== null) {
+                        $ago=$pagos->ago; $sep=$pagos->sep; $oct=$pagos->oct; 
+                        $nov=$pagos->nov; $dic=$pagos->dic; $beca='';
+                    }
+                    
+                    $info = array(
+                        'count'      => $counter,
+                        'student'    => $alumno->student_id,
+                        'name'       => $alumno->name,
+                        'surname'    => $alumno->name,
+                        'info'       => 'Pending...',
+                        'aug'        => $ago,
+                        'sep'        => $sep,
+                        'oct'        => $oct,
+                        'nov'        => $nov,
+                        'dec'        => $dic,
+                        'opt'        => 'See more..'
+                    );
+                } else {
+                    $ene=0; $feb=0; $mar=0; $abr=0; $may=0; $jun=0; $jul=0; $beca='';
+                    if ($pagos !== null) {
+                        $ene=$pagos->ene; $feb=$pagos->feb; $mar=$pagos->mar; $abr=$pagos->abr; 
+                        $may=$pagos->may; $jun=$pagos->jun; $jul=$pagos->jul;
+                    }
+                    $info = array(
+                        'count'      => $counter,
+                        'student'    => $alumno->student_id,
+                        'name'       => $alumno->name,
+                        'surname'    => $alumno->name,
+                        'info'       => 'Pending...',
+                        'jan'        => $ene,
+                        'feb'        => $feb,
+                        'mar'        => $mar,
+                        'apr'        => $abr,
+                        'may'        => $may,
+                        'jun'        => $jun,
+                        'jul'        => $jul,
+                        'opt'        => 'See more..'
+                    );
+                }
+
+                array_push($datos, $info);
+                $counter++;
+
+                // $datos[$counter]->edad     = $alumno->age;
+                // $datos[$counter]->sexo     = $alumno->genre;
+                // $datos[$counter]->avatar   = $alumno->avatar;
+                // $datos[$counter]->estudios = $alumno->studies.' '.$alumno->lastgrade;
+                // $datos[$counter]->id_grupo = $id_grupo;
+                // $datos[$counter]->grupo    = $grupo;
+                // $datos[$counter]->id_tutor = $id_tutor;
+                // $datos[$counter]->tutor    = $nombre_tutor;
+            }
+        }
+
+        return array('data' => $datos);
+    }
+
+    public static function studentPayList($student) {
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        // Setting year
+        $year = date('Y');
+
+        // SQL: student history pay in given year and ciclo
+        $history =  $database->prepare("SELECT * FROM students_pays 
+                                        WHERE student_id = :student
+                                          AND year       = :year
+                                        LIMIT 1;");
+        $history->execute(array(':student' => $student,
+                                ':year'    => $year));
+        if ($history->rowCount() > 0) {
+            return $history->fetch();
+        }
+
+        return null;
+    }
+
+
+
+
+
+
     public static function payTable($course, $page){
         $database = DatabaseFactory::getFactory()->getConnection();
         $curso = (int)$course;
@@ -135,7 +276,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="ene"
-                                     data-title="Enero"
+                                     data-title="ENERO"
                                      data-status="'.$ene.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ene).'</a>';
                         echo '</td>';
@@ -143,7 +284,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="feb"
-                                     data-title="Febrero"
+                                     data-title="FEBRERO"
                                      data-status="'.$feb.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($feb).'</a>';
                         echo '</td>';
@@ -151,7 +292,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="mar"
-                                     data-title="Marzo"
+                                     data-title="MARZO"
                                      data-status="'.$mar.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($mar).'</a>';
                         echo '</td>';
@@ -159,7 +300,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="abr"
-                                     data-title="Abril"
+                                     data-title="ABRIL"
                                      data-status="'.$abr.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($abr).'</a>';
                         echo '</td>';
@@ -167,7 +308,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="may"
-                                     data-title="Mayo"
+                                     data-title="MAYO"
                                      data-status="'.$may.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($may).'</a>';
                         echo '</td>';
@@ -175,7 +316,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="jun"
-                                     data-title="Junio"
+                                     data-title="JUNIO"
                                      data-status="'.$jun.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jun).'</a>';
                         echo '</td>';
@@ -183,7 +324,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="jul"
-                                     data-title="Julio"
+                                     data-title="JULIO"
                                      data-status="'.$jul.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jul).'</a>';
                         echo '</td>';
@@ -251,7 +392,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="ago"
-                                     data-title="Agosto"
+                                     data-title="AGOSTO"
                                      data-status="'.$ago.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ago).'</a>';
                         echo '</td>';
@@ -259,7 +400,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="sep"
-                                     data-title="Septiembre"
+                                     data-title="SEPTIEMBRE"
                                      data-status="'.$sep.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($sep).'</a>';
                         echo '</td>';
@@ -267,7 +408,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="oct"
-                                     data-title="Octubre"
+                                     data-title="OCTUBRE"
                                      data-status="'.$oct.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($oct).'</a>';
                         echo '</td>';
@@ -275,7 +416,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="nov"
-                                     data-title="Noviembre"
+                                     data-title="NOVIEMBRE"
                                      data-status="'.$nov.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($nov).'</a>';
                         echo '</td>';
@@ -283,7 +424,7 @@ class PagosModel
                             echo '<a href="#" class="check_pay" 
                                      data-student="'.$alumno->id.'" 
                                      data-month="dic"
-                                     data-title="Diciembre"
+                                     data-title="DICIEMBRE"
                                      data-status="'.$dic.'"
                                      data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($dic).'</a>';
                         echo '</td>';
