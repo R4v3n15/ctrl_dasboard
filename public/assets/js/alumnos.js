@@ -14,11 +14,14 @@ var Alumnos = {
         this.addToGroup();
         this.getGroups();
         this.changeGroupAllStudents();
+        this.openModals();
 
         this.unsuscribeStudent();
         this.unsuscribeStudents();
         this.deleteStudent();
         this.deleteStudents();
+
+        this.checkAllStudents();
 
         this.invoiceTable();
     },
@@ -82,7 +85,7 @@ var Alumnos = {
                         ],
                         "rowCallback": function( row, data, index ) {
                             if(data.finished) {
-                                $(row).addClass('bg-warning')
+                                $(row).addClass('border-t-danger')
                             }
                         }, 
                         buttons: [
@@ -104,13 +107,13 @@ var Alumnos = {
         this.countStudents();
         this.vars.dataTable = table;
 
-        table.on( 'draw.dt', function () {
-            let PageInfo = $('#table_students').DataTable().page.info();
-            table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
-                cell.innerHTML = i + 1 + PageInfo.start;
-                table.cell(cell).invalidate('dom');
-            } );
-        } );
+        // table.on( 'draw.dt', function () {
+        //     let PageInfo = $('#table_students').DataTable().page.info();
+        //     table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+        //         cell.innerHTML = i + 1 + PageInfo.start;
+        //         table.cell(cell).invalidate('dom');
+        //     } );
+        // } );
 
         $('#table_students tbody').on('click', '.btnSetGroup', function(event){
             event.preventDefault();
@@ -125,17 +128,33 @@ var Alumnos = {
             $('#modalAddToGroup').modal('show');
         });
 
+        $('#table_students tbody').on('change', '.check-item',function(event){
+            let item = $(this).val(),
+                reinscribir = $(this).data('inscribir') == '1' ? 1 : 0;
+
+                alumno = item + ',' + reinscribir;
+            if (_this.vars.alumnos.includes(alumno)) {
+                let position = _this.vars.alumnos.indexOf(alumno);
+                _this.vars.alumnos.splice(position, 1);
+            } else {
+                _this.vars.alumnos.push(alumno);
+            }
+            $(this).toggleClass('selected-item');
+        });
+
         $('#table_students tbody').on('click', '.btnChangeGroup', function(event){
             event.preventDefault();
 
             let student = $(this).data('student'),
-                grupo   = $(this).data('group');
+                grupo   = $(this).data('group'),
+                reinscripcion = $(this).data('reinscripcion');
 
             $('#course').val('');
             $('#groups').val('');
+            $('#reinscripcion').val(reinscripcion ? 1 : 0);
             $('#alumno_id').val(student);
 
-            $('#modalAddTitle').text('CAMBIAR DE GRUPO');
+            $('#modalAddTitle').text(!reinscripcion ? 'CAMBIAR DE GRUPO' : 'REINSCRIBIR ALUMNO');
             $('#extra_message').text('Grupo Actual: '+ grupo);
 
             $('#modalAddToGroup').modal('show');
@@ -198,9 +217,6 @@ var Alumnos = {
                 _this.countStudents();
                 _this.activeFilter();
                 _this.startSearch();
-                _this.openModals();
-
-                _this.checkAllStudents();
             }
         });
     },
@@ -322,10 +338,6 @@ var Alumnos = {
         $('#changeAll').click(function(event){
             event.preventDefault();
 
-            $.each($('.selected-item'), function(i, item) {
-                _this.vars.alumnos[i] = $(this).val();
-            });
-
             if (_this.vars.alumnos.length > 0) {
                 $('#updateMessage').html('Cambiar de grupo a: ' + _this.vars.alumnos.length + ' Alumnos.');
                 $('#updatecourse').val('');
@@ -411,10 +423,11 @@ var Alumnos = {
 
             var alumno = $('#alumno_id').val(),
                 curso  = $('#course').val(),
-                clase  = $('#groups').val();
+                clase  = $('#groups').val(),
+                reinscribir = $('#reinscripcion').val();
                 // console.log(alumno, clase);
             $.ajax({
-                data: { alumno: alumno, clase: clase },
+                data: { alumno: alumno, clase: clase, reinscribir: reinscribir },
                 synch: 'true',
                 type: 'POST',
                 url: _root_ + 'alumnos/cambiarGrupoAlumno'
@@ -439,24 +452,26 @@ var Alumnos = {
         });
     },
 
-    // Marcar/Desmarcar checkboxs de todos los alumnos de la tabla
+    // Marcar/Desmarcar todos los checkboxs de tabla alumnos
     checkAllStudents: function(){
         let _this = this;
         $('#checkAll').change(function(){
             let status = $("#checkAll").is(":checked");
             $(".check-item").prop("checked", status);
             $(".check-item").toggleClass('selected-item');
-        });
 
-        $('.check-item').change(function(event){
-            let item = $(this).val();
-            if (_this.vars.alumnos.includes(item)) {
-                let position = _this.vars.alumnos.indexOf(item);
-                _this.vars.alumnos.splice(position, 1);
-            } else {
-                _this.vars.alumnos.push(item);
-            }
-            $(this).toggleClass('selected-item');
+            $.each($(".selected-item"), function(i, stds){
+                let id = $(stds).val(),
+                    reinscribir = $(stds).data('inscribir') == '1' ? 1 : 0;
+
+                alumno = id + ',' + reinscribir;
+                if (_this.vars.alumnos.includes(alumno)) {
+                    let position = _this.vars.alumnos.indexOf(alumno);
+                    _this.vars.alumnos.splice(position, 1);
+                } else {
+                    _this.vars.alumnos.push(alumno);
+                }
+            });
         });
     },
 
@@ -468,7 +483,7 @@ var Alumnos = {
             let grupo = $('#updategroups').val();
             if(grupo !== ''){
                 $.ajax({
-                    data: { alumnos: _this.vars.alumnos, grupo: grupo },
+                    data: { alumnos: _this.vars.alumnos, clase: grupo },
                     synch: 'true',
                     type: 'POST',
                     url: _root_ + 'alumnos/cambiarGrupoAlumnos',
@@ -483,7 +498,8 @@ var Alumnos = {
                             $('.snackbar').addClass('snackbar-red');
                         }
                         _this.vars.alumnos = [];
-                        _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                        _this.vars.dataTable.destroy();
+                        _this.studentsTable();
                         $('#modalChangeGroup').modal('hide');
                     }
                 });

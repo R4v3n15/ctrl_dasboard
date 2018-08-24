@@ -139,7 +139,7 @@ var Cursos = {
     },
 
     getFrmEditClass: function() {
-        let that = this;
+        let _this = this;
         $('.updateClase').on('click', function(){
             $.ajax({
                 data: { clase: $(this).attr('id'),
@@ -151,10 +151,10 @@ var Cursos = {
                     $('#frmEditClase').html(data);
                     $('#modalEditClasse').modal('show');
                     $('#days').select2();
-                    that.setAttr();
+                    _this.setAttr();
 
                     // $('#cancel_edit').on('click', function(){
-                    //     that.getClasses();
+                    //     _this.getClasses();
                     // });
                 }
             });
@@ -171,7 +171,7 @@ var Cursos = {
                     $('#frmRestartClase').html(data);
                     $('#modalRestartClasse').modal('show');
                     $('#dias_list').select2();
-                    that.setAttr();
+                    _this.setAttr();
 
                     $('#cancel_restart').on('click', function(){
                         $('#modalRestartClasse').modal('hide');
@@ -495,6 +495,24 @@ var Cursos = {
                 properties: 'required'
             });
             $('#editdate_end-input').prop('autocomplete', 'off');
+        }
+
+        if ($('#restartdate_init').length) {
+            pikadayResponsive(document.getElementById("restartdate_init"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inicio",
+                properties: 'required'
+            });
+            $('#restartdate_init-input').prop('autocomplete', 'off');
+        }
+
+        if ($('#restartdate_end').length) {
+            pikadayResponsive(document.getElementById("restartdate_end"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Terminp",
+                properties: 'required'
+            });
+            $('#restartdate_end-input').prop('autocomplete', 'off');
         }
 
         $("#timepick3").timepicker({

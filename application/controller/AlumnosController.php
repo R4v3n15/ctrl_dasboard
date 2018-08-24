@@ -60,7 +60,11 @@ class AlumnosController extends Controller
 
     public function cambiarGrupoAlumno(){
         if (Request::post('alumno')) {
-            $this->View->renderJSON(AlumnoModel::ChangeStudentGroup(Request::post('alumno'), Request::post('clase')));
+            $this->View->renderJSON(AlumnoModel::ChangeStudentGroup(
+                                                Request::post('alumno'), 
+                                                Request::post('clase'),
+                                                Request::post('reinscribir')
+            ));
         } else {
             $this->View->renderJSON(array('success' => false, 
                          'message' => '&#x2718; Faltan datos, intente de nuevo o reporte el error!'));

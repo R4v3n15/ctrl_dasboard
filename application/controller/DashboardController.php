@@ -29,6 +29,10 @@ class DashboardController extends Controller
         $this->View->render('dashboard/admin');
     }
 
+    public function nuevaTabla(){
+        $this->View->renderJSON(GeneralModel::createTable());
+    }
+
     public function limpiarDB(){
         $this->View->renderJSON(GeneralModel::cleanDatabase());
     }

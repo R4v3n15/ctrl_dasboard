@@ -21,6 +21,14 @@
   max-width: 12rem;
 }
 
+.bg-green {
+    background: rgba(58,219,118, 0.2) !important;
+}
+
+.border-t-danger {
+    background: rgba(250,50,10,0.12) !important;
+}
+
 .border-l-danger {
     border-left: 7px solid #ec5840 !important;
 }

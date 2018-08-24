@@ -9,7 +9,7 @@
                 <label for="f_inicio" class="col-sm-12">Fecha de Inicio: </label>
                 <div class="col-sm-12">
                     <input type="text" 
-                           id="editdate_init" 
+                           id="restartdate_init" 
                            class="form-control"
                            placeholder="Inicia.." 
                            name="f_inicio"
@@ -26,7 +26,7 @@
                 <label for="f_fin" class="col-sm-12 control-label">Fecha Fin: </label>
                 <div class="col-sm-12">
                     <input type="text" 
-                           id="editdate_end" 
+                           id="restartdate_end" 
                            class="form-control"
                            placeholder="Finaliza.." 
                            name="f_fin" 

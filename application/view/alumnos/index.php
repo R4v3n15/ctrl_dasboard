@@ -49,10 +49,20 @@
                         </thead>
 
                         <tfoot>
-                            <tr class="info">
-                                <th class="text-center"> N° </th>
+                            <tr class="bg-green">
+                                <th class="text-center"> 
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="checkAll" >
+                                        <label class="custom-control-label" for="checkAll">
+                                            <i class="fa fa-arrow-up"></i></label>
+                                    </div> 
+                                </th>
                                 <th class="text-center">Foto</th>
-                                <th class="text-center">Apellidos</th>
+                                <th class="text-center">
+                                    <button type="button" class="btn btn-sm mini btn-outline-primary" id="changeAll">
+                                        Cambiar de Grupo
+                                    </button>
+                                </th>
                                 <th class="text-center">Nombre</th>
                                 <th class="text-center">Escolaridad</th>
                                 <th class="text-center">Edad</th>
@@ -90,6 +100,7 @@
                         </h6>
 
                         <input type="hidden" id="alumno_id" class="form-control">
+                        <input type="hidden" id="reinscripcion" class="form-control">
                         <div class="form-group">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -124,7 +135,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="addToGroup" class="btn btn-primary">Agregar</button>
+                    <button type="button" id="addToGroup" class="btn btn-info">Agregar</button>
                 </div>
             </div>
         </div>

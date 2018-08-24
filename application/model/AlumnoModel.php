@@ -44,13 +44,14 @@ class AlumnoModel
                         $clase = $clase->fetch();
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
-                        $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 3 days');
+                        $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 5 days');
                         $grupo = '<a class="btnChangeGroup"
                                      href="javascript:void(0)"
                                      data-student="'.$alumno->student_id.'"
                                      data-class="'.$clase->class_id.'"
                                      data-course="'.$clase->course_id.'"
                                      data-group="'.$nombre_curso.' '.$clase->group_name.'"
+                                     data-reinscripcion="'.$finished.'"
                                      title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
                     }
                 }
@@ -79,6 +80,19 @@ class AlumnoModel
 
                 // var_dump($avatar);
                 // exit();
+                
+                $convenio = $alumno->convenio == "0" ?
+                                '<i data-toggle="tooltip" title="Convenio Pendiente" class="fa fa-file"></i>' : '';
+                            
+                $check = '<div class="custom-control custom-checkbox">
+                            <input type="checkbox" 
+                                   class="custom-control-input check-item" 
+                                   id="customCheck'.$counter.'"
+                                   data-inscribir="'.($finished ? 1 : 0).'" 
+                                   value="'.$alumno->student_id.'">
+                            <label class="custom-control-label" for="customCheck'.$counter.'">'.$counter.'</label>
+                        </div>';
+                            
 
                 $photo = '<img class="rounded-circle btnChangeAvatar" 
                                src="'.$avatar.'"
@@ -87,10 +101,12 @@ class AlumnoModel
                                widt="42" 
                                height="42">';
 
+                $optClass = $finished ? 'danger' : 'primary';
+
                 $options = '<a href="javascript:void(0)"
                          data-target="#"
-                         class="btn btn-info btn-sm dropdown-toggle"
-                         data-toggle="dropdown">Más.. &nbsp;&nbsp; <span class="caret"></span>
+                         class="btn btn-outline-'.$optClass.' btn-sm dropdown-toggle"
+                         data-toggle="dropdown">Más.. <span class="caret"></span>
                       </a>';
                 $options .= '<ul class="dropdown-menu student">';
                 $options .= '<li>
@@ -143,7 +159,7 @@ class AlumnoModel
                 $options .= '</ul>';
 
                 $info = array(
-                    'count'      => $counter,
+                    'count'      => $check,
                     'avatar'     => $photo,
                     'surname'    => $alumno->surname.' '.$alumno->lastname,
                     'name'       => $alumno->name,
@@ -624,19 +640,112 @@ class AlumnoModel
     //  =  =  =  =  =  C H A N G E   G R O U P  =  =  =  =  =  =  = //
     //////////////////////////////////////////////////////////////////
 
-    public static function ChangeStudentGroup($alumno, $clase){
+    public static function ChangeStudentGroup($alumno, $clase, $reinscribir){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        (int)$clase === 0 ? $clase = null : $clase = (int)$clase;
+        $clase = (int)$clase === 0 ?  null : (int)$clase;
+        $reinscribir = (int)$reinscribir === 1 ? true : false;
         $commit   = true;
         $database->beginTransaction();
         try{
-            $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
-            $save   = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
 
-            if ($save) {
+            if ($reinscribir) {
+                $_student = $database->prepare("SELECT s.birthday, sd.ocupation, sd.workplace, 
+                                                       sd.studies, sd.lastgrade, sg.class_id, sg.date_begin
+                                                FROM students as s, 
+                                                     students_details as sd, 
+                                                     students_groups as sg
+                                                WHERE s.student_id = :student
+                                                  AND s.student_id = sd.student_id
+                                                  AND s.student_id = sg.student_id
+                                                LIMIT 1;");
+                $_student->execute(array(':student' => $alumno));
+
+                if ($_student->rowCount() > 0) {
+                    $_student = $_student->fetch();
+
+                    $_class  =  $database->prepare("SELECT cu.course, g.group_name, h.year, 
+                                                           h.date_end, c.teacher_id
+                                                    FROM classes as c, 
+                                                         courses as cu, 
+                                                         groups as g, 
+                                                         schedules as h
+                                                    WHERE c.course_id  = cu.course_id
+                                                      AND c.group_id   = g.group_id
+                                                      AND c.schedul_id = h.schedul_id 
+                                                      AND c.class_id   = :clase
+                                                    LIMIT 1;");
+                    $_class->execute(array(':clase' => $_student->class_id));
+
+                    $_class = $_class->fetch();
+
+                    $teacher_name = '';
+                    if ($_class->teacher_id != null && $_class->teacher_id != 0) {
+                        $teacher = $database->prepare("SELECT name, lastname FROM users 
+                                                       WHERE user_id = :user LIMIT 1;");
+                        $teacher->execute(array(':user' => $_class->teacher_id));
+                        $teacher = $teacher->fetch();
+                        $teacher_name = $teacher->name . ' ' . $teacher->lastname;
+                    }
+
+                    $history = $database->prepare("INSERT INTO student_history(student_id,
+                                                                                student_age,
+                                                                                ciclo,
+                                                                                student_group,
+                                                                                teacher_group,
+                                                                                student_init_date,
+                                                                                student_end_date,
+                                                                                student_school,
+                                                                                student_grade,
+                                                                                student_becado,
+                                                                                student_sponsor,
+                                                                                student_sep,
+                                                                                created_at
+                                                                            ) VALUES(
+                                                                                :alumno,
+                                                                                :edad,
+                                                                                :ciclo,
+                                                                                :grupo,
+                                                                                :maestro,
+                                                                                :fecha_inicio,
+                                                                                :fecha_termino,
+                                                                                :escuela,
+                                                                                :grado,
+                                                                                :becado,
+                                                                                :padrino,
+                                                                                :sep,
+                                                                                :created_at
+                                                                            );");
+                    $history->execute(array(
+                        ':alumno'       => $alumno,
+                        ':edad'         => H::getAge($_student->birthday),
+                        ':ciclo'        => $_class->year,
+                        ':grupo'        => $_class->course . ' ' . $_class->group_name,
+                        ':maestro'      => $teacher_name,
+                        ':fecha_inicio' => $_student->date_begin,
+                        ':fecha_termino' => $_class->date_end,
+                        ':escuela'       => $_student->workplace,
+                        ':grado'         => $_student->studies .' '. $_student->lastgrade,
+                        ':becado'        => 0,
+                        ':padrino'       => '',
+                        ':sep'           => 0,
+                        ':created_at'    => H::getTime()
+                    ));
+
+                    if ($history->rowCount() < 1) {
+                        $commint = false;
+                    }
+                }
+                
+            }
+
+
+            if ($commit) {
+                $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
+                $commit = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
                 $status = 1;
                 if($clase === null){
+                    // En espera
                     $status = 2;
                 }
                 $update  = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
@@ -670,10 +779,103 @@ class AlumnoModel
         $database->beginTransaction();
         try{
             foreach ($alumnos as $alumno) {
-                $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
-                $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
+                $datos = explode(',', $alumno);
+                $alumno = $datos[0];
+                $reinscribir = (int)$datos[1] === 1 ? true : false;
 
-                if ($save) {
+                if ($reinscribir) {
+                    $_student = $database->prepare("SELECT s.birthday, sd.ocupation, sd.workplace, 
+                                                           sd.studies, sd.lastgrade, sg.class_id, sg.date_begin
+                                                    FROM students as s, 
+                                                         students_details as sd, 
+                                                         students_groups as sg
+                                                    WHERE s.student_id = :student
+                                                      AND s.student_id = sd.student_id
+                                                      AND s.student_id = sg.student_id
+                                                    LIMIT 1;");
+                    $_student->execute(array(':student' => $alumno));
+
+                    if ($_student->rowCount() > 0) {
+                        $_student = $_student->fetch();
+
+                        $_class  =  $database->prepare("SELECT cu.course, g.group_name, h.year, 
+                                                               h.date_end, c.teacher_id
+                                                        FROM classes as c, 
+                                                             courses as cu, 
+                                                             groups as g, 
+                                                             schedules as h
+                                                        WHERE c.course_id  = cu.course_id
+                                                          AND c.group_id   = g.group_id
+                                                          AND c.schedul_id = h.schedul_id 
+                                                          AND c.class_id   = :clase
+                                                        LIMIT 1;");
+                        $_class->execute(array(':clase' => $_student->class_id));
+
+                        $_class = $_class->fetch();
+
+                        $teacher_name = '';
+                        if ($_class->teacher_id != null && $_class->teacher_id != 0) {
+                            $teacher = $database->prepare("SELECT name, lastname FROM users 
+                                                           WHERE user_id = :user LIMIT 1;");
+                            $teacher->execute(array(':user' => $_class->teacher_id));
+                            $teacher = $teacher->fetch();
+                            $teacher_name = $teacher->name . ' ' . $teacher->lastname;
+                        }
+
+                        $history = $database->prepare("INSERT INTO student_history(student_id,
+                                                                                    student_age,
+                                                                                    ciclo,
+                                                                                    student_group,
+                                                                                    teacher_group,
+                                                                                    student_init_date,
+                                                                                    student_end_date,
+                                                                                    student_school,
+                                                                                    student_grade,
+                                                                                    student_becado,
+                                                                                    student_sponsor,
+                                                                                    student_sep,
+                                                                                    created_at
+                                                                                ) VALUES(
+                                                                                    :alumno,
+                                                                                    :edad,
+                                                                                    :ciclo,
+                                                                                    :grupo,
+                                                                                    :maestro,
+                                                                                    :fecha_inicio,
+                                                                                    :fecha_termino,
+                                                                                    :escuela,
+                                                                                    :grado,
+                                                                                    :becado,
+                                                                                    :padrino,
+                                                                                    :sep,
+                                                                                    :created_at
+                                                                                );");
+                        $history->execute(array(
+                            ':alumno'       => $alumno,
+                            ':edad'         => H::getAge($_student->birthday),
+                            ':ciclo'        => $_class->year,
+                            ':grupo'        => $_class->course . ' ' . $_class->group_name,
+                            ':maestro'      => $teacher_name,
+                            ':fecha_inicio' => $_student->date_begin,
+                            ':fecha_termino' => $_class->date_end,
+                            ':escuela'       => $_student->workplace,
+                            ':grado'         => $_student->studies .' '. $_student->lastgrade,
+                            ':becado'        => 0,
+                            ':padrino'       => '',
+                            ':sep'           => 0,
+                            ':created_at'    => H::getTime()
+                        ));
+
+                        if ($history->rowCount() < 1) {
+                            $commint = false;
+                        }
+                    }
+                }
+
+
+                if ($commit) {
+                    $change = $database->prepare("UPDATE students_groups SET class_id = :clase WHERE student_id = :alumno;");
+                    $save = $change->execute(array(':clase' => $clase, ':alumno' => $alumno));
                     $status = 1;
                     if($clase === null){
                         $status = 2;

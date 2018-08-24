@@ -46,6 +46,27 @@ var Dashboard = {
     manageDatabase: function(){
         console.log('Management View');
 
+        $('#createTable').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'dashboard/nuevaTabla'
+            })
+            .then(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red');
+                }
+            });//End Ajax
+        });
+
         $('#cleanDatabase').click(function(event) {
             event.preventDefault();
 

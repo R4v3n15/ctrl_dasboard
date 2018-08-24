@@ -420,32 +420,30 @@ class GeneralModel
 
 
 
-    public static function cleanDatabase(){
+    public static function createTable(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
         $database->beginTransaction();
 
         try{
-            $cleanAddress = $database->prepare("TRUNCATE TABLE address;");
-            $cleanAddress->execute();
-
-            $cleanBecas = $database->prepare("TRUNCATE TABLE becas;");
-            $cleanBecas->execute();
-
-            $cleanStudents = $database->prepare("TRUNCATE TABLE students;");
-            $cleanStudents->execute();
-
-            $cleanDetails = $database->prepare("TRUNCATE TABLE students_details;");
-            $cleanDetails->execute();
-
-            $cleanGroups = $database->prepare("TRUNCATE TABLE students_groups;");
-            $cleanGroups->execute();
-
-            $cleanPays = $database->prepare("TRUNCATE TABLE students_pays;");
-            $cleanPays->execute();
-
-            $cleanTutors = $database->prepare("TRUNCATE TABLE tutors;");
-            $cleanTutors->execute();
+            $newTable = $database->prepare("CREATE TABLE student_history(
+                    `history_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    `student_id` int(11) UNSIGNED NOT NULL COMMENT 'Id del alumno',
+                    `student_age` tinyint(4) UNSIGNED NOT NULL COMMENT 'edad durante el curso',
+                    `ciclo` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'ciclo escolar',
+                    `student_group` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Grupo al que pertenecia',
+                    `teacher_group` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Maestro del curso',
+                    `student_init_date` date NOT NULL COMMENT 'fecha en que inicio el curso',
+                    `student_end_date` date NOT NULL COMMENT 'fecha en que termino el curso',
+                    `student_school` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Escuela al que pertenecia',
+                    `student_grade` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Grado de estudios',
+                    `student_becado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'si estaba becado',
+                    `student_sponsor` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'numbre del padrino',
+                    `student_sep` tinyint(1) NOT NULL COMMENT 'si estaba registrado en la sep',
+                    `created_at` datetime NOT NULL COMMENT 'fecha de creacion del registro',
+                    PRIMARY KEY (`history_id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+            $newTable->execute();
 
         } catch (PDOException $e) {
             $commit = false;
@@ -453,10 +451,10 @@ class GeneralModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; Error al tratar de limpiar Base de Datos!');
+            return array('success' => false, 'message' => '&#x2718; Error al tratar de actualizar Base de Datos!');
         }else {
             $database->commit();
-            return array('success' => true, 'message' => '&#x2713; Base de Datos limpiada correctamente!!');
+            return array('success' => true, 'message' => '&#x2713; Base de Datos actualizada correctamente!!');
         }
     }
 
