@@ -46,31 +46,52 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link <?= View::active($filename, 'dashboard') ? 'active': '';?>" href="<?= $base_url; ?>dashboard">
-                              <span data-feather="home"></span>
-                              Dashboard <span class="sr-only">(current)</span>
+                              <span data-feather="calendar"></span>
+                              Calendario <span class="sr-only">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item accordion" id="accordionExample">
                             <a class="nav-link <?= View::active($filename, 'alumnos') ? 'active': '';?> collapsed"
                                 data-toggle="collapse"
-                                data-target="#testCollapse"
+                                data-target="#studentsCollapse"
+                                id="students_menu"
                                 href="javascript:void(0)">
-                              <span data-feather="file"></span>
-                              Alumnos
+                              <span data-feather="users"></span>
+                              Alumnos <span data-feather="chevron-down"></span>
                             </a>
-                            <div id="testCollapse" 
+                            <div id="studentsCollapse" 
                                  class="collapse ml-3" 
                                  aria-labelledby="headingTwo" 
                                  data-parent="#accordionExample">
                                 <ul class="list-group">
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos">Alumnos</a></li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Alumnos</a></li>
                                     <?php if ($user_type !== 3): ?>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/inscribir">Nuevo</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/becados">Becados</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/sep">Sep</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/baja">Baja</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/egresados">Egresados</a></li>
-                                    <li class="dropdown-item"><a href="<?= $base_url; ?>alumnos/eliminados">Eliminados</a></li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/inscribir">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Nuevo</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/becados">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Becados</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/sep">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Sep</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/baja">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Baja</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/egresados">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Egresados</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a href="<?= $base_url; ?>alumnos/eliminados">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Eliminados</a>
+                                    </li>
                                     <?php endif ?>
                                 </ul>
                             </div>
@@ -78,7 +99,7 @@
                         <?php if ($user_type !== 3): ?>
                         <li class="nav-item">
                             <a class="nav-link <?= View::active($filename, 'cursos') ? 'active': '';?>" href="<?= $base_url; ?>curso">
-                              <span data-feather="layers"></span>
+                              <span data-feather="book-open"></span>
                               Clases
                             </a>
                         </li>
@@ -173,7 +194,7 @@
                         <?php endif ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= $base_url; ?>mapa">
-                              <span data-feather="file-text"></span>
+                              <span data-feather="map"></span>
                               Mapa
                             </a>
                         </li>

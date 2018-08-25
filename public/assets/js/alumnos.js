@@ -3,7 +3,8 @@ var Alumnos = {
         alumnos: [],
         currentPage: 0,
         tableView: 1,
-        dataTable: null
+        dataTable: null,
+        tableStatus: false
     },
 
     initialize: function(){
@@ -30,6 +31,23 @@ var Alumnos = {
         // Iniciado desde main.js
         let active_view = sessionStorage.getItem('vista_alumnos');
         this.studentsTable();
+
+        if (sessionStorage.getItem('collapse_menu') !== null) {
+            $('#students_menu').prop('aria-expanded', 'true');
+            $('#studentsCollapse').addClass('show');
+        } else {
+            $('#students_menu').prop('aria-expanded', 'false');
+            $('#studentsCollapse').removeClass('show');
+        }
+
+        $('#students_menu').click(function(event) {
+            if (sessionStorage.getItem('collapse_menu') === null) {
+                sessionStorage.setItem('collapse_menu', 'collapse');
+            } else {
+                sessionStorage.removeItem('collapse_menu');
+                console.log(sessionStorage.getItem('collapse_menu'));
+            }
+        });
     },
 
     getActiveView: function(){
@@ -57,7 +75,7 @@ var Alumnos = {
         let _this = this;
 
         let table = $('#table_students').DataTable({
-                        "stateSave": true,
+                        "stateSave": _this.vars.tableStatus,
                         "lengthMenu": [[25, 50, 100], [25, 50, 100]],
                         "ajax": {
                             'url': _root_ + 'alumnos/getAlumnos',
@@ -85,7 +103,7 @@ var Alumnos = {
                         ],
                         "rowCallback": function( row, data, index ) {
                             if(data.finished) {
-                                $(row).addClass('border-t-danger')
+                                $(row).addClass('bg-tr-danger')
                             }
                         }, 
                         buttons: [
@@ -190,6 +208,8 @@ var Alumnos = {
 
         $('#table_students_wrapper button').removeClass('dt-button');
 
+        _this.vars.tableStatus = true;
+
         // Busqueda Por Categoria
         // $('.dataTables_filter input').unbind().bind('keyup', function() {
         //     let colIndex = parseInt($('#select').val());
@@ -230,6 +250,7 @@ var Alumnos = {
                 $.each(data, function(i, value){
                     if (parseInt(value) > 0) {
                         $('#'+i).text(value);
+                        $('#'+i).parent().removeClass('d-none');
                     } else {
                         $('#'+i).parent().addClass('d-none');
                     }

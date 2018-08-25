@@ -106,9 +106,12 @@ var Cursos = {
         $('#addClase').on('click', function(event){
             event.preventDefault();
             $('#modalAddClasse').modal('show');
+            $('#dias').select2({
+                placeholder: 'Seleccione..',
+                allowClear: true
+            });
         });
 
-        $('#dias').select2();
 
         $('#frmCreateClase').submit(function(event){
             event.preventDefault();
@@ -125,7 +128,10 @@ var Cursos = {
                    callout.removeClass(v);
                 });
 
-                if (response.success) { callout.addClass('bg-success'); }
+                if (response.success) { 
+                    $('#frmCreateClase .form-control').val('');
+                    callout.addClass('bg-success'); 
+                }
                 else { callout.addClass('bg-danger'); }
 
                 $('#alert-content').html(response.message);

@@ -649,7 +649,7 @@ class AlumnoModel
         $database->beginTransaction();
         try{
 
-            if ($reinscribir) {
+            if ($reinscribir && $clase !== null) {
                 $_student = $database->prepare("SELECT s.birthday, sd.ocupation, sd.workplace, 
                                                        sd.studies, sd.lastgrade, sg.class_id, sg.date_begin
                                                 FROM students as s, 
@@ -748,6 +748,7 @@ class AlumnoModel
                     // En espera
                     $status = 2;
                 }
+
                 $update  = $database->prepare("UPDATE students SET status = :status WHERE student_id = :student;");
                 $updated = $update->execute(array(':status' => $status, ':student' => $alumno));
 
@@ -783,7 +784,7 @@ class AlumnoModel
                 $alumno = $datos[0];
                 $reinscribir = (int)$datos[1] === 1 ? true : false;
 
-                if ($reinscribir) {
+                if ($reinscribir && $clase !== null) {
                     $_student = $database->prepare("SELECT s.birthday, sd.ocupation, sd.workplace, 
                                                            sd.studies, sd.lastgrade, sg.class_id, sg.date_begin
                                                     FROM students as s, 

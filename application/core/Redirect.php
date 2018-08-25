@@ -27,7 +27,7 @@ class Redirect
      */
     public static function home()
     {
-        header("location: " . Config::get('URL')."dashboard");
+        header("location: " . Config::get('URL')."alumnos");
     }
 
     /**

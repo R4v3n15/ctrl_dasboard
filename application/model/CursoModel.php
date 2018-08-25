@@ -52,6 +52,30 @@ class CursoModel
                                        $c_inscripcion, $maestro)
     {
         $database = DatabaseFactory::getFactory()->getConnection();
+
+        // Verificar que no exista ya la clase
+        $validar = $database->prepare("SELECT cu.course, g.group_name
+                                       FROM classes as c,
+                                            courses as cu,
+                                            groups as g, 
+                                            schedules as h
+                                        WHERE c.course_id  = cu.course_id
+                                          AND c.group_id   = g.group_id
+                                          AND c.schedul_id = h.schedul_id
+                                          AND c.course_id  = :course
+                                          AND c.group_id   = :group
+                                          AND h.year       = :ciclo
+                                        LIMIT 1;");
+        $validar->execute(array(':course' => $curso, ':group' => $grupo, ':ciclo' => $ciclo));
+
+        if ($validar->rowCount() > 0) {
+            $clase = $validar->fetch();
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; '.$clase->course.' '.$clase->group_name.' ya esta registrado en el ciclo escolar '.$ciclo);
+        }
+
+
         $commit = true;
         $dias  = (array)$dias;
         $h_inicio = date('H:i', strtotime($h_inicio));
@@ -201,6 +225,7 @@ class CursoModel
                 $classe[$clase->class_id] = new stdClass();
                 $classe[$clase->class_id]->id         = $clase->class_id;
                 $classe[$clase->class_id]->name       = $clase->course.' '.$clase->group_name;
+                $classe[$clase->class_id]->ciclo      = $clase->year;
                 $classe[$clase->class_id]->inicia     = H::formatShortDate($clase->date_init);
                 $classe[$clase->class_id]->termina    = H::formatShortDate($clase->date_end);
                 $classe[$clase->class_id]->horario    = $hora_inicio.' - '.$hora_salida;
@@ -229,11 +254,12 @@ class CursoModel
 
         if (count($classes) > 0) {
             echo '<div class="table-responsive">';
-            echo '<table class="table table-striped table-sm table-bordered">';
+            echo '<table class="table table-hover table-sm table-bordered">';
             echo '<thead>';
                 echo '<tr class="info">';
                 echo '<th>ID</th>';
                 echo '<th>Clase</th>';
+                echo '<th>Ciclo</th>';
                 echo '<th>Inicio</th>';
                 echo '<th>Termino</th>';
                 echo '<th>Dias</th>';
@@ -262,7 +288,7 @@ class CursoModel
                                             <i class="fas fa-trash"></i>
                                 </button>';
                     if ($clase->concluido) { 
-                        $rowClase =  'border-l-danger';
+                        $rowClase =  'border-l-danger bg-tr-danger';
 
                         $options  = '<button type="button" id="'.$clase->id.'" data-horario="'.$clase->horario_id.'"
                                         class="btn btn-success restartClase mr-2"
@@ -280,6 +306,7 @@ class CursoModel
                     echo '<tr class="'.$rowClase.'">';
                     echo '<td>'.$counter++.'</td>';
                     echo '<td>'.$clase->name.'</td>';
+                    echo '<td>'.$clase->ciclo.'</td>';
                     echo '<td>'.$clase->inicia.'</td>';
                     echo '<td>'.$clase->termina.'</td>';
                     echo '<td>';

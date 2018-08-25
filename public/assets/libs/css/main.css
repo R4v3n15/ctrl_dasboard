@@ -25,18 +25,18 @@
     background: rgba(58,219,118, 0.2) !important;
 }
 
-.border-t-danger {
+.bg-tr-danger {
     background: rgba(250,50,10,0.12) !important;
 }
 
 .border-l-danger {
-    border-left: 7px solid #ec5840 !important;
+    border-left: 10px solid #ec5840 !important;
 }
 .border-l-warning {
     border-left: 7px solid #ffae00;
 }
 .border-l-success {
-    border-left: 7px solid #3adb76 !important;
+    border-left: 10px solid #3adb76 !important;
 }
 .border-l-secondary {
     border-left: 7px solid #777;
@@ -124,8 +124,6 @@
   margin-bottom: 5px;
   padding: 5px 6px;
 }
-
-
 
 .table-responsive {
 	/*box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 1px 3px rgba(0,0,0,0.23);*/
