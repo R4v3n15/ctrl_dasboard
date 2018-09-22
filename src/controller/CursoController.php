@@ -16,6 +16,9 @@ class CursoController extends Controller
     }
 
     public function index() {
+        // dump('Registry Found!!');
+        // dump(CursoModel::all());
+        // exit();
         $this->View->render('cursos/index', array(
             'user_type' => Session::get('user_type'),
             'dias'      => CursoModel::getDays(),
@@ -23,6 +26,10 @@ class CursoController extends Controller
             'niveles'   => CursoModel::getGroups(),
             'teachers'  => MaestroModel::getTeachers()
         ));
+    }
+
+    public function clases(){
+
     }
 
     public function obtenerClases(){

@@ -1,7 +1,15 @@
 <?php
+use Core\Eloquent;
 
-class CursoModel
-{
+// class CursoModel extends Illuminate\Database\Eloquent\Model {
+//     // Especificar nombre de la tabla
+//     protected $table = 'classes';
+// }
+
+// exit();
+
+class CursoModel {
+
     public static function getCourses() {
         $database = DatabaseFactory::getFactory()->getConnection();
 

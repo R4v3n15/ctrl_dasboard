@@ -9,10 +9,14 @@
         "php": ">=5.5.0",
         "phpmailer/phpmailer": "~5.2",
         "gregwar/captcha": "~1.1",
-        "phpunit/phpunit": "4.8.*|5.7.*"
+        "phpunit/phpunit": "4.8.*|5.7.*",
+        "illuminate/database": "*"
     },
     "autoload": {
-        "psr-4": { "": ["src/core/", "src/model/"] }
+        "psr-4": { 
+                "": ["src/core/", "src/model/"],
+                "Core\\" : "src/core/"
+            }
     },
     "require": {
         "symfony/var-dumper": "^3.2"
