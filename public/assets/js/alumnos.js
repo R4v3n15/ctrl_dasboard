@@ -75,7 +75,7 @@ var Alumnos = {
         let _this = this;
 
         let table = $('#table_students').DataTable({
-                        "stateSave": _this.vars.tableStatus,
+                        "stateSave": true,
                         "lengthMenu": [[25, 50, 100], [25, 50, 100]],
                         "ajax": {
                             'url': _root_ + 'alumnos/getAlumnos',
@@ -86,10 +86,9 @@ var Alumnos = {
                         },
                         "columnDefs": [ {
                             "searchable": false,
-                            "orderable": false,
+                            "orderable": true,
                             "targets": 0
                         } ],
-                        "order": [[ 1, 'asc' ]],
                         "columns": [
                             { "data": "count" },
                             { "data": "avatar" },

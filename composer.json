@@ -1,19 +1,18 @@
 {
-    "name": "panique/huge",
+    "name": "cescolar",
     "type": "project",
-    "description": "A full-feature user authentication / login system embedded into a simple but powerful MVC framework structure",
-    "keywords": ["login", "auth", "user", "authentication", "mvc", "membership"],
-    "homepage": "https://github.com/panique/huge",
+    "description": "A backend system for school control of Naatik Institute",
+    "keywords": ["backend", "school", "control"],
+    "homepage": "https://github.com/R4v3n15/ctrl_dasboard",
     "license": "MIT",
     "require-dev": {
         "php": ">=5.5.0",
         "phpmailer/phpmailer": "~5.2",
         "gregwar/captcha": "~1.1",
-        "phpunit/phpunit": "4.8.*|5.7.*",
-        "illuminate/database": "*"
+        "phpunit/phpunit": "4.8.*|5.7.*"
     },
     "autoload": {
-        "psr-4": { "": ["application/core/", "application/model/"] }
+        "psr-4": { "": ["src/core/", "src/model/"] }
     },
     "require": {
         "symfony/var-dumper": "^3.2"
