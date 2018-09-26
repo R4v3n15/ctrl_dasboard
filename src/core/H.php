@@ -99,7 +99,7 @@ class H
     }
 
     public static function getCiclo($month) {
-        if ($month < 8) {
+        if ((int)$month < 8) {
             // Agosto, Septiembre, Octubre, Noviembre, Diciembre
             $ciclo = 'B';
         } else {
@@ -107,14 +107,5 @@ class H
             $ciclo = 'A';
         }
          return $ciclo;
-    }
-
-    public static function p($array){
-        print("<pre>".print_r($array,true)."</pre>");
-        exit();
-    }
-
-    public static function f($string){
-        print("<pre>".$string."</pre>");
     }
 }

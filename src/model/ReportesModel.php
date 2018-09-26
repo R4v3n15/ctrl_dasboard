@@ -23,10 +23,7 @@ class ReportesModel
             $counter = 1;
             foreach ($students as $alumno) {
                 $id_grupo = 0;
-                $grupo = '<a href="javascript:void(0)" 
-                             class="link add_to_group badge badge-warning" 
-                             data-student="'.$alumno->student_id.'"
-                             title="Agregar grupo">Agregar a Grupo</a>';
+                $grupo = '<span class="badge badge-secondary">Sin Grupo</span>';
 
                 if ($alumno->class_id !== NULL) {
                     $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
@@ -41,13 +38,7 @@ class ReportesModel
                         $clase = $clase->fetch();
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
-                        $grupo = '<a class="change_group"
-                                     href="javascript:void(0)"
-                                     data-student="'.$alumno->student_id.'"
-                                     data-class="'.$clase->class_id.'"
-                                     data-course="'.$clase->course_id.'"
-                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                        $grupo = '<span class="badge badge-info">'.$nombre_curso.' '.$clase->group_name.'</span>';
                     }
                 }
 

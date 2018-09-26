@@ -5,17 +5,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="<?php Config::get('URL'); ?>favicon.ico">
+    <link rel="icon" href="<?= _root(); ?>favicon.ico">
     <!-- CSS -->
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/snackbar.min.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/dashboard.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/dataTables.min.css" rel="stylesheet">
-    <!-- <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome.min.css" rel="stylesheet"> -->
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/fontawesome-all.min.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/main.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/libs/css/cards.css" rel="stylesheet">
-    <link href="<?php echo Config::get('URL'); ?>assets/css/icons.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/snackbar.min.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/dashboard.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/dataTables.min.css" rel="stylesheet">
+    <!-- <link href="<?= _root(); ?>assets/libs/css/fontawesome.min.css" rel="stylesheet"> -->
+    <link href="<?= _root(); ?>assets/libs/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/main.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/libs/css/cards.css" rel="stylesheet">
+    <link href="<?= _root(); ?>assets/css/icons.css" rel="stylesheet">
     <?php  
         if(Registry::has('css')){
             Registry::get('css');
@@ -24,7 +24,6 @@
 </head>
 <body>
     <?php  if (Session::userIsLoggedIn()): 
-        $base_url = Config::get('URL'); 
         $user     = Session::get('user_name'); 
         $user_type = (int)Session::get('user_type');?>
     
@@ -45,7 +44,7 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'dashboard') ? 'active': '';?>" href="<?= $base_url; ?>dashboard">
+                            <a class="nav-link <?= View::active($filename, 'dashboard') ? 'active': '';?>" href="<?= _root(); ?>dashboard">
                               <span data-feather="calendar"></span>
                               Calendario <span class="sr-only">(current)</span>
                             </a>
@@ -65,31 +64,31 @@
                                  data-parent="#accordionExample">
                                 <ul class="list-group">
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos">
+                                        <a href="<?= _root(); ?>alumnos">
                                             <i class="fa fa-chevron-right text-secondary"></i> Alumnos</a></li>
                                     <?php if ($user_type !== 3): ?>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/inscribir">
+                                        <a href="<?= _root(); ?>alumnos/inscribir">
                                             <i class="fa fa-chevron-right text-secondary"></i> Nuevo</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/becados">
+                                        <a href="<?= _root(); ?>alumnos/becados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Becados</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/sep">
+                                        <a href="<?= _root(); ?>alumnos/sep">
                                             <i class="fa fa-chevron-right text-secondary"></i> Sep</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/baja">
+                                        <a href="<?= _root(); ?>alumnos/baja">
                                             <i class="fa fa-chevron-right text-secondary"></i> Baja</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/egresados">
+                                        <a href="<?= _root(); ?>alumnos/egresados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Egresados</a>
                                     </li>
                                     <li class="dropdown-item">
-                                        <a href="<?= $base_url; ?>alumnos/eliminados">
+                                        <a href="<?= _root(); ?>alumnos/eliminados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Eliminados</a>
                                     </li>
                                     <?php endif ?>
@@ -98,25 +97,25 @@
                         </li>
                         <?php if ($user_type !== 3): ?>
                         <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'cursos') ? 'active': '';?>" href="<?= $base_url; ?>curso">
+                            <a class="nav-link <?= View::active($filename, 'cursos') ? 'active': '';?>" href="<?= _root(); ?>curso">
                               <span data-feather="book-open"></span>
                               Clases
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'maestros') ? 'active': '';?>" href="<?= $base_url; ?>maestro">
+                            <a class="nav-link <?= View::active($filename, 'maestros') ? 'active': '';?>" href="<?= _root(); ?>maestro">
                               <span data-feather="users"></span>
                               Maestros
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'padrinos') ? 'active': '';?>" href="<?= $base_url; ?>padrinos">
+                            <a class="nav-link <?= View::active($filename, 'padrinos') ? 'active': '';?>" href="<?= _root(); ?>padrinos">
                               <span data-feather="users"></span>
                               Padrinos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?= View::active($filename, 'pagos') ? 'active': '';?>" href="<?= $base_url; ?>pagos">
+                            <a class="nav-link <?= View::active($filename, 'pagos') ? 'active': '';?>" href="<?= _root(); ?>pagos">
                               <span data-feather="credit-card"></span>
                               Pagos
                             </a>
@@ -133,38 +132,38 @@
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>reportes/alumnos">
+                            <a class="nav-link" href="<?= _root(); ?>reportes/alumnos">
                               <span data-feather="file-text"></span>
                               Reportes
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>dashboard/admin">
+                            <a class="nav-link" href="<?= _root(); ?>dashboard/admin">
                               <span data-feather="database"></span>
                               Administrar BD
                             </a>
                         </li>
                         <?php if ($user_type === 777): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>user">
+                            <a class="nav-link" href="<?= _root(); ?>user">
                               <span data-feather="user"></span>
                               Mi Perfil
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>register/index">
+                            <a class="nav-link" href="<?= _root(); ?>register/index">
                               <span data-feather="user-plus"></span>
                               Nuevo Usuario
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>importar">
+                            <a class="nav-link" href="<?= _root(); ?>importar">
                               <span data-feather="file-text"></span>
                               Importar
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>importar/repetidos">
+                            <a class="nav-link" href="<?= _root(); ?>importar/repetidos">
                               <span data-feather="file-text"></span>
                               Repetidos
                             </a>
@@ -193,7 +192,7 @@
                         </li>
                         <?php endif ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= $base_url; ?>mapa">
+                            <a class="nav-link" href="<?= _root(); ?>mapa">
                               <span data-feather="map"></span>
                               Mapa
                             </a>

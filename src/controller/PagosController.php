@@ -12,9 +12,19 @@ class PagosController extends Controller
     }
 
     public function index() {
-        $this->View->render('pagos/index', array(
-            'cursos' => CursoModel::getCourses()
-        ));
+        // $this->View->render('pagos/index', array(
+        //     'cursos' => CursoModel::getCourses()
+        // ));
+
+        if ((int)date('m') < 8) {
+            $this->View->render('pagos/pagos_a', array(
+                'cursos' => CursoModel::getCourses()
+            ));
+        } else {
+            $this->View->render('pagos/pagos_b', array(
+                'cursos' => CursoModel::getCourses()
+            ));
+        }
     }
 
     public function tablaPagos() {

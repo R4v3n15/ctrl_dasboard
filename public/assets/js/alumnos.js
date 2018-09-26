@@ -84,11 +84,15 @@ var Alumnos = {
                                 'curso': _this.getActiveView()
                             }
                         },
-                        "columnDefs": [ {
-                            "searchable": false,
-                            "orderable": true,
-                            "targets": 0
-                        } ],
+                        dom: 'Bfrtip',
+                        "columnDefs": [ 
+                            {
+                                "searchable": false,
+                                "orderable": true,
+                                "targets": 0
+                            },
+                            // {"className": "dt-center", "targets": "_all"}
+                        ],
                         "columns": [
                             { "data": "count" },
                             { "data": "avatar" },
@@ -206,6 +210,7 @@ var Alumnos = {
         });
 
         $('#table_students_wrapper button').removeClass('dt-button');
+        $('#table_students tbody td.dt-center').css('text-align', 'center');
 
         _this.vars.tableStatus = true;
 

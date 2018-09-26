@@ -8,18 +8,18 @@
         <div class="footer"></div>
     <script>
         var _ciclo = "<?= H::getCiclo(date('m')); ?>";
-        var _root_ = "<?= Config::get('URL');  ?>";
+        var _root_ = "<?= _root(); ?>";
     </script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/modernizr.min.js"></script>
-	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/jquery-331.min.js"></script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/popper.min.js"></script>
-	<script src="<?php echo Config::get('URL'); ?>assets/libs/js/bootstrap.min.js"></script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/coreDataTables.min.js"></script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/dataTables.min.js"></script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/feather.min.js"></script>
-    <script src="<?php echo Config::get('URL'); ?>assets/libs/js/snackbar.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/modernizr.min.js"></script>
+	<script src="<?= _root(); ?>assets/libs/js/jquery-331.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/popper.min.js"></script>
+	<script src="<?= _root(); ?>assets/libs/js/bootstrap.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/coreDataTables.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/dataTables.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/feather.min.js"></script>
+    <script src="<?= _root(); ?>assets/libs/js/snackbar.min.js"></script>
 
-    <script src="<?php echo Config::get('URL'); ?>assets/js/main.js"></script>
+    <script src="<?= _root(); ?>assets/js/main.js"></script>
 
     <script>
         $(function () {

@@ -11,6 +11,7 @@
                         <span class="input-group-text">Buscar por:</span>
                     </div>
                     <select class="form-control rounded-0" id="select" name="select">
+                        <option value="0">Seleccione..</option>
                         <option value="1">Nombre</option>
                         <option value="2">Apellido</option>
                         <option value="3">Escolaridad</option>
@@ -29,7 +30,7 @@
                             <th class="text-center">Nombre</th>
                             <th class="text-center">Apellido</th>
                             <th class="text-center">Escolaridad</th>
-                            <th class="text-center">Escuela</th>
+                            <th class="text-center">Escuela/Lugar de Trabajo</th>
                             <th class="text-center">Edad</th>
                             <th class="text-center">Grupo</th>
                             <th class="text-center">Tutor</th>

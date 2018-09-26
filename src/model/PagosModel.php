@@ -2,122 +2,6 @@
 
 class PagosModel
 {
-    public static function renderPayTable($course, $ciclo){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $curso = (int)$course;
-        $students = GeneralModel::studentsByCourse($curso);
-
-        $datos = [];
-        if ($students !== null) {
-            $counter  = 1;
-
-            foreach ($students as $alumno) {
-                $id_grupo = 0;
-                $grupo = '';
-
-                if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
-                                                 FROM classes as c, courses as cu, groups as g
-                                                 WHERE c.class_id  = :clase
-                                                   AND c.status    = 1
-                                                   AND c.course_id = cu.course_id
-                                                   AND c.group_id  = g.group_id
-                                                 LIMIT 1;");
-                    $clase->execute(array(':clase' => $alumno->class_id));
-                    if ($clase->rowCount() > 0) {
-                        $clase = $clase->fetch();
-                        $id_grupo = $clase->class_id;
-                        $nombre_curso = ucwords(strtolower($clase->course));
-                        $grupo = '<a class="change_group"
-                                     href="javascript:void(0)"
-                                     data-student="'.$alumno->student_id.'"
-                                     data-class="'.$clase->class_id.'"
-                                     data-course="'.$clase->course_id.'"
-                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
-                    }
-                } else {
-                    continue;
-                }
-
-                //-> Tutor del Alumno
-                $id_tutor     = 0;
-                $nombre_tutor = '- - - -';
-                if ($alumno->id_tutor !== NULL) {
-                    $tutor= $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
-                                                FROM tutors
-                                                WHERE id_tutor = :tutor
-                                                LIMIT 1;");
-                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
-                    if ($tutor->rowCount() > 0) {
-                        $tutor = $tutor->fetch();
-                        $id_tutor = $tutor->id_tutor;
-                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet;
-                    }
-                }
-
-
-                $pagos = self::studentPayList($alumno->student_id);
-                if ($ciclo === "A") {
-                    $ago=0; $sep=0; $oct=0; $nov=0; $dic=0; $beca='';
-                    if ($pagos !== null) {
-                        $ago=$pagos->ago; $sep=$pagos->sep; $oct=$pagos->oct; 
-                        $nov=$pagos->nov; $dic=$pagos->dic; $beca='';
-                    }
-                    
-                    $info = array(
-                        'count'      => $counter,
-                        'student'    => $alumno->student_id,
-                        'name'       => $alumno->name,
-                        'surname'    => $alumno->name,
-                        'info'       => 'Pending...',
-                        'aug'        => $ago,
-                        'sep'        => $sep,
-                        'oct'        => $oct,
-                        'nov'        => $nov,
-                        'dec'        => $dic,
-                        'opt'        => 'See more..'
-                    );
-                } else {
-                    $ene=0; $feb=0; $mar=0; $abr=0; $may=0; $jun=0; $jul=0; $beca='';
-                    if ($pagos !== null) {
-                        $ene=$pagos->ene; $feb=$pagos->feb; $mar=$pagos->mar; $abr=$pagos->abr; 
-                        $may=$pagos->may; $jun=$pagos->jun; $jul=$pagos->jul;
-                    }
-                    $info = array(
-                        'count'      => $counter,
-                        'student'    => $alumno->student_id,
-                        'name'       => $alumno->name,
-                        'surname'    => $alumno->name,
-                        'info'       => 'Pending...',
-                        'jan'        => $ene,
-                        'feb'        => $feb,
-                        'mar'        => $mar,
-                        'apr'        => $abr,
-                        'may'        => $may,
-                        'jun'        => $jun,
-                        'jul'        => $jul,
-                        'opt'        => 'See more..'
-                    );
-                }
-
-                array_push($datos, $info);
-                $counter++;
-
-                // $datos[$counter]->edad     = $alumno->age;
-                // $datos[$counter]->sexo     = $alumno->genre;
-                // $datos[$counter]->avatar   = $alumno->avatar;
-                // $datos[$counter]->estudios = $alumno->studies.' '.$alumno->lastgrade;
-                // $datos[$counter]->id_grupo = $id_grupo;
-                // $datos[$counter]->grupo    = $grupo;
-                // $datos[$counter]->id_tutor = $id_tutor;
-                // $datos[$counter]->tutor    = $nombre_tutor;
-            }
-        }
-
-        return array('data' => $datos);
-    }
-
     public static function studentPayList($student) {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -136,6 +20,243 @@ class PagosModel
         }
 
         return null;
+    }
+
+    public static function getContactInfo($student, $tutor){
+        if ((int)$tutor !== 0) {
+            $database = DatabaseFactory::getFactory()->getConnection();
+            $_sql = $database->prepare("SELECT cellphone, phone, phone_alt
+                                        FROM tutors
+                                        WHERE id_tutor = :tutor
+                                        LIMIT 1;");
+            $_sql->execute(array(':tutor' => $tutor));
+            if ($_sql->rowCount() > 0) {
+                $row = $_sql->fetch();
+                $phones = '';
+                $phones .= 'Celular: ' .   $row->cellphone . '<br>';
+                $phones .= 'Tel. Casa: ' . $row->phone . '<br>';
+                $phones .= 'Tel. Alt.:' .  $row->phone_alt;
+                return $phones;
+            } else {
+                return '- - -';
+            }
+        }
+
+        return 'N/A';
+    }
+
+    public static function getRelatives($student, $tutor) {
+        if ((int)$tutor !== 0) {
+            $database = DatabaseFactory::getFactory()->getConnection();
+            $_sql = $database->prepare("SELECT CONCAT_WS(' ',name, surname) as relative
+                                        FROM students
+                                        WHERE id_tutor    = :tutor
+                                          AND student_id != :student");
+            $_sql->execute(array(':tutor' => $tutor, ':student' => $student));
+            $relatives = '';
+            if ($_sql->rowCount() > 0) {
+                foreach ($_sql as $row) {
+                    $relatives .= $row->relative . '<br>';
+                }
+                return $relatives;
+            } else {
+                return 'No';
+            }
+        }
+
+        return 'NO';
+    }
+
+    public static function renderPayTable($course, $ciclo){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $curso = (int)$course;
+        $students = GeneralModel::studentsByCourse($curso);
+
+        $datos = [];
+        if ($students !== null) {
+            $counter  = 1;
+
+            foreach ($students as $alumno) {
+                $id_grupo = 0;
+
+                if ($alumno->class_id === NULL) {
+                    continue;
+                }
+
+                $opt = '<a href="javascript:void(0)"
+                            data-student="'.$alumno->student_id.'"
+                            data-name="'.$alumno->name . ' ' . $alumno->surname.'"
+                            data-relatives="'.self::getRelatives($alumno->student_id, $alumno->id_tutor).'"
+                            class="btn btn-sm btn-info btn-shadow py-0 payAction">Pagar
+                            </a>';
+
+
+                $pagos = self::studentPayList($alumno->student_id);
+                if ($ciclo === "A") {
+                    $_ago=0; $_sep=0; $_oct=0; $_nov=0; $_dic=0; $beca='';
+                    $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
+                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
+                    if ($pagos !== null) {
+                        $_ago=$pagos->ago; 
+                        $_sep=$pagos->sep; 
+                        $_oct=$pagos->oct; 
+                        $_nov=$pagos->nov; 
+                        $_dic=$pagos->dic;
+
+                        if ($pagos->comment !== null && $pagos->comment !== '') {
+                                $comment = $pagos->comment . '..';
+                                $comment .= '<a href="javascript:void(0)" class="editComment" 
+                                                data-student="'.$alumno->student_id.'"
+                                                data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
+                        }
+
+                        $beca = (int)$pagos->becado_a === 1 ? '<i class="mdi-action-beca">B</i><br>' : '';
+                    }
+
+                    $ago =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="ago"
+                                        data-title="AGOSTO"
+                                        data-status="'.$_ago.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_ago).'</a>';
+
+                    $sep =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="sep"
+                                        data-title="SEPTIEMBRE"
+                                        data-status="'.$_sep.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_sep).'</a>';
+
+                    $oct =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="oct"
+                                        data-title="OCTUBRE"
+                                        data-status="'.$_oct.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_oct).'</a>';
+
+                    $nov =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="nov"
+                                        data-title="NOVIEMBRE"
+                                        data-status="'.$_nov.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_nov).'</a>';
+
+                    $dic =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="dic"
+                                        data-title="DICIEMBRE"
+                                        data-status="'.$_dic.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_dic).'</a>';
+
+                    
+                    $info = array(
+                        'count'      => $counter,
+                        'student'    => $alumno->student_id,
+                        'name'       => $alumno->name . ' ' . $alumno->surname,
+                        'info'       => self::getContactInfo($alumno->student_id, $alumno->id_tutor),
+                        'aug'        => $ago,
+                        'sep'        => $sep,
+                        'oct'        => $oct,
+                        'nov'        => $nov,
+                        'dec'        => $dic,
+                        'comment'    => $comment,
+                        'opt'        => $opt
+                    );
+                } else {
+                    $_ene=0; $_feb=0; $_mar=0; $_abr=0; $_may=0; $_jun=0; $_jul=0; $beca='';
+                    $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
+                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
+                    if ($pagos !== null) {
+                        $_ene=$pagos->ene; 
+                        $_feb=$pagos->feb; 
+                        $_mar=$pagos->mar; 
+                        $_abr=$pagos->abr; 
+                        $_may=$pagos->may; 
+                        $_jun=$pagos->jun; 
+                        $_jul=$pagos->jul;
+
+                        if ($pagos->comment !== null && $pagos->comment !== '') {
+                            $comment = $pagos->comment . '..';
+                            $comment .= '<a href="javascript:void(0)" class="editComment" 
+                                            data-student="'.$alumno->student_id.'"
+                                            data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
+                        }
+
+                        $beca = (int)$pagos->becado_b === 1 ? '<i class="mdi-action-beca">B</i><br>' : '';
+                    }
+
+                    $ene =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="ene"
+                                        data-title="ENERO"
+                                        data-status="'.$_ene.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_ene).'</a>';
+
+                    $feb =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="feb"
+                                        data-title="FEBRERO"
+                                        data-status="'.$_feb.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_feb).'</a>';
+
+                    $mar =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="mar"
+                                        data-title="MARZO"
+                                        data-status="'.$_mar.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_mar).'</a>';
+
+                    $abr =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="abr"
+                                        data-title="ABRIL"
+                                        data-status="'.$_abr.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_abr).'</a>';
+
+                    $may =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="may"
+                                        data-title="MAYO"
+                                        data-status="'.$_may.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_may).'</a>';
+
+                    $jun =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="jun"
+                                        data-title="JUNIO"
+                                        data-status="'.$_jun.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_jun).'</a>';
+
+                    $jul =  $beca . '<a href="javascript:void(0)" class="payMonth" 
+                                        data-student="'.$alumno->student_id.'" 
+                                        data-month="jul"
+                                        data-title="JULIO"
+                                        data-status="'.$_jul.'"
+                                        data-name="'.$alumno->name.'">'.self::statusIcon($_jul).'</a>';
+
+                    $info = array(
+                        'count'      => $counter,
+                        'student'    => $alumno->student_id,
+                        'name'       => $alumno->name .' '.$alumno->surname,
+                        'info'       => self::getContactInfo($alumno->student_id, $alumno->id_tutor),
+                        'jan'        => $ene,
+                        'feb'        => $feb,
+                        'mar'        => $mar,
+                        'apr'        => $abr,
+                        'may'        => $may,
+                        'jun'        => $jun,
+                        'jul'        => $jul,
+                        'comment'    => $comment,
+                        'opt'        => $opt
+                    );
+                }
+
+                array_push($datos, $info);
+                $counter++;
+            }
+        }
+
+        return array('data' => $datos);
     }
 
 
