@@ -148,6 +148,27 @@ class GeneralModel
         return null;
     }
 
+    public static function tablePayByCourse($course){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
+                                               s.lastname, s.age, s.genre, s.avatar, g.class_id,
+                                               g.convenio, sd.studies, sd.lastgrade, sd.workplace as school
+                                        FROM students as s, students_groups as g, students_details as sd, classes as c
+                                        WHERE s.status = 1
+                                          AND s.deleted  = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = c.class_id
+                                          AND s.student_id = sd.student_id
+                                          AND c.course_id  = :course 
+                                        ORDER BY s.surname ASC, s.lastname ASC;");
+        $students->execute(array(':course' => $course));
+        if ($students->rowCount() > 0) {
+            return $students->fetchAll();
+        }
+
+        return null;
+    }
+
     // Counter
     public static function countAll() {
         $database = DatabaseFactory::getFactory()->getConnection();

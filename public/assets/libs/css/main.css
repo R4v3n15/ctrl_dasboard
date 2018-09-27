@@ -21,6 +21,11 @@
   max-width: 12rem;
 }
 
+table.dataTable td {
+  text-align: center;
+  vertical-align: middle;
+}
+
 .bg-green {
     background: rgba(58,219,118, 0.2) !important;
 }

@@ -1,20 +1,19 @@
 var Pagos = {
 
     vars  : {
-        currentPage : 0,
+        PAGE : 1,
+        TABLE: null,
+        GRUPO: 1
     },
 
     initialize: function(){
         console.log('Pagos Initialize');
-        this.defaultActiveView();
-        // this.activeView();
+
         this.changePayTable();
         this.savePayment();
         this.saveComment();
         this.reportsViews();
 
-
-        // Test Functions
         this.definePayTable();
     },
 
@@ -48,7 +47,7 @@ var Pagos = {
                             'url': _root_ + 'pagos/tablaPagos',
                             "type": "POST",
                             'data': {
-                                'curso': 1,
+                                'curso': _this.vars.GRUPO,
                                 'ciclo': _ciclo
                             }
                         },
@@ -87,7 +86,7 @@ var Pagos = {
 
 
         this.countStudents();
-        this.vars.dataTable = table;
+        this.vars.TABLE = table;
 
         table.on( 'draw.dt', function () {
             let PageInfo = $('#tabla_pagos').DataTable().page.info();
@@ -100,20 +99,38 @@ var Pagos = {
 
         $('#tabla_pagos tbody').on( 'click', '.payMonth', function () {
             let student = $(this).data('student'),
-                month   = $(this).data('title');
+                month   = $(this).data('title'),
+                code    = $(this).data('month'),
+                status  = $(this).data('status');
 
             $('#month_name').text(month);
+            $('#student_id').val(student);
+            $('#month_to_pay').val(code);
+            $("#pay_action option[value='" + status +"']").prop("selected", true);
             $('#modalPayMonth').modal('show'); 
         });
 
         $('#tabla_pagos tbody').on( 'click', '.payAction', function () {
             let student   = $(this).data('student'),
                 name      = $(this).data('name'),
-                relatives = $(this).data('relatives');
+                relatives = $(this).data('relatives'),
+                comment   = $(this).data('comment');
 
             $('#nameStudent').text(name);
             $('#relativesStudent').html(relatives);
+            $('#payStudent').val(student);
+            $('#payComment').val(comment);
+            $('#monthToPay').html(_this.monthList());
             $('#modalPayAction').modal('show'); 
+        });
+
+        $('#tabla_pagos tbody').on( 'click', '.addComment', function () {
+            let student = $(this).data('student'),
+                comment = $(this).data('comment');
+
+            $('#id_alumno').val(student);
+            $('#comment').val(comment);
+            $('#modalAddComment').modal('show'); 
         });
 
         $('#tabla_pagos_wrapper button').removeClass('dt-button');
@@ -129,7 +146,7 @@ var Pagos = {
                             'url': _root_ + 'pagos/tablaPagos',
                             "type": "POST",
                             'data': {
-                                'curso': 1,
+                                'curso': _this.vars.GRUPO,
                                 'ciclo': _ciclo
                             }
                         },
@@ -165,7 +182,7 @@ var Pagos = {
 
 
         this.countStudents();
-        this.vars.dataTable = table;
+        this.vars.TABLE = table;
 
         table.on( 'draw.dt', function () {
             let PageInfo = $('#tabla_pagos').DataTable().page.info();
@@ -178,109 +195,77 @@ var Pagos = {
 
         $('#tabla_pagos tbody').on( 'click', '.payMonth', function () {
             let student = $(this).data('student'),
-                month   = $(this).data('title');
+                month   = $(this).data('title'),
+                code    = $(this).data('month'),
+                status  = $(this).data('status');
 
             $('#month_name').text(month);
+            $('#student_id').val(student);
+            $('#month_to_pay').val(code);
+            $("#pay_action option[value='" + status +"']").prop("selected", true);
             $('#modalPayMonth').modal('show'); 
         });
 
         $('#tabla_pagos tbody').on( 'click', '.payAction', function () {
             let student   = $(this).data('student'),
                 name      = $(this).data('name'),
-                relatives = $(this).data('relatives');
+                relatives = $(this).data('relatives'),
+                comment   = $(this).data('comment');
 
             $('#nameStudent').text(name);
             $('#relativesStudent').html(relatives);
+            $('#payStudent').val(student);
+            $('#payComment').val(comment);
+            $('#monthToPay').html(_this.monthList());
             $('#modalPayAction').modal('show'); 
+        });
+
+        $('#tabla_pagos tbody').on( 'click', '.addComment', function () {
+            let student = $(this).data('student'),
+                comment = $(this).data('comment');
+
+            $('#comment').val(comment);
+            $('#id_alumno').val(student);
+            $('#modalAddComment').modal('show'); 
         });
 
         $('#tabla_pagos_wrapper button').removeClass('dt-button');
     },
 
-    defaultActiveView: function() {
-        if (sessionStorage.getItem('payTable') === null) {
-            sessionStorage.setItem('payTable', 'tabla_1');
+    monthList: function(){
+        let months = '<option value="" hidden>Seleccione..</option>';
+        if (_ciclo == 'B') {
+            months += '<option value="ene">Enero</option>';
+            months += '<option value="feb">Febrero</option>';
+            months += '<option value="mar">Marzo</option>';
+            months += '<option value="abr">Abril</option>';
+            months += '<option value="may">Mayo</option>';
+            months += '<option value="jun">Junio</option>';
+            months += '<option value="jul">Julio</option>';
+        } else {
+            months += '<option value="ago">Agosto</option>';
+            months += '<option value="sep">Septiembre</option>';
+            months += '<option value="oct">Octubre</option>';
+            months += '<option value="nov">Noviembre</option>';
+            months += '<option value="dic">Diciembre</option>';
         }
+
+        return months;
     },
 
-    activeView: function() {
-        let _this = this;
-        let activeView  = sessionStorage.getItem('payTable');
-        let activeTable = $('#'+activeView).data('table');
-        // console.log(activeView, activeTable);
-        $('#'+activeView).addClass('active');
-
-        _this.tablePay(activeTable, _this.vars.currentPage);
-    },
-
-    getActiveTable: function() {
-        let _this = this;
-        let activeView  = sessionStorage.getItem('payTable');
-        let activeTable = $('#'+activeView).data('table');
-        return activeTable;
-    },
 
     changePayTable: function(){
         let _this = this;
         $('.pays_view').click(function(event){
             event.preventDefault();
-            let _new = $(this).attr('id');
+            let grupo = $(this).data('table');
             $('.pays_view').removeClass('active');
-            sessionStorage.setItem('payTable', _new);
-
-            _this.activeView();
-        });
-    },
-
-    tablePay: function(curso, page=0){
-        let _this = this;
-        $.ajax({
-            data: { curso: curso, page: page },
-            synch: 'true',
-            type: 'POST',
-            url: _root_ + 'pagos/getTablaPagos',
-            success: function(data){
-                $('#tabla_pagos').html(data);
-                _this.openModals();
-                _this.countStudents();
-                _this.navigationPage();
-            }
-        });
-    },
-
-    navigationPage: function(){
-        let _this = this;
-        $(".page-students").on('click', function(event){
-            event.preventDefault();
-            _this.vars.currentPage = parseInt($(this).data("students"));
-            _this.tablePay(_this.getActiveTable, _this.vars.currentPage);
-        });
-    },
-
-    openModals: function() {
-        let that = this;
-        // Modal para marcar pagos
-        $('.check_pay').on('click', function(event){
-            event.preventDefault();
-            let student_name = $(this).data('name'),
-                student_id   = $(this).data('student'),
-                month_title  = $(this).data('title'),
-                month_id     = $(this).data('month'),
-                status       = $(this).data('status');
-            $('#student_name').text(student_name);
-            $('#student_id').val(student_id);
-            $('#month_to_pay').val(month_id);
-            $('#month_name').text(month_title)
-            $("#pay_action option[value='" + status +"']").attr("selected", true);
-            $('#modalPayMonth').modal('show');
-        });
-
-        // Modal para agregar comentarios
-        $('.add_comment').click(function(event){
-            event.preventDefault();
-            $('#id_alumno').val($(this).data('student'));
-            $('#comment').val($(this).data('comment'));
-            $('#modalAddComment').modal('show');
+            $('#tabla_'+grupo).addClass('active');
+            _this.vars.GRUPO = grupo;
+            _this.vars.PAGE  = 1;
+            // sessionStorage.setItem('payTable', grupo);
+            _this.vars.TABLE.destroy();
+            _this.definePayTable();
         });
     },
 
@@ -293,7 +278,6 @@ var Pagos = {
                 month      = $('#month_to_pay').val(),
                 pay_action = $('#pay_action').val(); // 0/null:Adeudo, 1:pagar, 2:becado, 3:no aplica
 
-            console.log(student, month, pay_action);
             if (student !== '' && month !== '' && pay_action !== '') {
                 $.ajax({
                     data: { student:  student, month: month, action: pay_action },
@@ -307,7 +291,8 @@ var Pagos = {
                             $('#general_snack').attr('data-content', 'Pago de Mensualidad Actualizado!');
                             $('#general_snack').snackbar('show');
                             $('.snackbar').addClass('snackbar-blue');
-                            _this.tablePay(_this.getActiveTable(), page);
+                            _this.vars.TABLE.destroy();
+                            _this.definePayTable();
                         } else {
                             console.log(data);
                             $('#response').html("Error Desconocido: Por favor reporte este problema.");
@@ -318,6 +303,30 @@ var Pagos = {
             } else {
                 $('#response').html('Falta Información para terminar');
             }
+        });
+
+        $('#payForm').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                data: $('#payForm').serialize(),
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/pagarMensualidad'
+            })
+            .done(function(response){
+                if (response.success) {
+                    let page = _this.vars.currentPage;
+                    $('#modalPayAction').modal('hide'); 
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    _this.vars.TABLE.destroy();
+                    _this.definePayTable();
+                } else {
+                    $('#response').html(response.message);
+                }
+            });
         });
     },
 
@@ -340,7 +349,8 @@ var Pagos = {
                             $('#general_snack').attr('data-content', 'Comentario Actualizado!');
                             $('#general_snack').snackbar('show');
                             $('.snackbar').addClass('snackbar-blue');
-                            _this.tablePay(_this.getActiveTable(), _this.vars.currentPage);
+                            _this.vars.TABLE.destroy();
+                            _this.definePayTable();
                         } else {
                             $('#general_snack').attr('data-content', 'Error: Intente de Nuevo o reporte el problema!');
                             $('#general_snack').snackbar('show');
@@ -348,7 +358,6 @@ var Pagos = {
                         }
 
                         $('#modalAddComment').modal('hide');
-                        
                     }
                 });
             }

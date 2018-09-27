@@ -17,11 +17,11 @@ class PagosController extends Controller
         // ));
 
         if ((int)date('m') < 8) {
-            $this->View->render('pagos/pagos_a', array(
+            $this->View->render('pagos/pagos_b', array(
                 'cursos' => CursoModel::getCourses()
             ));
         } else {
-            $this->View->render('pagos/pagos_b', array(
+            $this->View->render('pagos/pagos_a', array(
                 'cursos' => CursoModel::getCourses()
             ));
         }
@@ -29,10 +29,6 @@ class PagosController extends Controller
 
     public function tablaPagos() {
         $this->View->renderJSON(PagosModel::renderPayTable(Request::post('curso'), Request::post('ciclo')));
-    }
-
-    public function getTablaPagos() {
-        PagosModel::payTable(Request::post('curso'), Request::post('page'));
     }
 
     public function numeroAlumnos(){
@@ -59,6 +55,30 @@ class PagosController extends Controller
         $this->View->renderJSON(
             PagosModel::payMonth(Request::post('student'), Request::post('month'), Request::post('action'))
         );
+    }
+
+    public function pagarMensualidad(){
+        if (!Request::post('monthToPay')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique mes a pagar'));
+            return;
+        }
+
+        if (!Request::post('payStatus')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique va realizar un pago o no'));
+            return;
+        }
+        if (!Request::post('payStudent')) {
+            $this->View->renderJSON(array('success' => false, 
+                                          'messsage' => 'Error desconocido: reporte problema (CODE: empty_st) '));
+            return;
+        }
+
+        $this->View->renderJSON(PagosModel::payMonthly(
+                                    Request::post('payStudent'), 
+                                    Request::post('monthToPay'), 
+                                    Request::post('payStatus'),
+                                    Request::post('payComment')
+        ));
     }
 
     public function guardarComentario(){

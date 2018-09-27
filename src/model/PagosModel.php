@@ -2,11 +2,11 @@
 
 class PagosModel
 {
-    public static function studentPayList($student) {
+    public static function studentPayList($student, $year=null) {
         $database = DatabaseFactory::getFactory()->getConnection();
 
         // Setting year
-        $year = date('Y');
+        $year = $year === null ? date('Y') : $year;
 
         // SQL: student history pay in given year and ciclo
         $history =  $database->prepare("SELECT * FROM students_pays 
@@ -25,17 +25,18 @@ class PagosModel
     public static function getContactInfo($student, $tutor){
         if ((int)$tutor !== 0) {
             $database = DatabaseFactory::getFactory()->getConnection();
-            $_sql = $database->prepare("SELECT cellphone, phone, phone_alt
+            $_sql = $database->prepare("SELECT cellphone, phone, phone_alt,
+                                               CONCAT_WS(' ',namet, surnamet) as name
                                         FROM tutors
                                         WHERE id_tutor = :tutor
                                         LIMIT 1;");
             $_sql->execute(array(':tutor' => $tutor));
             if ($_sql->rowCount() > 0) {
                 $row = $_sql->fetch();
-                $phones = '';
+                $phones = $row->name . '<br>';
                 $phones .= 'Celular: ' .   $row->cellphone . '<br>';
                 $phones .= 'Tel. Casa: ' . $row->phone . '<br>';
-                $phones .= 'Tel. Alt.:' .  $row->phone_alt;
+                // $phones .= 'Tel. Alt.:' .  $row->phone_alt;
                 return $phones;
             } else {
                 return '- - -';
@@ -70,45 +71,50 @@ class PagosModel
     public static function renderPayTable($course, $ciclo){
         $database = DatabaseFactory::getFactory()->getConnection();
         $curso = (int)$course;
-        $students = GeneralModel::studentsByCourse($curso);
+        $students = GeneralModel::tablePayByCourse($curso);
 
         $datos = [];
         if ($students !== null) {
             $counter  = 1;
 
             foreach ($students as $alumno) {
-                $id_grupo = 0;
-
                 if ($alumno->class_id === NULL) {
                     continue;
+                }
+
+                $pagos = self::studentPayList($alumno->student_id);
+
+                $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
+                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
+
+                $comentario = '';
+                if ($pagos !== null && $pagos->comment !== null && $pagos->comment !== '') {
+                    $comentario = $pagos->comment;
+                    $comment = strlen($pagos->comment) > 85 ? substr($pagos->comment, 0, 85) :  $pagos->comment;
+                    $comment .= '.. <a href="javascript:void(0)" class="addComment" 
+                                    data-student="'.$alumno->student_id.'"
+                                    data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
                 }
 
                 $opt = '<a href="javascript:void(0)"
                             data-student="'.$alumno->student_id.'"
                             data-name="'.$alumno->name . ' ' . $alumno->surname.'"
+                            data-comment="'.$comentario.'"
                             data-relatives="'.self::getRelatives($alumno->student_id, $alumno->id_tutor).'"
-                            class="btn btn-sm btn-info btn-shadow py-0 payAction">Pagar
+                            class="btn btn-sm btn-outline-primary btn-shadown btn-flat-sm payAction">
+                            Pagar
                             </a>';
 
 
-                $pagos = self::studentPayList($alumno->student_id);
                 if ($ciclo === "A") {
                     $_ago=0; $_sep=0; $_oct=0; $_nov=0; $_dic=0; $beca='';
-                    $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
-                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
+                    
                     if ($pagos !== null) {
                         $_ago=$pagos->ago; 
                         $_sep=$pagos->sep; 
                         $_oct=$pagos->oct; 
                         $_nov=$pagos->nov; 
                         $_dic=$pagos->dic;
-
-                        if ($pagos->comment !== null && $pagos->comment !== '') {
-                                $comment = $pagos->comment . '..';
-                                $comment .= '<a href="javascript:void(0)" class="editComment" 
-                                                data-student="'.$alumno->student_id.'"
-                                                data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
-                        }
 
                         $beca = (int)$pagos->becado_a === 1 ? '<i class="mdi-action-beca">B</i><br>' : '';
                     }
@@ -164,8 +170,7 @@ class PagosModel
                     );
                 } else {
                     $_ene=0; $_feb=0; $_mar=0; $_abr=0; $_may=0; $_jun=0; $_jul=0; $beca='';
-                    $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
-                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
+
                     if ($pagos !== null) {
                         $_ene=$pagos->ene; 
                         $_feb=$pagos->feb; 
@@ -174,13 +179,6 @@ class PagosModel
                         $_may=$pagos->may; 
                         $_jun=$pagos->jun; 
                         $_jul=$pagos->jul;
-
-                        if ($pagos->comment !== null && $pagos->comment !== '') {
-                            $comment = $pagos->comment . '..';
-                            $comment .= '<a href="javascript:void(0)" class="editComment" 
-                                            data-student="'.$alumno->student_id.'"
-                                            data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
-                        }
 
                         $beca = (int)$pagos->becado_b === 1 ? '<i class="mdi-action-beca">B</i><br>' : '';
                     }
@@ -260,624 +258,6 @@ class PagosModel
     }
 
 
-
-
-
-
-    public static function payTable($course, $page){
-        $database = DatabaseFactory::getFactory()->getConnection();
-        $curso = (int)$course;
-        $students = GeneralModel::studentsByCourse($curso);
-
-        if ($students !== null) {
-            H::getLibrary('paginadorLib');
-            $paginate = new \Paginador();
-            $filas    = 20;
-            $page     = (int)$page;
-            $alumnos  = $paginate->paginar($students, $page, $filas);
-            $counter  = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
-
-            $datos = [];
-            foreach ($alumnos as $alumno) {
-                $id_grupo = 0;
-                $grupo = '<a href="javascript:void(0)" class="link adding_group" data-student="'.$alumno->student_id.'"
-                             title="Agregar grupo">Agregar a Grupo</a>';
-
-                if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, cu.course, g.group_name
-                                                 FROM classes as c, courses as cu, groups as g
-                                                 WHERE c.class_id  = :clase
-                                                   AND c.status    = 1
-                                                   AND c.course_id = cu.course_id
-                                                   AND c.group_id  = g.group_id
-                                                 LIMIT 1;");
-                    $clase->execute(array(':clase' => $alumno->class_id));
-                    if ($clase->rowCount() > 0) {
-                        $clase = $clase->fetch();
-                        $id_grupo = $clase->class_id;
-                        $nombre_curso = ucwords(strtolower($clase->course));
-                        $grupo = '<a class="change_group"
-                                     href="javascript:void(0)"
-                                     data-student="'.$alumno->student_id.'"
-                                     data-class="'.$clase->class_id.'"
-                                     data-course="'.$clase->course_id.'"
-                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
-                    }
-                } else {
-                    continue;
-                }
-
-                //-> Tutor del Alumno
-                $id_tutor     = 0;
-                $nombre_tutor = '- - - -';
-                if ($alumno->id_tutor !== NULL) {
-                    $tutor= $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
-                                                FROM tutors
-                                                WHERE id_tutor = :tutor
-                                                LIMIT 1;");
-                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
-                    if ($tutor->rowCount() > 0) {
-                        $tutor = $tutor->fetch();
-                        $id_tutor = $tutor->id_tutor;
-                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet;
-                    }
-                }
-
-                $datos[$counter] = new stdClass();
-                $datos[$counter]->count    = $counter;
-                $datos[$counter]->id       = $alumno->student_id;
-                $datos[$counter]->nombre   = $alumno->name;
-                $datos[$counter]->apellido = $alumno->surname.' '.$alumno->lastname;
-                $datos[$counter]->edad     = $alumno->age;
-                $datos[$counter]->sexo     = $alumno->genre;
-                $datos[$counter]->avatar   = $alumno->avatar;
-                $datos[$counter]->estudios = $alumno->studies.' '.$alumno->lastgrade;
-                $datos[$counter]->convenio = $alumno->convenio;
-                $datos[$counter]->id_grupo = $id_grupo;
-                $datos[$counter]->grupo    = $grupo;
-                $datos[$counter]->id_tutor = $id_tutor;
-                $datos[$counter]->tutor    = $nombre_tutor;
-                $counter++;
-            }
-
-            // Pasa información a la vista
-            $paginacion = $paginate->getView('pagination_ajax', 'students');
-            
-            // Busqueda
-            // View::renderFilters('filters');
-            if (date('m') < 8) {
-                self::renderPayTableB($datos);
-            } else {
-                self::renderPayTableA($datos);
-            }
-            echo $paginacion; 
-        } else {
-            echo '<h4 class="text-center text-secondary my-3">
-                    No hay alumnos en esta lista.
-                  </h4>';
-        } 
-    }
-
-    public static function renderPayTableB($alumnos){
-        echo '<div class="table-responsive">';
-            echo '<table id="tbl_paylist" class="table table-striped table-sm table-bordered">';
-                echo '<thead>';
-                echo '<tr class="bg-secondary">';
-                    echo '<th class="text-center text-white" title="Number" > N°</th>';
-                    echo '<th class="text-center text-white" title="Student"> Alumno</th>';
-                    echo '<th class="text-center text-white" title="Inform" > Datos</th>';
-                    echo '<th class="text-center text-white" title="Enero"  > Ene</th>';
-                    echo '<th class="text-center text-white" title="Febrero"> Feb</th>';
-                    echo '<th class="text-center text-white" title="Marzo"  > Mar</th>';
-                    echo '<th class="text-center text-white" title="Abril"  > Abr</th>';
-                    echo '<th class="text-center text-white" title="Mayo"   > May</th>';
-                    echo '<th class="text-center text-white" title="Junio"  > Jun</th>';
-                    echo '<th class="text-center text-white" title="Julio"  > Jul</th>';
-                    echo '<th class="text-center text-white" title="Comment"> Comentario</th>';
-                    echo '<th class="text-center text-white" title="Options"> Opciones</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                foreach ($alumnos as $alumno) {
-                    $pagos = self::studentPayHistory($alumno->id);
-                    $ene=0; $feb=0; $mar=0; $abr=0; $may=0; $jun=0; $jul=0; $beca='';
-                    if ($pagos !== null) {
-                        $ene=$pagos->ene; $feb=$pagos->feb;
-                        $mar=$pagos->mar; $abr=$pagos->abr;
-                        $may=$pagos->may; $jun=$pagos->jun;
-                        $jul=$pagos->jul;
-                        $beca = $pagos->becado_b == '1' ? '<i class="mdi-action-beca">B</i><br>' : '';
-                    }
-                    echo '<tr class="row_data">';
-                        echo '<td class="text-center row-flat align-middle">'.$alumno->count.'</td>';
-                        echo '<td class="text-center row-flat align-middle">'.$alumno->nombre.'</td>';
-                        echo '<td class="text-center row-flat align-middle">Family: 78965412</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="ene"
-                                     data-title="ENERO"
-                                     data-status="'.$ene.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ene).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="feb"
-                                     data-title="FEBRERO"
-                                     data-status="'.$feb.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($feb).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="mar"
-                                     data-title="MARZO"
-                                     data-status="'.$mar.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($mar).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="abr"
-                                     data-title="ABRIL"
-                                     data-status="'.$abr.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($abr).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="may"
-                                     data-title="MAYO"
-                                     data-status="'.$may.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($may).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="jun"
-                                     data-title="JUNIO"
-                                     data-status="'.$jun.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jun).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="jul"
-                                     data-title="JULIO"
-                                     data-status="'.$jul.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jul).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            if ($pagos !== null && $pagos->comment != null) {
-                                echo $pagos->comment;
-                                echo '<a href="#" 
-                                         class="add_comment" 
-                                         data-student="'.$alumno->id.'"
-                                         data-comment="'.$pagos->comment.'">
-                                        <i class="fa fa-edit"></i></a>';
-                            } else {
-                                echo '<a href="#" 
-                                         class="add_comment" 
-                                         data-student="'.$alumno->id.'"
-                                         data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
-                            }
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                        echo '<div class="btn-group row-flat">';
-                            echo '<a href="javascript:void(0)"
-                                     class="btn btn-sm btn-info btn-shadow py-0">Pagar
-                                  </a>';
-                        echo '</div>';
-                        echo '</td>';
-                    echo '</tr>';
-                }
-                echo '</tbody>';
-            echo '</table>';
-        echo '</div>';
-    }
-
-    public static function renderPayTableA($alumnos){
-        echo '<div class="table">';
-            echo '<table id="tbl_paylist" class="table table-striped table-sm table-bordered">';
-                echo '<thead>';
-                echo '<tr class="info">';
-                    echo '<th class="text-center" title="Number">N°</th>';
-                    echo '<th class="text-center" title="Student">Alumno</th>';
-                    echo '<th class="text-center" title="Info">Datos</th>';
-                    echo '<th class="text-center" title="Agosto">Ago</th>';
-                    echo '<th class="text-center" title="Septiembre">Sep</th>';
-                    echo '<th class="text-center" title="Octubre">Oct</th>';
-                    echo '<th class="text-center" title="Noviembre">Nov</th>';
-                    echo '<th class="text-center" title="Diciembre">Dic</th>';
-                    echo '<th class="text-center" title="Comment">Comentario</th>';
-                    echo '<th class="text-center" title="Option">Opciones</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                foreach ($alumnos as $alumno) {
-                    $pagos = self::studentPayHistory($alumno->id);
-                    $ago=0; $sep=0; $oct=0; $nov=0; $dic=0; $beca='';
-                    if ($pagos !== null) {
-                        $ago=$pagos->ago; $sep=$pagos->sep; 
-                        $oct=$pagos->oct; $nov=$pagos->nov; 
-                        $dic=$pagos->dic;
-                        $beca = $pagos->becado_a == '1' ? '<i class="mdi-action-beca">B</i><br>' : '';
-                    }
-                    echo '<tr class="row_data">';
-                        echo '<td class="text-center row-flat align-middle">'.$alumno->count.'</td>';
-                        echo '<td class="text-center row-flat align-middle">'.$alumno->nombre.'</td>';
-                        echo '<td class="text-center row-flat align-middle">Family: 78965412</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="ago"
-                                     data-title="AGOSTO"
-                                     data-status="'.$ago.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ago).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="sep"
-                                     data-title="SEPTIEMBRE"
-                                     data-status="'.$sep.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($sep).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="oct"
-                                     data-title="OCTUBRE"
-                                     data-status="'.$oct.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($oct).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="nov"
-                                     data-title="NOVIEMBRE"
-                                     data-status="'.$nov.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($nov).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="dic"
-                                     data-title="DICIEMBRE"
-                                     data-status="'.$dic.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($dic).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                        if ($pagos !== null && $pagos->comment != null) {
-                            echo $pagos->comment;
-                            echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">
-                                    <i class="mdi-content-create"></i></a>';
-                        } else {
-                            echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">Agregar comentario</a>';
-                        }
-                        echo '</td>';
-                        echo '<td class="text-center row-flat align-middle">';
-                        echo '<div class="btn-group">';
-                            echo '<a href="javascript:void(0)"
-                                     class="btn btn-sm btn-info btn-shadow py-0">Pagar
-                                  </a>';
-                        echo '</div>';
-                        echo '</td>';
-                    echo '</tr>';
-                }
-                echo '</tbody>';
-            echo '</table>';
-        echo '</div>';
-    }
-
-
-
-
-
-
-
-
-	public static function getPaylist($lista, $page) {
-        $page  = (int)$page;
-        $filas = 20;
-		$alumnos = GeneralModel::students($lista);
-
-		if ($alumnos !== null && count($alumnos) > 0) {
-            // Paginar
-            H::getLibrary('paginadorLib');
-            $paginator  = new \Paginador();
-            $items      = $paginator->paginar($alumnos, $page, $filas);
-            $counter    = $page > 0 ? (($page*$filas)-$filas) + 1 : 1;
-            $paginacion = $paginator->getView('pagination_ajax', 'students');
-
-            // Busqueda
-            View::renderFilters('filters');
-            if (date('m') < 8) {
-                self::displayPayListB($items, $paginacion, $counter);
-            } else {
-                self::displayPayListA($items, $paginacion, $counter);
-            }
-
-		} else {
-			echo '<h4 class="text-center text-info subheader">
-					No hay lista de pagos en este grupo.
-				  </h4>';
-		}
-	}
-
-    public static function displayPayListB($alumnos, $paginacion, $count){
-        echo '<div class="table">';
-            echo '<table id="tbl_paylist"
-                         class="table table-bordered table-hover table-striped table-condensed">';
-                echo '<thead>';
-                echo '<tr class="info">';
-                    echo '<th class="text-center">N°</th>';
-                    echo '<th class="text-center">Alumno</th>';
-                    echo '<th class="text-center">Datos</th>';
-                    echo '<th class="text-center" title="Enero">Ene</th>';
-                    echo '<th class="text-center" title="Febrero">Feb</th>';
-                    echo '<th class="text-center" title="Marzo">Mar</th>';
-                    echo '<th class="text-center" title="Abril">Abr</th>';
-                    echo '<th class="text-center" title="Mayo">May</th>';
-                    echo '<th class="text-center" title="Junio">Jun</th>';
-                    echo '<th class="text-center" title="Julio">Jul</th>';
-                    echo '<th class="text-center">Comentario</th>';
-                    echo '<th class="text-center">Opciones</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                foreach ($alumnos as $alumno) {
-                    $pagos = self::studentPayHistory($alumno->id);
-                    $ene=0; $feb=0; $mar=0; $abr=0; $may=0; $jun=0; $jul=0; $beca='';
-                    if ($pagos !== null) {
-                        $ene=$pagos->ene; $feb=$pagos->feb; 
-                        $mar=$pagos->mar; $abr=$pagos->abr; 
-                        $may=$pagos->may; $jun=$pagos->jun; 
-                        $jul=$pagos->jul;
-                        $beca = $pagos->becado_b == '1' ? '<i class="mdi-action-beca">B</i><br>' : '';
-                    }
-                    echo '<tr class="row_data">';
-                        echo '<td class="text-center tiny">'.($count++).'</td>';
-                        echo '<td class="text-center tiny">'.$alumno->nombre.'</td>';
-                        echo '<td class="text-center tiny">Family: 78965412</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="ene"
-                                     data-title="Enero"
-                                     data-status="'.$ene.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ene).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="feb"
-                                     data-title="Febrero"
-                                     data-status="'.$feb.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($feb).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="mar"
-                                     data-title="Marzo"
-                                     data-status="'.$mar.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($mar).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="abr"
-                                     data-title="Abril"
-                                     data-status="'.$abr.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($abr).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="may"
-                                     data-title="Mayo"
-                                     data-status="'.$may.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($may).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="jun"
-                                     data-title="Junio"
-                                     data-status="'.$jun.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jun).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="jul"
-                                     data-title="Julio"
-                                     data-status="'.$jul.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($jul).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            if ($pagos !== null && $pagos->comment != null) {
-                                echo $pagos->comment;
-                                echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">
-                                        <i class="mdi-content-create"></i></a>';
-                            } else {
-                                echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">Agregar comentario</a>';
-                            }
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                        echo '<div class="btn-group tiny">';
-                            echo '<a href="javascript:void(0)"
-                                     class="btn btn-main btn-xs btn-raised">Pagar
-                                  </a>';
-                        echo '</div>';
-                        echo '</td>';
-                    echo '</tr>';
-                }
-                echo '</tbody>';
-                echo '<tfoot>';
-                echo '<tr>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-xs mini btn-second change_multi">
-                                Adeudos
-                            </button>
-                          </td>';
-                    echo '<td class="text-center">
-                            <button type="button" class="btn btn-xs mini btn-warning tekedown_multi">
-                                Becados
-                            </button>
-                          </td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                    echo '<td class="text-center"></td>';
-                echo '</tr>';
-                echo '</tfoot>';
-            echo '</table>';
-            echo "<br><br><br>";
-        echo '</div>';
-
-        // Paginación
-        echo '<div class="row">';
-            echo '<div class="col-sm-12 text-center">';
-                echo $paginacion;
-            echo '</div>';
-        echo '</div>';
-    }
-
-    public static function displayPayListA($alumnos, $paginacion, $count){
-        echo '<div class="table">';
-            echo '<table id="tbl_paylist"
-                         class="table table-bordered table-hover table-striped table-condensed">';
-                echo '<thead>';
-                echo '<tr class="info">';
-                    echo '<th class="text-center">N°</th>';
-                    echo '<th class="text-center">Alumno</th>';
-                    echo '<th class="text-center">Datos</th>';
-                    echo '<th class="text-center" title="Agosto">Ago</th>';
-                    echo '<th class="text-center" title="Septiembre">Sep</th>';
-                    echo '<th class="text-center" title="Octubre">Oct</th>';
-                    echo '<th class="text-center" title="Noviembre">Nov</th>';
-                    echo '<th class="text-center" title="Diciembre">Dic</th>';
-                    echo '<th class="text-center">Comentario</th>';
-                    echo '<th class="text-center">Opciones</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                foreach ($alumnos as $alumno) {
-                    $pagos = self::studentPayHistory($alumno->id);
-                    $ago=0; $sep=0; $oct=0; $nov=0; $dic=0; $beca='';
-                    if ($pagos !== null) {
-                        $ago=$pagos->ago; $sep=$pagos->sep; 
-                        $oct=$pagos->oct; $nov=$pagos->nov; 
-                        $dic=$pagos->dic;
-                        $beca = $pagos->becado_a == '1' ? '<i class="mdi-action-beca">B</i><br>' : '';
-                    }
-                    echo '<tr class="row_data">';
-                        echo '<td class="text-center tiny">'.($count++).'</td>';
-                        echo '<td class="text-center tiny">'.$alumno->nombre.'</td>';
-                        echo '<td class="text-center tiny">Family: 78965412</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="ago"
-                                     data-title="Agosto"
-                                     data-status="'.$ago.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($ago).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="sep"
-                                     data-title="Septiembre"
-                                     data-status="'.$sep.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($sep).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="oct"
-                                     data-title="Octubre"
-                                     data-status="'.$oct.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($oct).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="nov"
-                                     data-title="Noviembre"
-                                     data-status="'.$nov.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($nov).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                            echo '<a href="#" class="check_pay" 
-                                     data-student="'.$alumno->id.'" 
-                                     data-month="dic"
-                                     data-title="Diciembre"
-                                     data-status="'.$dic.'"
-                                     data-name="'.$alumno->nombre.'">'.$beca.self::statusIcon($dic).'</a>';
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                        if ($pagos !== null && $pagos->comment != null) {
-                            echo $pagos->comment;
-                            echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">
-                                    <i class="mdi-content-create"></i></a>';
-                        } else {
-                            echo '<a href="#" class="add_comment" data-student="'.$alumno->id.'">Agregar comentario</a>';
-                        }
-                        echo '</td>';
-                        echo '<td class="text-center tiny">';
-                        echo '<div class="btn-group tiny">';
-                            echo '<a href="javascript:void(0)"
-                                     class="btn btn-main btn-xs btn-raised">Pagar
-                                  </a>';
-                        echo '</div>';
-                        echo '</td>';
-                    echo '</tr>';
-                }
-                echo '</tbody>';
-                echo '<tfoot>';
-                echo '<tr>';
-                echo '<td class="text-center">
-                        <button type="button" class="btn btn-xs mini btn-second change_multi">
-                            Adeudos
-                        </button>
-                      </td>';
-                echo '<td class="text-center">
-                        <button type="button" class="btn btn-xs mini btn-warning tekedown_multi">
-                            Becados
-                        </button>
-                      </td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '<td class="text-center"></td>';
-                echo '</tr>';
-                echo '</tfoot>';
-            echo '</table>';
-            echo "<br><br><br>";
-        echo '</div>';
-
-        // Paginación
-        echo '<div class="row">';
-            echo '<div class="col-sm-12 text-center">';
-                echo $paginacion;
-            echo '</div>';
-        echo '</div>';
-    }
-
     public static function studentPayHistory($student, $year=null, $ciclo=null) {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -918,15 +298,16 @@ class PagosModel
             $ciclo = self::getCiclo(date('m'));
         }
 
+        // dump($student, $month, $action, $year, $ciclo);
+        // exit();
+
         // Validar si el alumno esta en la tabla pagos de la lista actual
         $get_student =  $database->prepare("SELECT student_id 
                                             FROM students_pays 
                                             WHERE student_id = :student
-                                              AND year  = :year
-                                              AND ciclo = :ciclo;");
+                                              AND year  = :year;");
         $get_student->execute(array(':student' => $student,
-                                    ':year'    => $year,
-                                    ':ciclo'   => $ciclo));
+                                    ':year'    => $year));
 
         $payed = false;
         if ($get_student->rowCount() > 0) {
@@ -934,26 +315,67 @@ class PagosModel
             $set_pay =  $database->prepare("UPDATE students_pays 
                                             SET $month = :action
                                             WHERE student_id = :student
-                                              AND year = :year
-                                              AND ciclo = :ciclo;");
+                                              AND year = :year;");
             $payed = $set_pay->execute(array(':student' => $student,
                                              ':action'  => $action,
-                                             ':year'    => $year,
-                                             ':ciclo'   => $ciclo));
+                                             ':year'    => $year));
         } else {
             // Si no esta en la tabla lo agregamos como una nueva entrada
-            $set_pay =  $database->prepare("INSERT INTO students_pays(student_id, $month, year, ciclo)
-                                                     VALUES(:student, :action, :year, :ciclo);");
+            $set_pay =  $database->prepare("INSERT INTO students_pays(student_id, $month, year)
+                                                     VALUES(:student, :action, :year);");
             $set_pay->execute(array(':student' => $student,
                                     ':action'  => $action,
-                                    ':year'    => $year,
-                                    ':ciclo'   => $ciclo));
+                                    ':year'    => $year));
             if ($set_pay->rowCount() > 0) {
                 $payed = true;
             }
         }
 
         return array('success' => $payed);
+    }
+
+    public static function payMonthly($student, $month, $action, $comment, $year=null){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        // Si no se especifica año y ciclo, se toman los actuales
+        if ($year == null || $year == '') {
+            $year = date('Y');
+        }
+
+        // Validar si el alumno esta en la tabla pagos de la lista actual
+        $get_student =  $database->prepare("SELECT student_id 
+                                            FROM students_pays 
+                                            WHERE student_id = :student
+                                              AND year  = :year;");
+        $get_student->execute(array(':student' => $student,
+                                    ':year'    => $year));
+
+        $payed = false;
+        if ($get_student->rowCount() > 0) {
+            // Si esta en la tabla agregamos su pago en el mes correspondiente
+            $set_pay =  $database->prepare("UPDATE students_pays 
+                                            SET $month  = :action,
+                                                comment = :comment
+                                            WHERE student_id = :student
+                                              AND year = :year;");
+            $payed = $set_pay->execute(array(':student' => $student,
+                                             ':action'  => $action,
+                                             ':comment' => $comment,
+                                             ':year'    => $year));
+        } else {
+            // Si no esta en la tabla lo agregamos como una nueva entrada
+            $set_pay =  $database->prepare("INSERT INTO students_pays(student_id, $month, year, comment)
+                                                     VALUES(:student, :action, :year, :comment);");
+            $set_pay->execute(array(':student' => $student,
+                                    ':action'  => $action,
+                                    ':year'    => $year,
+                                    ':comment' => $comment
+                                ));
+            if ($set_pay->rowCount() > 0) {
+                $payed = true;
+            }
+        }
+
+        return array('success' => $payed, 'message' => 'Pago de mensualidad actualizado con éxito');
     }
 
     public static function saveComment($student, $comment, $year=null, $ciclo=null){

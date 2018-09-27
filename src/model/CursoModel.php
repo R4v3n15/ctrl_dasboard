@@ -636,19 +636,28 @@ class CursoModel {
         return 0;
     }
 
-    public static function moveClass($clase){
+    // Marcar clase como termindao
+    public static function concludeClass($clase){
         $database = DatabaseFactory::getFactory()->getConnection(); 
         $query = $database->prepare("UPDATE classes SET status = 2 WHERE class_id = :clase");
 
         return $query->execute(array(':clase' => $clase));
     }
 
+    // Mover clase a lista de finalizados
+    public static function moveClass($clase){
+        $database = DatabaseFactory::getFactory()->getConnection(); 
+        $query = $database->prepare("UPDATE classes SET status = 3 WHERE class_id = :clase");
+
+        return $query->execute(array(':clase' => $clase));
+    }
+
+    // Eliminar Clase
     public static function deleteClass($clase){
         $database = DatabaseFactory::getFactory()->getConnection(); 
-        $delete = $database->prepare("DELETE FROM classes WHERE class_id = :clase");
-        $delete->execute(array(':clase' => $clase));
+        $query = $database->prepare("UPDATE classes SET status = 4 WHERE class_id = :clase");
 
-        return $delete->rowCount() > 0;
+        return $query->execute(array(':clase' => $clase));
     }
 
     public static function getCurrentDayCourse($clase, $dias) {
