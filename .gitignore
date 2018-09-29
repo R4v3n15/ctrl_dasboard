@@ -4,4 +4,5 @@
 # don't commit all the dependencies fetched via Composer
 /vendor/
 /public/avatars/
+/src/config/dbconfig.php
 .phpintel
