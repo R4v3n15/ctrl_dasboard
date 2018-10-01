@@ -7,10 +7,10 @@ class CursoController extends Controller
         parent::__construct();
         Auth::checkAuthentication();
 
-        Registry::set('css',array('select2.min&assets/select/css', 
+        Registry::set('css',array('select2.min&assets/libs/css', 
                                   'jquery.timepicker&assets/libs/css', 
                                   'pikaday&assets/libs/css'));
-        Registry::set('js', array('select2.min&assets/select/js', 
+        Registry::set('js', array('select2.min&assets/libs/js', 
                                   'jquery.timepicker.min&assets/libs/js',
                                   'moment.min&assets/libs/js', 
                                   'pikaday.min&assets/libs/js',

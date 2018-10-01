@@ -103,7 +103,7 @@ table.dataTable td {
   color: white;
   font-size: 0.95rem;
   margin-bottom: 5px;
-  padding: 5px 6px;
+  padding: 12px 10px;
 }
 
 #snackbar-container>div.snackbar.snackbar-green {
@@ -111,7 +111,7 @@ table.dataTable td {
   color: white;
   font-size: 0.95rem;
   margin-bottom: 5px;
-  padding: 5px 6px;
+  padding: 12px 10px;
 }
 
 #snackbar-container>div.snackbar.snackbar-orange {
@@ -119,7 +119,7 @@ table.dataTable td {
   color: white;
   font-size: 0.95rem;
   margin-bottom: 5px;
-  padding: 5px 6px;
+  padding: 12px 10px;
 }
 
 #snackbar-container>div.snackbar.snackbar-red {
@@ -127,7 +127,7 @@ table.dataTable td {
   color: white;
   font-size: 0.95rem;
   margin-bottom: 5px;
-  padding: 5px 6px;
+  padding: 12px 10px;
 }
 
 .table-responsive {
