@@ -98,7 +98,7 @@ class PadrinosModel
                 echo '</div>';
             echo '</div>';
         } else {
-            echo '<h4 class="text-center text-naatik subheader">No hay Padrinos registrados aún.</h4>';
+            echo '<h5 class="text-center text-muted">No hay Padrinos registrados aún.</h5>';
         }
     }
 

@@ -16,23 +16,70 @@ class MapaModel
 			if ((int)$alumno->id_tutor !== 0) {
 				$address = $database->prepare("SELECT * FROM address WHERE user_id = :tutor AND user_type = 1 LIMIT 1;");
 				$address->execute(array(':tutor' => $alumno->id_tutor));
+				$user = $alumno->id_tutor;
+				$user_type = 1;
 			} else {
 				$address = $database->prepare("SELECT * FROM address WHERE user_id = :student AND user_type = 2 LIMIT 1;");
 				$address->execute(array(':student' => $alumno->student_id));
+				$user = $alumno->student_id;
+				$user_type = 2;
 			}
 			$address = $address->fetch();
 
-			$alumno->address  = $address->id_address;
-			$alumno->street   = $address->street;
-			$alumno->number   = $address->st_number;
-			$alumno->between  = $address->st_between;
-			$alumno->colony   = $address->colony;
-			$alumno->latitude = $address->latitud;
-			$alumno->longitud = $address->longitud;
+			$alumno->user      = $user;
+			$alumno->user_type = $user_type;
+			$alumno->address   = $address->id_address;
+			$alumno->street    = $address->street;
+			$alumno->number    = $address->st_number;
+			$alumno->between   = $address->st_between;
+			$alumno->colony    = $address->colony;
+			$alumno->latitude  = $address->latitud;
+			$alumno->longitud  = $address->longitud;
 			
 			return $alumno;
 		}
 		return null;
+	}
+
+
+	public static function updateStudentLocation($user, $user_type, $street, $number, $between, $colony, $latitud, $longitud){
+		$database = DatabaseFactory::getFactory()->getConnection();
+
+		// Validate
+		$exists = $database->prepare("SELECT * FROM address WHERE user_id = :user AND user_type = :usertype LIMIT 1;");
+		$exists->execute(array(':user' => $user, ':usertype' => $user_type));
+
+		if ($exists->rowCount() > 0) {
+			$update  =  $database->prepare("UPDATE address 
+											SET street = :street,
+												st_number = :numero,
+												st_between = :entre,
+												colony     = :colony,
+												latitud    = :latitud,
+												longitud   = :longitud
+											WHERE user_id  = :user
+											  AND user_type = :user_type;");
+			$commit = $update->execute(array(
+								':street'	=> $street,
+								':numero'	=> $number,
+								':entre'	=> $between,
+								':colony'	=> $colony,
+								':latitud'	=> $latitud,
+								':longitud'	=> $longitud,
+								':user'		=> $user,
+								':user_type' => $user_type
+			));
+
+			if ($commit) {
+				return array('success' => true, 'message' => 'Datos de ubicación del alumno actualizados con éxito!!');
+			}
+
+			return array(
+					'success' => false, 
+					'message' => 'Error al tratar de actualizar ubicación, intente de nuevo o reporte el error.');
+		} else {
+			array('success' => false, 'message' => 'Algo salio mal, intente de nuevo o reporte el problema.');
+		}
 	}
 
 	public static function getMarks(){

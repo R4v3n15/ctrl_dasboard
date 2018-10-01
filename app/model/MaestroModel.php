@@ -78,6 +78,8 @@ class MaestroModel
                     echo $paginacion;
                 echo '</div>';
             echo '</div>';
+        } else {
+             echo '<h5 class="text-center text-muted">No hay maestros registrados aún.</h5>';
         }
     }
 

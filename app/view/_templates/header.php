@@ -75,18 +75,22 @@
                                         <a href="<?= _root(); ?>alumnos/becados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Becados</a>
                                     </li>
+                                    <?php if ($user_type === 777): ?>
                                     <li class="dropdown-item">
                                         <a href="<?= _root(); ?>alumnos/sep">
                                             <i class="fa fa-chevron-right text-secondary"></i> Sep</a>
                                     </li>
+                                    <?php endif ?>
                                     <li class="dropdown-item">
                                         <a href="<?= _root(); ?>alumnos/baja">
                                             <i class="fa fa-chevron-right text-secondary"></i> Baja</a>
                                     </li>
+                                    <?php if ($user_type === 777): ?>
                                     <li class="dropdown-item">
                                         <a href="<?= _root(); ?>alumnos/egresados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Egresados</a>
                                     </li>
+                                    <?php endif ?>
                                     <li class="dropdown-item">
                                         <a href="<?= _root(); ?>alumnos/eliminados">
                                             <i class="fa fa-chevron-right text-secondary"></i> Eliminados</a>
@@ -178,13 +182,13 @@
                                 Lista Becados
                             </a>
                         </li>
-                        <?php endif ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= _root(); ?>mapa">
                                 <span data-feather="map"></span>
                                 Mapa
                             </a>
                         </li>
+                        <?php endif ?>
                         <?php if (_active($filename, 'pagos')): ?>
                         <li class="nav-item">
                             <a class="nav-link" id="lista-becarios" href="#">

@@ -7,7 +7,7 @@ class MapaController extends Controller
         parent::__construct();
         Auth::checkAuthentication();
 
-        Registry::set('js', array('wines&assets/js'));
+        Registry::set('js', array('croquis&assets/js'));
     }
 
     public function index() {
@@ -21,6 +21,19 @@ class MapaController extends Controller
 
     public function getXMarks(){
         MapaModel::getMarks();
+    }
+
+    public function actualizarUbicacion(){
+        $this->View->renderJSON(MapaModel::updateStudentLocation(
+                                    Request::post('user'),
+                                    Request::post('user_type'),
+                                    Request::post('street'),
+                                    Request::post('numero'),
+                                    Request::post('between'),
+                                    Request::post('colony'),
+                                    Request::post('latitud'),
+                                    Request::post('latitud')
+        ));
     }
 
 }

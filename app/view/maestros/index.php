@@ -1,4 +1,3 @@
-<?php $base_url = Config::get('URL'); ?>
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-12 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -17,7 +16,7 @@
             <!-- Tabla de Maestros -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <img src="<?= Config::get('URL');?>public/assets/img/loader.gif">
+                    <img src="<?= _root(); ?>public/assets/img/loader.gif">
                     <h6 class="text-center" style="margin-top: -2.5rem;">Cargando..</h6>
                 </div>
             </div>  
@@ -36,7 +35,7 @@
             </div>
             <div class="modal-body mx-3 mb-3">
                 <form method="post" 
-                      action="<?= Config::get('URL'); ?>maestro/nuevoMaestro"
+                      action="<?= _root(); ?>maestro/nuevoMaestro"
                       class="row" 
                       enctype="multipart/form-data">
                     <div class="col-md-12">
@@ -192,7 +191,7 @@
             </div>
             <div class="modal-body mx-3 mb-3">
                 <form method="post"
-                      action="<?= Config::get('URL'); ?>maestro/editarMaestro"
+                      action="<?= _root(); ?>maestro/editarMaestro"
                       class="row" 
                       enctype="multipart/form-data">
                     <div class="col-md-12">

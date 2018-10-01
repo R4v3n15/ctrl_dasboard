@@ -139,6 +139,12 @@ class AlumnoModel
                             </a>
                         </li>';
                 $options .=   '<li>
+                            <a href="'.Config::get('URL').'mapa/u/'.$alumno->student_id.'">
+                                <i class="ml-1 text-dark fa fa-chevron-right"></i>
+                                Croquis
+                            </a>
+                        </li>';
+                $options .=   '<li>
                             <a  href="javascript:void(0)" 
                                 class="btnUnsuscribeStudent" 
                                 data-student="'.$alumno->student_id.'"
