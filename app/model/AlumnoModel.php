@@ -651,11 +651,19 @@ class AlumnoModel
 
         $clase = (int)$clase === 0 ?  null : (int)$clase;
         $reinscribir = (int)$reinscribir === 1 ? true : false;
+        $message = "No se realizo el cambio de grupo, intente de nuevo o reporte el error!";
         $commit   = true;
         $database->beginTransaction();
         try{
+           
+            if (@$database->query("SELECT 1 FROM student_history LIMIT 0;")) {
+                $commit = true;
+            } else {
+                $commit  = false;
+                $message = "Error hace falta una tabla, reporte el error a sistemas";
+            }
 
-            if ($reinscribir && $clase !== null) {
+            if ($commit && $reinscribir && $clase !== null) {
                 $_student = $database->prepare("SELECT s.birthday, sd.ocupation, sd.workplace, 
                                                        sd.studies, sd.lastgrade, sg.class_id, sg.date_begin
                                                 FROM students as s, 
@@ -765,13 +773,14 @@ class AlumnoModel
                 $commit = false;
             }        
         } catch (PDOException $e) {
+            $message = $e->getMessage();
             $commit = false;
         }
 
         if (!$commit) {
             $database->rollBack();
             return array('success' => false, 
-                         'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+                         'message' => '&#x2718; '. $message);
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');
@@ -782,10 +791,22 @@ class AlumnoModel
         $database = DatabaseFactory::getFactory()->getConnection();
 
         $clase === '0' ? $clase = null : $clase = (int)$clase;
+        $message = "No se realizo el cambio de grupo, intente de nuevo o reporte el error!";
+
         $commit   = true;
         $database->beginTransaction();
         try{
+            if (@$database->query("SELECT 1 FROM student_history LIMIT 0;")) {
+                $commit = true;
+            } else {
+                $commit  = false;
+                $message = "Error hace falta una tabla, reporte el error a sistemas";
+            }
+
             foreach ($alumnos as $alumno) {
+                if (!$commit) {
+                    break;
+                }
                 $datos = explode(',', $alumno);
                 $alumno = $datos[0];
                 $reinscribir = (int)$datos[1] === 1 ? true : false;
@@ -900,7 +921,7 @@ class AlumnoModel
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; No se realizo el cambio de grupo, intente de nuevo o reporte el error!');
+            return array('success' => false, 'message' => '&#x2718; ' . $message);
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Cambio de grupo realizado correctamente!!');

@@ -201,8 +201,8 @@
 <div class="modal fade" id="modalUnsuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="mdlTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unsuscribeTitle">Dar de Baja Alumno</h5>
+            <div class="modal-header py-2 bg-warning">
+                <h5 class="modal-title m-0 text-white" id="unsuscribeTitle">Dar de Baja Alumno</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -227,7 +227,7 @@
                     <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Der de Baja</button>
+                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Dar de Baja</button>
                 </div>
             </div>
         </div>

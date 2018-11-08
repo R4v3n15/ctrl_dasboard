@@ -64,6 +64,9 @@ var Dashboard = {
                     $('#general_snack').snackbar('show');
                     $('.snackbar').addClass('snackbar-red');
                 }
+            })
+            .fail(function(errno){
+                console.log(errno.responseText);
             });//End Ajax
         });
 

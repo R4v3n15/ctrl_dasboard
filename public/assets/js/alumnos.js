@@ -181,13 +181,13 @@ var Alumnos = {
             $('#modalAddToGroup').modal('show');
         });
 
-        $('#table_students tbody').on( 'click', '.btnSuscribeStudent', function () {
+        $('#table_students tbody').on( 'click', '.btnUnsuscribeStudent', function () {
             let student = $(this).data('student'),
                 name    = $(this).data('name');
 
-            $('#suscribe_student').val(student);
-            $('#suscribe_name').text(name);
-            $('#modalSuscribeStudent').modal('show');
+            $('#unsuscribe_student').val(student);
+            $('#unsuscribe_name').text(name);
+            $('#modalUnsuscribeStudent').modal('show');
                 
         });
 
@@ -462,17 +462,17 @@ var Alumnos = {
                     $('#general_snack').attr('data-content', response.message);
                     $('#general_snack').snackbar('show');
                     $('.snackbar').addClass('snackbar-blue');
+                    _this.vars.dataTable.destroy();
+	                _this.studentsTable();
+	                $('#modalAddToGroup').modal('hide');
                 } else {
                     $('#general_snack').attr('data-content', response.message);
                     $('#general_snack').snackbar('show');
                     $('.snackbar').addClass('snackbar-red');
                 }
-                $('#modalAddToGroup').modal('hide');
-                _this.vars.dataTable.destroy();
-                _this.studentsTable();
             })
             .fail(function(errno){
-                console.log(errno);
+                console.log(errno.message);
             });
         });
     },
@@ -553,13 +553,15 @@ var Alumnos = {
                     if (response.success) {
                         $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
-                        $('.snackbar').addClass('snackbar-blue')
+                        $('.snackbar').addClass('snackbar-blue');
+                        _this.vars.dataTable.destroy();
+	                    _this.studentsTable();
                     } else {
                         $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');
                         $('.snackbar').addClass('snackbar-red')
                     }
-                    _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
+                    
                     $('#modalUnsuscribeStudent').modal('hide');
                 }
             });
@@ -710,13 +712,15 @@ var Alumnos = {
                         if (response.success) {
                             $('#general_snack').attr('data-content', response.message);
                             $('#general_snack').snackbar('show');
-                            $('.snackbar').addClass('snackbar-blue')
+                            $('.snackbar').addClass('snackbar-blue');
+
+                            _this.vars.dataTable.destroy();
+		                    _this.studentsTable();
                         } else {
                             $('#general_snack').attr('data-content', response.message);
                             $('#general_snack').snackbar('show');
                             $('.snackbar').addClass('snackbar-red')
                         }
-                        _this.getStudentsTable(_this.getActiveView(), _this.vars.currentPage);
                         $('#modalDeleteStudent').modal('hide');
                     }
                 });
