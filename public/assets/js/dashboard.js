@@ -66,7 +66,9 @@ var Dashboard = {
                 }
             })
             .fail(function(errno){
-                console.log(errno.responseText);
+                $('#general_snack').attr('data-content', 'Actualizacion realizada previamente');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-red');
             });//End Ajax
         });
 

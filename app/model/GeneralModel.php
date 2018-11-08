@@ -444,6 +444,7 @@ class GeneralModel
     public static function createTable(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
+        $message  = "Error al tratar de actualizar Base de Datos!";
         $database->beginTransaction();
 
         try{
@@ -467,12 +468,13 @@ class GeneralModel
             $newTable->execute();
 
         } catch (PDOException $e) {
+            $message = $e->getMessage();
             $commit = false;
         }
 
         if (!$commit) {
             $database->rollBack();
-            return array('success' => false, 'message' => '&#x2718; Error al tratar de actualizar Base de Datos!');
+            return array('success' => false, 'message' => '&#x2718; ' . $message);
         }else {
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Base de Datos actualizada correctamente!!');
