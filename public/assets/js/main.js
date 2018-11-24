@@ -53,12 +53,35 @@ var Main = {
     },
 
     initSettings: function(){
+        let path = window.location.pathname.split( '/' );
         let alumnos_activo = sessionStorage.getItem('vista_alumnos');
+
         $('#'+alumnos_activo).addClass('active');
 
         let nuevo_activo = sessionStorage.getItem('formNewStudent');
         $('#'+nuevo_activo).addClass('active');
+
+        if(_isAlumnos === "active"){
+            if(path[2] !== undefined){
+                $('#studentPage_'+path[2]).addClass('border');
+                $('#chevron'+path[2]).removeClass('text-secondary');
+            } else {
+                $('#studentPage').addClass('border');
+            }
+            $('#students_menu').removeClass('collapsed').attr('aria-expanded', true);
+            $('#chevron').removeClass('text-secondary');
+            $('#studentsCollapse').addClass('show');
+        }
+
+        $('.student-page').click(function(event) {
+            if(path[2] !== undefined){
+                $('#studentPage_'+path[2]).addClass('border');
+            } else {
+                $('#studentPage').addClass('border');
+            }
+        });
     },
+
 };
 
 Main.initialize();

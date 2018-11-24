@@ -3,6 +3,9 @@
 <head>
     <title>Control Escolar</title>
     <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="<?= _root(); ?>favicon.ico">
@@ -63,37 +66,37 @@
                                  aria-labelledby="headingTwo" 
                                  data-parent="#accordionExample">
                                 <ul class="list-group">
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage">
                                         <a href="<?= _root(); ?>alumnos">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Alumnos</a></li>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron"></i> Alumnos</a></li>
                                     <?php if ($user_type !== 3): ?>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_inscribir">
                                         <a href="<?= _root(); ?>alumnos/inscribir">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Nuevo</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_inscribir"></i> Nuevo</a>
                                     </li>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_becados">
                                         <a href="<?= _root(); ?>alumnos/becados">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Becados</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_becados"></i> Becados</a>
                                     </li>
                                     <?php if ($user_type === 777): ?>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_sep">
                                         <a href="<?= _root(); ?>alumnos/sep">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Sep</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_sep"></i> Sep</a>
                                     </li>
                                     <?php endif ?>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_baja">
                                         <a href="<?= _root(); ?>alumnos/baja">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Baja</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_baja"></i> Baja</a>
                                     </li>
                                     <?php if ($user_type === 777): ?>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_egresados">
                                         <a href="<?= _root(); ?>alumnos/egresados">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Egresados</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_egresados"></i> Egresados</a>
                                     </li>
                                     <?php endif ?>
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item student-page" id="studentPage_eliminados">
                                         <a href="<?= _root(); ?>alumnos/eliminados">
-                                            <i class="fa fa-chevron-right text-secondary"></i> Eliminados</a>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_eliminados"></i> Eliminados</a>
                                     </li>
                                     <?php endif ?>
                                 </ul>

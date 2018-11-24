@@ -9,6 +9,7 @@
     <script>
         var _ciclo = "<?= H::getCiclo(date('m')); ?>";
         var _root_ = "<?= _root(); ?>";
+        var _isAlumnos = "<?= _active($filename, 'alumnos');?>";
     </script>
     <script src="<?= _root(); ?>assets/libs/js/modernizr.min.js"></script>
 	<script src="<?= _root(); ?>assets/libs/js/jquery-331.min.js"></script>

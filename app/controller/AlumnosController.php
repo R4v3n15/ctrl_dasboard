@@ -435,7 +435,23 @@ class AlumnosController extends Controller
             $this->View->renderJSON(
                             array(
                                 'success' => false, 
-                                'message' => '&#x2718; No se pudo eliminar al alumno, intente de nuevo o reporte el error!')
+                                'message' => '&#x2718; ERROR:404, intente de nuevo o reporte el error!')
+            );
+        }
+    }
+
+    public function validarClase(){
+        $this->View->renderJSON(AlumnoModel::validateClass(Request::post('idClass')));
+    }
+
+    public function restaurarAlumno(){
+        if (Request::post('idStudent') || Request::post('idClass')) {
+            $this->View->renderJSON(AlumnoModel::restoreStudent(Request::post('idStudent'), Request::post('idClass')));
+        } else {
+            $this->View->renderJSON(
+                            array(
+                                'success' => false, 
+                                'message' => '&#x2718; ERROR:404, intente de nuevo o reporte el error!')
             );
         }
     }

@@ -7,7 +7,7 @@
             <div class="col-12">
                 <table id="example" class="table table-sm table-striped" style="width:100%">
                     <thead>
-                        <tr class="bg-info">
+                        <tr class="">
                             <th class="text-center">No.</th>
                             <th class="text-center">Foto</th>
                             <th class="text-center">Nombre</th>
@@ -40,8 +40,8 @@
 <div class="modal fade" id="modalReactiveStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Reactivar</h5>
+            <div class="modal-header py-2 bg-success">
+                <h6 class="modal-title mb-0 text-white" id="ModalCenterTitle">Reactivar Alumno</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -51,14 +51,18 @@
                     <div class="col-12 text-center">
                         <p class="text-center"> 
                             Dara de alta a:<br> 
-                            <strong id="nombre_alumno"></strong>.<br> 
+                            <strong id="nameStudentToActivate"></strong>.<br> 
                             ¿Desea continuar con esta acción?
                         </p>
-                <input type="hidden" id="num_alumno">
+                        <h6 class="text-center text-info">
+                            El Alumno sera retornado a <strong id="returnStudentTo"></strong>
+                        </h6>
+                        <input type="hidden" id="idStudentToActivate">
+                        <input type="hidden" id="idClassToReturn">
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-6 text-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>

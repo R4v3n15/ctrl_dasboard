@@ -31,7 +31,11 @@
             <div class="col-12">
                 <?php $this->renderFeedbackMessages(); ?>
             </div>
-            <div class="col-12 px-0">
+            <div class="col-12 text-center mt-5" id="loader">
+                <img src="<?= Config::get('URL');?>public/assets/img/loader.gif">
+                <h6 class="text-center text-muted" style="margin-top: -2.5rem;">Cargando..</h6>
+            </div>
+            <div class="col-12 px-0 d-none" id="data-container">
                 <div class="table-responsive">
                     <table id="table_students" class="table table-sm table-striped" style="width:100%">
                         <thead>
