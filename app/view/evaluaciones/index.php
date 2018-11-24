@@ -12,6 +12,21 @@
         </div>
 
         <div class="row">
+            <div class="col-md-12 text-center">
+                <h3 class="mb-0"><i class="fa fa-cogs"></i></h3>
+                <h5 class="text-info mb-4">
+                    | - - - - - - - - - - - - - - - - -  - - - - - - - - - |<br>
+                     E N &nbsp;&nbsp;&nbsp; M A N T E N I M I E N T O <br>
+                    | - - - - - - - - - - - - - - - - -  - - - - - - - - - |
+                </h5>
+                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
+            </div>
+        </div>
+
+        <?php $user_type = (int)Session::get('user_type'); ?>
+
+        <?php if ($user_type === 777): ?>
+        <div class="row">
             <div class="col-md-12">
                 <?php $this->renderFeedbackMessages(); ?>
             </div>
@@ -175,5 +190,6 @@
                 </div>
             </div>
         </div>
+        <?php endif ?>
     </main>
 </div>

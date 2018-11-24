@@ -9,6 +9,7 @@ class LoginController extends Controller
     public function __construct()
     {
         parent::__construct();
+        Registry::set('js', array('login&assets/js'));
     }
 
     /**
@@ -34,7 +35,9 @@ class LoginController extends Controller
         // check if csrf token is valid
         if (!Csrf::isTokenValid()) {
             LoginModel::logout();
-            Redirect::home();
+            $this->View->renderJSON(array(
+                                    'success' => false, 
+                                    'message' => '&#x2718; ERROR:500 - Imposible iniciar sesión, intente más tarde'));
             exit();
         }
 
@@ -47,17 +50,24 @@ class LoginController extends Controller
 
         // check login status: if true, then redirect user to user/index, if false, then to login form again
         if ($login_successful) {
+            $this->View->renderJSON(array(
+                                    'success' => True, 
+                                    'message' => 'Iniciando, espere por favor...'));
+            exit();
             if (Request::post('redirect')) {
                 Redirect::toPreviousViewedPageAfterLogin(ltrim(urldecode(Request::post('redirect')), '/'));
             } else {
                 Redirect::to('alumnos');
             }
         } else {
-            if (Request::post('redirect')) {
-                Redirect::to('login?redirect=' . ltrim(urlencode(Request::post('redirect')), '/'));
-            } else {
-                Redirect::to('login/index');
-            }
+            $this->View->renderJSON(array(
+                                    'success' => false, 
+                                    'message' => 'Usuario o contraseña incorrectos'));
+            // if (Request::post('redirect')) {
+            //     Redirect::to('login?redirect=' . ltrim(urlencode(Request::post('redirect')), '/'));
+            // } else {
+            //     Redirect::to('login/index');
+            // }
         }
     }
 
