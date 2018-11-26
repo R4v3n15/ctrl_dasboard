@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /** Configuration for: Error reporting */
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
@@ -43,6 +43,14 @@ return array(
     'COOKIE_SECURE'   => false,
     'COOKIE_HTTP'     => true,
     'SESSION_RUNTIME' => 604800,
+	
+    'DB_TYPE' => 'mysql',
+    'DB_HOST' => 'localhost',
+    'DB_NAME' => 'control',
+    'DB_USER' => 'root',
+    'DB_PASS' => 'admin',
+    'DB_PORT' => '3306',
+    'DB_CHARSET' => 'utf8',
 
     /** Configuration for: Avatars/Gravatar support */
     'USE_GRAVATAR'                => false,

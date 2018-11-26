@@ -35,9 +35,9 @@ class DatabaseFactory
             try {
                 $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING);
                 $this->database = new PDO(
-                   Config::db('DB_TYPE') . ':host=' . Config::db('DB_HOST') . ';dbname=' .
-                   Config::db('DB_NAME') . ';port=' . Config::db('DB_PORT') . ';charset=' . Config::db('DB_CHARSET'),
-                   Config::db('DB_USER'), Config::db('DB_PASS'), $options
+                   Config::get('DB_TYPE') . ':host=' . Config::get('DB_HOST') . ';dbname=' .
+                   Config::get('DB_NAME') . ';port=' . Config::get('DB_PORT') . ';charset=' . Config::get('DB_CHARSET'),
+                   Config::get('DB_USER'), Config::get('DB_PASS'), $options
                    );
             } catch (PDOException $e) {
 
