@@ -1,13 +1,7 @@
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-md-12 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
-            <h5 class="text-info">Usuarios Naatik</h5>
-            <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                    <button class="btn btn-sm btn-outline-secondary">Share</button>
-                    <button class="btn btn-sm btn-outline-secondary">Export</button>
-                </div>
-            </div>
+            <h5 class="text-info">Registro de Usuarios</h5>
         </div>
 
         <div class="row justify-content-center">
@@ -15,7 +9,7 @@
                 <?php $this->renderFeedbackMessages(); ?>
             </div>
             <div class="col-md-8">
-                <h4 class="text-center text-info">Nuevo Usuario</h4>
+                <h4 class="text-center text-info my-3">Nuevo Usuario</h4>
                 <!-- register form -->
                 <form method="post" action="<?php echo Config::get('URL'); ?>register/register_action">
                     <div class="row">
@@ -75,18 +69,18 @@
                                    autocomplete="off" />
                         </div>
                     </div>
-                    <div class="row justify-content-center my-3">
+                    <div class="row justify-content-center my-4">
                         <div class="col-8 col-md-6 text-center">
                             <input type="submit" 
                                    value="Register" 
-                                   class="btn btn-sm btn-primary btn-raised center" />
+                                   class="btn btn-primary box-shadown center" />
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col-md-8">
                 <p style="display: block; font-size: 13px; color: #999;">
-                    NOTA: Por favor rellene los campos con datos reales. La cuenta de correo es opcional, el cual le puede servir para el inicio de sesión si olvida su nombre de usuario.
+                    NOTA: Por favor rellene los campos con datos reales. La cuenta de correo es opcional, el cual le puede servir para el inicio de sesión si olvida su nombre de usuario o viceversa.
                 </p>
             </div>
         </div>

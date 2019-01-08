@@ -136,10 +136,10 @@
             </div>
             <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="addToGroup" class="btn btn-info">Agregar</button>
+                    <button type="button" id="addToGroup" class="btn btn-info box-shadown">Agregar</button>
                 </div>
             </div>
         </div>
@@ -190,12 +190,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="updateGroup" class="btn btn-primary">Cambiar</button>
+                    <button type="button" id="updateGroup" class="btn btn-info box-shadown">Cambiar</button>
                 </div>
             </div>
         </div>
@@ -206,7 +206,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header py-2 bg-warning">
-                <h5 class="modal-title m-0 text-white" id="unsuscribeTitle">Dar de Baja Alumno</h5>
+                <h6 class="modal-title m-0 text-white" id="unsuscribeTitle">DAR DE BAJA ALUMNO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -226,12 +226,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="unsuscribeStudent" class="btn btn-primary">Dar de Baja</button>
+                    <button type="button" id="unsuscribeStudent" class="btn btn-info box-shadown">Dar de Baja</button>
                 </div>
             </div>
         </div>
@@ -241,8 +241,8 @@
 <div class="modal fade" id="modalUnsuscribeStudents" tabindex="-1" role="dialog" aria-labelledby="MdTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unsuscribeTitle">Dar de Baja Alumnos</h5>
+            <div class="modal-header py-2 bg-warning">
+                <h6 class="modal-title my-0 text-white" id="unsuscribeTitle">DAR DE BAJA ALUMNOS</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -260,12 +260,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="unsuscribeStudents" class="btn btn-primary">Der de Baja</button>
+                    <button type="button" id="unsuscribeStudents" class="btn btn-info box-shadown">Der de Baja</button>
                 </div>
             </div>
         </div>
@@ -275,8 +275,8 @@
 <div class="modal fade" id="modalDeleteStudent" tabindex="-1" role="dialog" aria-labelledby="deleteTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteTitle">Eliminar Alumno</h5>
+            <div class="modal-header py-2 bg-danger">
+                <h6 class="modal-title mb-0 text-white" id="deleteTitle">ELIMINAR ALUMNO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -285,7 +285,7 @@
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <input type="hidden" class="form-control text-center" id="delete_student" />
-                        <h6 class="text-center text-secondary">¿Está seguro de querer eliminar a:</h6>
+                        <h6 class="text-center text-secondary">¿Desea eliminar a:</h6>
                         <h5 class="text-center text-info">
                             <small id="delete_name"></small>?
                         </h5>
@@ -294,10 +294,10 @@
             </div>
             <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="deleteStudent" class="btn btn-danger">Eliminar</button>
+                    <button type="button" id="deleteStudent" class="btn btn-danger box-shadown">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -307,8 +307,8 @@
 <div class="modal fade" id="modalDeleteStudents" tabindex="-1" role="dialog" aria-labelledby="reTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reTitle">Eliminar Alumnos Seleccionados</h5>
+            <div class="modal-header py-2 bg-danger">
+                <h6 class="modal-title mb-0 text-white" id="reTitle">ELIMINAR ALUMNOS</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -324,10 +324,10 @@
             </div>
             <div class="row mb-4">
                 <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary box-shadown btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="deleteStudents" class="btn btn-primary">Eliminar</button>
+                    <button type="button" id="deleteStudents" class="btn btn-info box-shadown">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -338,8 +338,8 @@
 <div class="modal fade" id="modalInvoiceList" tabindex="-1" role="dialog" aria-labelledby="invoiceTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="invoiceTitle">Lista de Facturación</h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title mb-0 text-white" id="invoiceTitle">LISTA DE FACTURACIÓN</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -380,8 +380,8 @@
 <div class="modal fade" id="modalChangeAvatar" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteTitle">Cambiar Foto</h5>
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title mb-0 text-white" id="deleteTitle">CAMBIAR FOTO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -399,10 +399,10 @@
                             </div>
                         </div>
                         <div class="col-6 text-center">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary box-shadown" data-dismiss="modal">Cancelar</button>
                         </div>
                         <div class="col-6 text-center">
-                            <button type="submit" id="deleteStudent" class="btn btn-info">Cambiar</button>
+                            <button type="submit" id="deleteStudent" class="btn btn-info box-shadown">Cambiar</button>
                         </div>
                     </div>
                 </form>

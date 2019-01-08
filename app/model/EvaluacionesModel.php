@@ -2,6 +2,21 @@
 
 class EvaluacionesModel
 {
+    public static function getStudentName($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $query = $database->prepare("SELECT CONCAT_WS(' ', name, surname, lastname) as name 
+                                     FROM students 
+                                     WHERE student_id = :student
+                                     LIMIT 1;");
+        $query->execute(array(':student' => $student));
+
+        if ($query->rowCount() > 0) {
+            return $query->fetch()->name;
+        }
+
+        return null;
+    }
 
     public static function getStudentData($student) {
         $database = DatabaseFactory::getFactory()->getConnection();

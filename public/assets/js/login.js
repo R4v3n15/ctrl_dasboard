@@ -27,6 +27,7 @@ var LoginUser = {
                 }
             })
             .fail(function(errno){
+                console.log(errno.message)
                 $('#general_snack').attr('data-content', 'ERROR:500, Error desconocido, reporte el incidente!');
                 $('#general_snack').snackbar('show');
                 $('.snackbar').addClass('snackbar-red');

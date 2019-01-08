@@ -130,7 +130,7 @@ class AlumnoModel
                             </a>
                         </li>';
                 $options .=   '<li>
-                            <a href="'.Config::get('URL').'evaluaciones/index/'.$alumno->student_id.'">
+                            <a href="'.Config::get('URL').'evaluaciones/st/'.$alumno->student_id.'">
                                 <i class="ml-1 text-success fa fa-chevron-right"></i>
                                 Calificaciones
                             </a>

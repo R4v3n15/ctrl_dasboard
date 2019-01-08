@@ -6,16 +6,23 @@ var Evaluaciones = {
 
     setEvaluationPoints: function(){
         let _this = this;
-        $('#id_date').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
+            
+
+        if ($('#evaluation_date').length) {
+            new Pikaday(
+                    {
+                        field: document.getElementById('evaluation_date'),
+                        defaultDate: moment().toDate(),
+                        setDefaultDate: true,
+                        format: 'YYYY-MM-DD'
+                    });
+        }
         // Evaluate Achievement
         $('.read_achiev').click(function(){
             let value = $(this).data('val');
             $('#reading').val(value);
-            $('.read_achiev').children('span').removeClass('checked');
-            $(this).children('span').addClass('checked');
+            $('.read_achiev').find('span').removeClass('checked');
+            $(this).find('span').addClass('checked');
         });
 
         $('.write_achiev').click(function(){

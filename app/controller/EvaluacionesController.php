@@ -7,9 +7,23 @@ class EvaluacionesController extends Controller
         parent::__construct();
         Auth::checkAuthentication();
 
-        Registry::set('css',array('icons&assets/css', 'alumnos&assets/css'));
-        Registry::set('js', array('select2.min&assets/libs/js', 
+        Registry::set('css',array('pikaday&assets/libs/pikaday/css', 'icons&assets/css'));
+        Registry::set('js', array('moment.min&assets/libs/js', 
+                                  'pikaday&assets/libs/pikaday', 
                                   'evaluaciones&assets/js'));
+    }
+
+    public function st($student){
+        $alumno = EvaluacionesModel::getStudentName($student);
+
+        if ($alumno) {
+            $this->View->render('evaluaciones/index', array(
+                'student_name' => $alumno,
+                'student_id'   => $student
+            ));
+        } else {
+            $this->View->render('error/404');
+        }
     }
 
     public function index($alumno) {
@@ -17,8 +31,16 @@ class EvaluacionesController extends Controller
             'alumno' => $alumno));
     }
 
-    public function evaluar($alumno){
-        $this->View->render('evaluaciones/evaluarv1', array('alumno' => $alumno));
+    public function ev($student){
+        $alumno = EvaluacionesModel::getStudentName($student);
+        if ($alumno) {
+            $this->View->render('evaluaciones/evaluarv1', array(
+                'student_name'   => $alumno,
+                'student_id'    => $student
+            ));
+        } else {
+            $this->View->render('error/404');
+        }
     }
 
     public function guardarEvaluacion(){
