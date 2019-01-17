@@ -76,4 +76,97 @@ class ReportesModel
 
         return array('data' => $datos);   
     }
+
+
+    public static function register(){
+        $cursos = self::Courses();
+
+        $total = 0;
+        foreach ($cursos as $curso) {
+            $curso->name    = ucwords(strtolower($curso->course));
+            $grupos = self::groupsByCourse($curso->course_id);
+            $curso->grupos  = $grupos['grupos'];
+            $total         += $grupos['totalAlumnos'];
+        }
+
+        return array('cursos' => $cursos, 'totalAlumnos' => $total);
+    }
+
+    public static function Courses(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $query = $database->prepare("SELECT course_id, course FROM courses");
+        $query->execute();    
+
+        return $query->fetchAll();
+    }
+
+    public static function groupsByCourse($course){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $_sql = $database->prepare('SELECT c.class_id, g.* 
+                                    FROM classes as c, groups as g
+                                    WHERE c.course_id = :course 
+                                      AND c.status = 1
+                                      AND c.group_id = g.group_id;');
+        $_sql->execute(array(':course' => $course));
+
+        $grupos = $_sql->fetchAll();
+        $total  = 0;
+        foreach ($grupos as $grupo) {
+            $grupo->alumnos = self::countStudenByGroup($grupo->class_id);
+            $total += $grupo->alumnos;
+        }
+
+        return array('grupos' => $grupos, 'totalAlumnos' => $total);
+    }
+
+    public static function countStudenByGroup($clase){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $students = $database->prepare("SELECT s.student_id
+                                        FROM students as s, students_groups as g
+                                        WHERE s.status     = 1
+                                          AND s.deleted    = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = :clase;");
+        $students->execute(array(':clase' => $clase));
+
+        return $students->rowCount();
+    }
+
+    public static function countByCourse($course){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT s.student_id, c.course_id
+                                        FROM students as s, students_groups as g, classes as c
+                                        WHERE s.status = 1
+                                          AND s.deleted  = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = c.class_id
+                                          AND c.course_id  = :course;");
+        $students->execute(array(':course' => $course));
+
+        return $students->rowCount();
+    }
+
+    public static function countStudentsWithoutGroup(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+       
+        $_sql = $database->prepare('SELECT class_id FROM classes WHERE status = 3;');
+        $_sql->execute();
+
+        $total = 0;
+        foreach ($_sql->fetchAll() as $clase) {
+            $query = $database->prepare("SELECT s.student_id
+                                        FROM students as s, students_groups as g
+                                        WHERE s.status     = 1
+                                          AND s.deleted    = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = :clase;");
+            $query->execute(array(':clase' => $clase->class_id));
+
+            $total += $query->rowCount();
+        }
+
+        return $total;
+    }
 }

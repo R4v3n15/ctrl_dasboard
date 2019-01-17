@@ -980,6 +980,21 @@ class AlumnoModel
 
     public static function createAvatar($student, $avatar_name){
     	$database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = $database->prepare('SELECT avatar FROM students WHERE student_id = :student LIMIT 1;');
+        $sql->execute(array(':student' => $student));
+
+        // Remove the old avatar
+        if ($sql) {
+            $result  = $sql->fetch();
+            $realPath = Config::get('PATH_AVATARS_STUDENTS').$result->avatar.'.jpg';
+            $image    = strtolower($result->avatar);
+            if (!file_exists($realPath && $image !== 'masculino' && $image !== 'femenino')) {
+                unlink($realPath);
+            }
+        }
+
+
     	$avatar = $database->prepare('UPDATE students SET avatar = :avatar WHERE student_id = :student;');
     	$save = $avatar->execute(array(':avatar' => $avatar_name, ':student' => $student));
 

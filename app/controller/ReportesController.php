@@ -29,6 +29,21 @@ class ReportesController extends Controller
         $this->View->render('reportes/alumnos');
     }
 
+    public function registro() {
+        $registro = ReportesModel::register();
+        $this->View->render('reportes/registro', array(
+            'totalAlumnos'   => GeneralModel::countTotalStudents(),
+            'courses'        => $registro['cursos'],
+            'alumnosActivos' => $registro['totalAlumnos'],
+            'whitoutGroup'   => ReportesModel::countStudentsWithoutGroup(),
+            'waiting'        => GeneralModel::countStandbyStudent(),
+            'standby'        => GeneralModel::countBajaStudents(),
+            'egresados'      => GeneralModel::countEgresadosStudent(),
+            'deleted'        => GeneralModel::countDeletedStudents()
+
+        ));
+    }
+
     public function getStudentsTable(){
         $this->View->renderJSON(ReportesModel::StudentsTable(Request::post('curso')));
     }

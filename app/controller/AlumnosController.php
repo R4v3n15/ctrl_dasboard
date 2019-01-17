@@ -29,11 +29,10 @@ class AlumnosController extends Controller
 
     public function cambiarFotoAlumno(){
         if (Request::post('avatar_student') && $_FILES['avatar_file']['tmp_name'] !== "") {
-            $avatar = 'student_'.(int)Request::post('avatar_student');
+            $avatar = 'student_'.(int)Request::post('avatar_student').'_'.date('his');
             $upload = FotoModel::createAvatar($avatar);
             if ($upload) {
                 $this->View->renderJSON(AlumnoModel::createAvatar(Request::post('avatar_student'), $avatar));
-                
             } else {
                 $this->View->renderJSON(
                               array('success' => false,

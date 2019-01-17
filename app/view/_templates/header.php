@@ -34,7 +34,6 @@
            class="navbar-brand col-sm-3 col-md-2 mr-0 menu-toggle text-center" 
            href="#menu-toggle"><i class="fa fa-bars"></i> NAATIK SC</a>
         <h6 class="text-secondary">Bienvenid@: <?= strtoupper($user); ?></h6>
-        <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
         <ul class="navbar-nav px-5">
             <li class="nav-item text-nowrap">
                 <a class="nav-link" href="<?= _root(); ?>login/logout">Salir <span data-feather="log-out"></span></a>
@@ -138,11 +137,31 @@
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= _root(); ?>reportes/alumnos">
+                        <li class="nav-item accordion" id="accordionReports">
+                            <a class="nav-link <?= _active($filename, 'alumnos');?> collapsed"
+                                data-toggle="collapse"
+                                data-target="#reportsCollapse"
+                                id="students_menu"
+                                href="javascript:void(0)">
                                 <span data-feather="file-text"></span>
-                                Reportes
+                                Reportes <span data-feather="chevron-down"></span>
                             </a>
+                            <div id="reportsCollapse" 
+                                 class="collapse ml-3" 
+                                 aria-labelledby="headingTwo" 
+                                 data-parent="#accordionReports">
+                                <ul class="list-group">
+                                    <li class="dropdown-item student-page">
+                                        <a href="<?= _root(); ?>reportes/alumnos">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Alumnos
+                                        </a>
+                                    </li>
+                                    <li class="dropdown-item student-page">
+                                        <a href="<?= _root(); ?>reportes/registro">
+                                            <i class="fa fa-chevron-right text-secondary"></i> Registro</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= _root(); ?>dashboard/admin">

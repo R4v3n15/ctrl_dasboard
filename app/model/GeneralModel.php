@@ -169,12 +169,20 @@ class GeneralModel
         return null;
     }
 
+    public static function countTotalStudents(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT student_id FROM students;");
+        $students->execute();
+
+        return $students->rowCount();
+    }
+
     // Counter
     public static function countAll() {
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id 
                                         FROM students as s, students_groups as g
-                                        WHERE s.status = 1 
+                                        WHERE s.status  = 1 
                                           AND s.deleted = 0
                                           AND s.student_id = g.student_id;");
         $students->execute();
@@ -194,8 +202,8 @@ class GeneralModel
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, c.course_id
                                         FROM students as s, students_groups as g, classes as c
-                                        WHERE s.status = 1
-                                          AND s.deleted  = 0
+                                        WHERE s.status     = 1
+                                          AND s.deleted    = 0
                                           AND s.student_id = g.student_id
                                           AND g.class_id   = c.class_id
                                           AND c.course_id  = :course;");
@@ -204,33 +212,38 @@ class GeneralModel
         return $students->rowCount();
     }
 
+    public static function countDeletedStudents(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT student_id FROM students WHERE deleted = 1;");
+        $students->execute();
 
-
-    public static function filter($category, $param){
-        switch ($category) {
-            case 'alumno':
-                self::filterStudent($param, null, null);
-                break;
-            case 'grupo':
-                // code...
-                break;
-            case 'tutor':
-                // code...
-                break;
-            case 'edad':
-                // code...
-                break;
-            case 'escuela':
-                // code...
-                break;
-            case 'grado':
-                // code...
-                break;
-            default:
-                return array('message' => 'Nothing found');
-                break;
-        }
+        return $students->rowCount();
     }
+
+    public static function countBajaStudents(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT student_id FROM students WHERE status = 0;");
+        $students->execute();
+
+        return $students->rowCount();
+    }
+
+    public static function countStandbyStudent() {
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT student_id FROM students WHERE status = 2 AND deleted = 0;");
+        $students->execute();
+
+        return $students->rowCount();
+    }
+
+     public static function countEgresadosStudent() {
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT student_id FROM students WHERE status = 3;");
+        $students->execute();
+
+        return $students->rowCount();
+    }
+
 
     // Prevencion de Duplicidad
     public static function filterStudent($name, $surname=null, $lastname=null){
