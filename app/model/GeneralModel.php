@@ -399,12 +399,37 @@ class GeneralModel
         $bk_path = Config::get('PATH_BACKUPS'); //Carpeta destino del Backup
 
         $backup_file = $bk_path . $name . '_' .date("Ymd-His") . ".sql";
-        echo "<h3>Backing up database to `<code>{$backup_file}</code>`</h3>";
+        // echo "<h3>Backing up database to `<code>{$backup_file}</code>`</h3>";
         $cmd = "C:\\xampp\mysql\bin\mysqldump.exe -h {$host} -u {$user} -p{$pass} {$name} > $backup_file";
          
         exec($cmd,$output);
-        var_dump($output);
     }
+
+    public static function getLastBackup(){
+        $host = Config::get('DB_HOST'); //Host del Servidor MySQL
+        $name = Config::get('DB_NAME'); //Nombre de la Base de datos
+        $user = Config::get('DB_USER'); //Usuario de MySQL
+        $pass = Config::get('DB_PASS'); //Password de Usuario MySQL
+        $path = Config::get('PATH_BACKUPS'); //Carpeta destino del Backup
+
+        $files = scandir($path);
+
+        $restore = null;
+        $created_at = 0;
+        $lastBackup = null;
+        foreach ($files as $file) {
+            if ((preg_match('/.sql/',$file)) ) {
+                $root = $path . pathinfo($file)['basename'];
+
+                if (filemtime($root) > $created_at) {
+                    $lastBackup = pathinfo($file)['basename'];
+                    $created_at = filemtime($root);
+                }
+            }
+        }
+        return $lastBackup;        
+    }
+
 
 
     ////////////////////////////////////////////////////////////

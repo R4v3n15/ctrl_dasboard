@@ -17,12 +17,15 @@
         
         <div class="row justify-content-center">
             <div class="col-3 text-center mb-4">
-                <button type="buttom" class="btn btn-success box-shadown" id="createTable"><i class="fa fa-sync"></i> Actualizar Recursos</button>
+                <a href="<?= _root(); ?>dashboard/descargarDB" class="btn btn-success box-shadown">Descargar BD</a>
             </div>
             <div class="col-3 text-center mb-4">
                 <button type="buttom" class="btn btn-info box-shadown" id="createBackup"><i class="fa fa-archive"></i> Respaldar BD</button>
             </div>
             <?php if ($user_type === 777): ?>
+            <div class="col-3 text-center mb-4">
+                <button type="buttom" class="btn btn-success box-shadown" id="createTable"><i class="fa fa-sync"></i> Actualizar Recursos</button>
+            </div>
             <div class="col-3 text-center mb-4">
                 <button type="buttom" class="btn btn-warning box-shadown" id="importDatabase"><i class="fa fa-upload"></i> Importar BD</button>
             </div>

@@ -104,7 +104,8 @@ var Alumnos = {
                             { "data": "studies" },
                             { "data": "age" },
                             { "data": "group_name" },
-                            { "data": "tutor_name" },
+                            { "data": "teacher" },
+                            { "data": "horary" },
                             { "data": "options" }
                         ],
                         "rowCallback": function( row, data, index ) {
@@ -131,13 +132,13 @@ var Alumnos = {
         this.countStudents();
         this.vars.dataTable = table;
 
-        // table.on( 'draw.dt', function () {
-        //     let PageInfo = $('#table_students').DataTable().page.info();
-        //     table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
-        //         cell.innerHTML = i + 1 + PageInfo.start;
-        //         table.cell(cell).invalidate('dom');
-        //     } );
-        // } );
+        table.on( 'draw.dt', function () {
+            let PageInfo = $('#table_students').DataTable().page.info();
+            table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                cell.innerHTML = i + 1 + PageInfo.start;
+                table.cell(cell).invalidate('dom');
+            } );
+        } );
 
         $('#table_students tbody').on('click', '.btnSetGroup', function(event){
             event.preventDefault();

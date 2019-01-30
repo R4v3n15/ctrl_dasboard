@@ -46,6 +46,39 @@ var Dashboard = {
     manageDatabase: function(){
         console.log('Management View');
 
+        $('#downloadBD').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                synch: 'true',
+                url: _root_ + 'dashboard/backDatabase',
+                type: 'POST'
+            })
+            .done(function(resp) {
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'dashboard/descargarDB'
+                })
+                .then(function(response){
+                    if (response.success) {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                    } else {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                });//End Ajax
+            })
+            .fail(function(errno) {
+                $('#general_snack').attr('data-content', 'Error: ' + errno.status + ': ' + errno.statusText);
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-red');
+            });
+        });
+
         $('#createTable').click(function(event) {
             event.preventDefault();
 

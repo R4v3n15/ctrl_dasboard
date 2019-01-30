@@ -26,7 +26,9 @@ class DashboardController extends Controller
     }
 
     public function admin(){
-        $this->View->render('dashboard/admin');
+        $this->View->render('dashboard/admin', array(
+            'backup' => GeneralModel::getLastBackup()
+        ));
     }
 
     public function nuevaTabla(){
@@ -56,5 +58,23 @@ class DashboardController extends Controller
 
     public function importDatabase() {
         $this->View->renderJSON(GeneralModel::restoreDatabase());
+    }
+
+    public function descargarDB($data=null) {
+
+        GeneralModel::createBackupDatabase();
+
+        $database = GeneralModel::getLastBackup();
+
+        if ($database !== null) {
+            $file_url = Config::get('PATH_BACKUPS'). $database;
+            header('Content-Type: application/octet-stream');
+            header("Content-Transfer-Encoding: Binary"); 
+            header("Content-disposition: attachment; filename=\"" . basename($file_url) .     "\""); 
+            readfile($file_url); 
+            exit;
+        }
+
+        dump('Nada para descargar...');
     }
 }

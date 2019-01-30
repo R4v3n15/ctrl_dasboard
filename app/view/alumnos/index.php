@@ -47,7 +47,8 @@
                                 <th class="text-center">Escolaridad</th>
                                 <th class="text-center">Edad</th>
                                 <th class="text-center">Grupo</th>
-                                <th class="text-center">Tutor</th>
+                                <th class="text-center">Maestro</th>
+                                <th class="text-center">Horario</th>
                                 <th class="text-center">Opciones</th>
                             </tr>
                         </thead>
@@ -71,7 +72,8 @@
                                 <th class="text-center">Escolaridad</th>
                                 <th class="text-center">Edad</th>
                                 <th class="text-center">Grupo</th>
-                                <th class="text-center">Tutor</th>
+                                <th class="text-center">Maestro</th>
+                                <th class="text-center">Horario</th>
                                 <th class="text-center">Opciones</th>
                             </tr>
                         </tfoot>

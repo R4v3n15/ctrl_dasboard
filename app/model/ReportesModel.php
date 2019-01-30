@@ -99,15 +99,15 @@ class ReportesModel
 
         return $query->fetchAll();
     }
-
+    
     public static function groupsByCourse($course){
         $database = DatabaseFactory::getFactory()->getConnection();
 
         $_sql = $database->prepare('SELECT c.class_id, g.* 
                                     FROM classes as c, groups as g
                                     WHERE c.course_id = :course 
-                                      AND c.status = 1
-                                      AND c.group_id = g.group_id;');
+                                      AND c.status    = 1
+                                      AND c.group_id  = g.group_id;');
         $_sql->execute(array(':course' => $course));
 
         $grupos = $_sql->fetchAll();

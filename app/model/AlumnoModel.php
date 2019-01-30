@@ -24,6 +24,8 @@ class AlumnoModel
             foreach ($students as $alumno) {
                 $id_grupo = 0;
                 $nombre_curso = '';
+                $maestro = '- - - -';
+                $horario = '- - - -';
                 $finished = false;
                 $grupo = '<a href="javascript:void(0)" 
                              class="link btnSetGroup badge badge-warning" 
@@ -31,8 +33,8 @@ class AlumnoModel
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.status, 
-                                                        cu.course, g.group_name, h.date_end
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.status, 
+                                                        cu.course, g.group_name, h.date_end, h.hour_init, h.hour_end
                                                  FROM classes as c, courses as cu, groups as g, schedules as h
                                                  WHERE c.class_id   = :clase
                                                    AND c.course_id  = cu.course_id
@@ -40,11 +42,13 @@ class AlumnoModel
                                                    AND c.schedul_id = h.schedul_id
                                                  LIMIT 1;");
                     $clase->execute(array(':clase' => $alumno->class_id));
+
                     if ($clase->rowCount() > 0) {
                         $clase = $clase->fetch();
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
                         $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 5 days');
+                        $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
                         $grupo = '<a class="btnChangeGroup"
                                      href="javascript:void(0)"
                                      data-student="'.$alumno->student_id.'"
@@ -53,6 +57,16 @@ class AlumnoModel
                                      data-group="'.$nombre_curso.' '.$clase->group_name.'"
                                      data-reinscripcion="'.$finished.'"
                                      title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+
+                        if ($clase->teacher_id !== null) {
+                            $getUser = $database->prepare("SELECT name, lastname FROM users WHERE user_id = :teacher LIMIT 1;");
+                            $getUser->execute(array(':teacher' => $clase->teacher_id));
+
+                            if ($getUser->rowCount() > 0) {
+                                $getUser = $getUser->fetch();
+                                $maestro = $getUser->name . ' ' . $getUser->lastname;
+                            }
+                        }
                     }
                 }
 
@@ -169,7 +183,8 @@ class AlumnoModel
                     'studies'    => $alumno->studies.' '.$alumno->lastgrade,
                     'age'        => $alumno->age,
                     'group_name' => $grupo,
-                    'tutor_name' => $nombre_tutor,
+                    'teacher'    => ucwords(strtolower($maestro)),
+                    'horary'     => $horario,
                     'options'    => $options,
                     'finished'   => $finished
                 );
