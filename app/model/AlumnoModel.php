@@ -26,6 +26,7 @@ class AlumnoModel
                 $nombre_curso = '';
                 $maestro = '- - - -';
                 $horario = '- - - -';
+                $dias = '';
                 $finished = false;
                 $grupo = '<a href="javascript:void(0)" 
                              class="link btnSetGroup badge badge-warning" 
@@ -33,7 +34,7 @@ class AlumnoModel
                              title="Agregar grupo">Agregar a Grupo</a>';
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.status, 
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, 
                                                         cu.course, g.group_name, h.date_end, h.hour_init, h.hour_end
                                                  FROM classes as c, courses as cu, groups as g, schedules as h
                                                  WHERE c.class_id   = :clase
@@ -48,6 +49,27 @@ class AlumnoModel
                         $id_grupo = $clase->class_id;
                         $nombre_curso = ucwords(strtolower($clase->course));
                         $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 5 days');
+
+                        $getDays = $database->prepare("SELECT d.day 
+                                                       FROM days as d, schedul_days as sd 
+                                                       WHERE sd.schedul_id = :schedul
+                                                         AND sd.day_id     = d.day_id
+                                                       ORDER BY d.day_id;");
+                        $getDays->execute(array(':schedul' => $clase->schedul_id));
+                        $days = $getDays->fetchAll();
+
+                        $pointer = 1;
+                        foreach ($days as $day) {
+                            if(count($days) > $pointer) {
+                                $dias .= ucwords(strtolower($day->day)) . ', ';
+                            } else {
+                                $dias .= ucwords(strtolower($day->day));
+                            }
+                            $pointer++;
+                        }
+
+
+
                         $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
                         $grupo = '<a class="btnChangeGroup"
                                      href="javascript:void(0)"
@@ -175,6 +197,8 @@ class AlumnoModel
                         </li>';
                 $options .= '</ul>';
 
+                $dias = '<small>'.$dias.'</small>';
+
                 $info = array(
                     'count'      => $check,
                     'avatar'     => $photo,
@@ -184,7 +208,7 @@ class AlumnoModel
                     'age'        => $alumno->age,
                     'group_name' => $grupo,
                     'teacher'    => ucwords(strtolower($maestro)),
-                    'horary'     => $horario,
+                    'horary'     => $dias . '<br>' . $horario,
                     'options'    => $options,
                     'finished'   => $finished
                 );
