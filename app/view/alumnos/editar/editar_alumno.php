@@ -52,11 +52,11 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group row">
-                <label class="col-12">Sexo: </label>
+                <label class="col-12">Sexo: <?= $alumno->genre; ?></label>
                 <div class="col-12">
                     <select class="form-control form-control-sm" name="genre">
-                        <option value="Masculino" <?= $alumno->genre == 'Masculino' ? 'checked' : ''; ?>>Masculino</option>
-                        <option value="Femenino" <?= $alumno->genre == 'Femenino' ? 'checked' : ''; ?>>Femenino</option>
+                        <option value="Masculino" <?= $alumno->genre == 'Masculino' ? 'selected' : ''; ?>>Masculino</option>
+                        <option value="Femenino" <?= $alumno->genre == 'Femenino' ? 'selected' : ''; ?>>Femenino</option>
                     </select>
                 </div>
             </div>
@@ -67,9 +67,9 @@
                 <div class="col-12">
                     <select class="form-control form-control-sm" name="edo_civil">
                         <option value="Soltero(a)" 
-                                <?= $alumno->edo_civil == 'Soltero(a)' ? 'checked' : ''; ?>>Soltero(a)</option>
+                                <?= $alumno->edo_civil == 'Soltero(a)' ? 'selected' : ''; ?>>Soltero(a)</option>
                         <option value="Casado(a)" 
-                                <?= $alumno->edo_civil == 'Casado(a)' ? 'checked' : ''; ?>>Casado(a)</option>
+                                <?= $alumno->edo_civil == 'Casado(a)' ? 'selected' : ''; ?>>Casado(a)</option>
                     </select>
                 </div>
             </div>
