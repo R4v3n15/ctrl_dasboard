@@ -242,6 +242,18 @@
                                </div>
                             </div>
                         </div>
+                        <div class="col-sm-6 col-md-6 col-lg-4">
+                            <div class="form-group">
+                               <label class="col-12">Libro: </label>
+                               <div class="col-12">
+                                  <input type="text" 
+                                         class="form-control" 
+                                         name="libro" 
+                                         id="libro" 
+                                         placeholder="Nombre del libro">
+                               </div>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                     <div class="row justify-content-center mb-3">

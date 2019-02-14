@@ -57,7 +57,7 @@ class CursoModel {
 
     public static function addNewClass($curso, $grupo, $f_inicio, $f_fin, $ciclo, $dias, 
                                        $h_inicio, $h_salida, $c_normal, $c_promocional, 
-                                       $c_inscripcion, $maestro)
+                                       $c_inscripcion, $maestro, $libro)
     {
         $database = DatabaseFactory::getFactory()->getConnection();
 
@@ -121,6 +121,7 @@ class CursoModel {
                                                   group_id, 
                                                   schedul_id, 
                                                   teacher_id,
+                                                  book,
                                                   costo_normal,
                                                   costo_promocional,
                                                   costo_inscripcion,
@@ -130,6 +131,7 @@ class CursoModel {
                                                    :grupo,
                                                    :horario,
                                                    :maestro,
+                                                   :libro,
                                                    :c_normal,
                                                    :c_promocional,
                                                    :c_inscripcion,
@@ -140,6 +142,7 @@ class CursoModel {
                                            ':grupo'           => $grupo,
                                            ':horario'         => $horario,
                                            ':maestro'         => $maestro,
+                                           ':libro'           => $libro,
                                            ':c_normal'        => $c_normal,
                                            ':c_promocional'   => $c_promocional,
                                            ':c_inscripcion'   => $c_inscripcion,
@@ -180,7 +183,7 @@ class CursoModel {
         $page      = (int)$page;
 
         $database = DatabaseFactory::getFactory()->getConnection();
-        $sql = "SELECT c.class_id, c.teacher_id, c.schedul_id, cu.course_id, cu.course, cu.status,
+        $sql = "SELECT c.class_id, c.teacher_id, c.schedul_id, c.book, cu.course_id, cu.course, cu.status,
                        g.group_id, g.group_name, h.year, h.date_init, h.date_end, h.hour_init, h.hour_end
                 FROM classes as c, courses as cu, 
                      groups as g, schedules as h
@@ -237,6 +240,7 @@ class CursoModel {
                 $classe[$clase->class_id]->inicia     = H::formatShortDate($clase->date_init);
                 $classe[$clase->class_id]->termina    = H::formatShortDate($clase->date_end);
                 $classe[$clase->class_id]->horario    = $hora_inicio.' - '.$hora_salida;
+                $classe[$clase->class_id]->libro      = $clase->book;
                 $classe[$clase->class_id]->maestro_id = $id_maestro;
                 $classe[$clase->class_id]->maestro    = $maestro;
                 $classe[$clase->class_id]->horario_id = $clase->schedul_id;
@@ -273,6 +277,7 @@ class CursoModel {
                 echo '<th>Dias</th>';
                 echo '<th>Horario</th>';
                 echo '<th>Maestro</th>';
+                echo '<th>Libro</th>';
                 echo $user_type == 1 || $user_type == 2 ? '<th class="text-center">Opciones</th>' : '';
                 echo '</tr>';
             echo '</thead>';
@@ -324,6 +329,7 @@ class CursoModel {
                     echo '</td>';
                     echo '<td>'.$clase->horario.'</td>';
                     echo '<td>'.$clase->maestro.'</td>';
+                    echo '<td>'.$clase->libro.'</td>';
                     if ($user_type == 1 || $user_type == 2) {
                     echo '<td class="text-center">'.$options.'</td>';
                     }
@@ -342,7 +348,7 @@ class CursoModel {
         $sql = "SELECT cu.course, g.group_name, c.schedul_id,
                        h.year, h.date_init, h.date_end, 
                        h.hour_init, h.hour_end, c.class_id, 
-                       c.course_id, c.group_id, c.teacher_id, 
+                       c.course_id, c.group_id, c.teacher_id, c.book, 
                        c.costo_normal, c.costo_promocional, c.costo_inscripcion
                 FROM classes as c, 
                      courses as cu, 
@@ -435,7 +441,7 @@ class CursoModel {
 
 
     public static function updateClass($clase, $curso, $grupo, $horario, $f_inicio, $f_fin, $ciclo, $dias, 
-        $h_inicio, $h_salida, $c_inscripcion, $maestro){
+        $h_inicio, $h_salida, $c_inscripcion, $maestro, $libro){
 
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit = true;
@@ -492,6 +498,7 @@ class CursoModel {
                                   group_id   = :nivel,
                                   teacher_id = :maestro,
                                   costo_inscripcion = :costo,
+                                  book       = :libro,
                                   updated_at = :f_update  
                               WHERE class_id = :clase;";
 
@@ -499,6 +506,7 @@ class CursoModel {
                     $set = $insert->execute(array( ':curso'    => $curso,
                                                    ':nivel'    => $grupo,
                                                    ':maestro'  => $maestro,
+                                                   ':libro'    => $libro,
                                                    ':costo'    => $c_inscripcion,
                                                    ':f_update' => $f_update,
                                                    ':clase'    => $clase));

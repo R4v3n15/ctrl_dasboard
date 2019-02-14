@@ -63,7 +63,8 @@ class CursoController extends Controller
                                         Request::post('c_normal'),
                                         Request::post('c_promocional'),
                                         Request::post('inscripcion'),
-                                        Request::post('maestro')
+                                        Request::post('maestro'),
+                                        Request::post('libro')
             ));
         } else {
             $this->View->renderJSON(
@@ -106,7 +107,9 @@ class CursoController extends Controller
                 Request::post('h_inicio'),
                 Request::post('h_salida'),
                 Request::post('inscripcion'),
-                Request::post('maestro'));
+                Request::post('maestro'),
+                Request::post('libro')
+            );
             Redirect::to('curso/index');
         } 
     }

@@ -192,6 +192,19 @@
                </div>
             </div>
         </div>
+        <div class="col-sm-6 col-md-6 col-lg-4">
+            <div class="form-group">
+                <label for="h_salida" class="col-md-12 control-label">Libro: </label>
+                <div class="col-md-12">
+                    <input type="text" 
+                         class="form-control" 
+                         name="libro" 
+                         id="libro"
+                         value="<?= $this->clase->book; ?>"
+                         placeholder="Nombre del libro">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row justify-content-center mb-3">
         <div class="col-6 col-md-4 text-center">
