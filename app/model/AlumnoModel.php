@@ -1594,7 +1594,7 @@ class AlumnoModel
         }
     }
 
-    public static function updateStudies($student, $ocupation, $workplace, $studies, $lastgrade, $class){
+    public static function updateStudies($student, $ocupation, $workplace, $studies, $lastgrade, $inscription_date, $class){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
         $database->beginTransaction();
@@ -1615,6 +1615,9 @@ class AlumnoModel
                 $_sql = $database->prepare("UPDATE students_groups 
                                             SET class_id = :clase
                                             WHERE student_id = :student;");
+
+                $_update = $database->prepare("UPDATE students SET created_at = :inscription_date WHERE student_id = :student;");
+                $_update->execute(array(':inscription_date' => $inscription_date, ':student' => $student));
 
                 $commit == $_sql->execute(array(':clase' => $class, ':student' => $student));
                 

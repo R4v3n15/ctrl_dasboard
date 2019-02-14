@@ -362,6 +362,7 @@ class AlumnosController extends Controller
                                         Request::post('workplace'),
                                         Request::post('studies'),
                                         Request::post('lastgrade'),
+                                        Request::post('fecha_inscripcion'),
                                         $clase
             ));
         } else {

@@ -83,7 +83,7 @@
                    id="fecha_inscripcion" 
                    class="form-control form-control-sm"
                    placeholder="Cuándo inicia el alumno"
-                   value="<?= $alumno->created_at; ?>" 
+                   value="<?= date('Y-m-d', strtotime($alumno->created_at)); ?>" 
                    name="fecha_inscripcion">
         </label>
     </div>
