@@ -244,6 +244,7 @@ class AlumnosController extends Controller
                 Request::post('curso_previo'),
                 Request::post('description_previo'),
                 $grupo,
+                Request::post('fecha_inscripcion'),
                 Request::post('f_inicio_alumno')
         ));
     }

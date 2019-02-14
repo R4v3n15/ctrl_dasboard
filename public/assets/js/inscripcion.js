@@ -541,6 +541,14 @@ var Inscripcion = {
             });
         }
 
+        // Datepicker fecha de inicio
+        if ($('#fecha_inscripcion').length) {
+            pikadayResponsive(document.getElementById("fecha_inscripcion"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inscripción"
+            });
+        }
+
         // Helper para especificar lugar de trabajo
         $('#ocupation').on('change', function(){
             let ocupacion = $('#ocupation').val();

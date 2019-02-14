@@ -121,7 +121,19 @@
                 <span class="col-sm-12"  id="days"></span>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="col-12 control-label">Fecha de Inscripción:</label>
+                <div class="col-12">
+                    <input type="text" 
+                           id="fecha_inscripcion" 
+                           class="form-control form-control-sm"
+                           placeholder="Cuándo inicia el alumno" 
+                           name="fecha_inscripcion">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
             <div class="form-group">
                 <label class="col-12 control-label">Inicio Alumno:</label>
                 <div class="col-12">

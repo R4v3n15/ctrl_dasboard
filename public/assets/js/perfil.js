@@ -212,6 +212,13 @@ var Perfil = {
                 placeholder: "Fecha de Nacimiento"
             });
         }
+
+        if ($('#fecha_inscripcion').length) {
+            pikadayResponsive(document.getElementById("fecha_inscripcion"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Inscripción"
+            });
+        }
             
         $("#avatar").fileinput({
             showCaption: true,

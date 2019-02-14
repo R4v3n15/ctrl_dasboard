@@ -1043,7 +1043,7 @@ class AlumnoModel
     	return array('success' => false, 'message' => 'No se guardo la foto del alumno, intente mas tarde.');
     }
 
-    public static function createStudies($student, $ocupation, $workplace, $studies, $lastgrade, $prior_course, $prior_comments, $class_id, $date_start){
+    public static function createStudies($student, $ocupation, $workplace, $studies, $lastgrade, $prior_course, $prior_comments, $class_id, $inscription_date, $date_start){
     	$database = DatabaseFactory::getFactory()->getConnection();
 
     	$commit   = true;
@@ -1080,6 +1080,10 @@ class AlumnoModel
 				                      ':year'         => date('Y'),
 					                  ':ciclo'        => $ciclo,
 						              ':prior_course' => $prior_comments));
+
+                // Update Date inscription into students table
+                $updateDate = $database->prepare("UPDATE students SET created_at = :inscription_date WHERE student_id = :student;");
+                $updateDate->execute(array(':inscription_date' => $inscription_date, ':student' => $student));
 
 			    if ($group->rowCount() < 1) {
 			    	$commit = false;
@@ -1417,10 +1421,11 @@ class AlumnoModel
     public static function studiesProfileData($student){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $query = $database->prepare("SELECT sd.*, sg.class_id
-                                     FROM students_details as sd, students_groups as sg
+        $query = $database->prepare("SELECT s.created_at, sd.*, sg.class_id
+                                     FROM students as s, students_details as sd, students_groups as sg
                                      WHERE sd.student_id = :student
                                        AND sg.student_id = :student
+                                       AND s.student_id  = :student
                                      LIMIT 1;");
         $query->execute(array(':student' => $student));
         
@@ -1444,9 +1449,6 @@ class AlumnoModel
             }
 
             $details->clase = $clase;
-
-            // H::p($details);
-            // exit();
 
             return $details;
         }

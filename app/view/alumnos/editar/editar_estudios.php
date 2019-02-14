@@ -78,6 +78,14 @@
                 <?php endif ?>
             </select>
         </label>
+        <label class="col-sm-6">Fecha de Inscripción:
+            <input type="text" 
+                   id="fecha_inscripcion" 
+                   class="form-control form-control-sm"
+                   placeholder="Cuándo inicia el alumno"
+                   value="<?= $alumno->created_at; ?>" 
+                   name="fecha_inscripcion">
+        </label>
     </div>
     <div class="row">
         <div class="col-12 text-center">
