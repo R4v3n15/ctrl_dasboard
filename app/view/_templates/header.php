@@ -176,13 +176,13 @@
                                 Mi Perfil
                             </a>
                         </li>
+                        <?php endif ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= _root(); ?>register/index">
                                 <span data-feather="user-plus"></span>
                                 Nuevo Usuario
                             </a>
                         </li>
-                        <?php endif ?>
                         <?php if (_active($filename, 'alumnos')): ?>
                         <li class="nav-item">
                             <a class="nav-link btnInvoiceList" href="javascript:void(0)">

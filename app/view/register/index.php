@@ -31,7 +31,7 @@
                         <div class="col-md-6 mb-3">
                             <select name="user_type" class="form-control form-control-sm">
                                 <option value="">Seleccione una categoría</option>
-                                <option value="1">Director</option>
+                                <!-- <option value="1">Director</option> -->
                                 <option value="2">Recepción</option>
                                 <option value="3">Maestro</option>
                             </select>
@@ -41,14 +41,14 @@
                                    pattern="[a-zA-Z0-9]{2,64}" 
                                    name="user_name"
                                    class="form-control form-control-sm" 
-                                   placeholder="Username" 
+                                   placeholder="Nombre de usuario" 
                                    required />
                         </div>
                         <div class="col-md-6 mb-3">
                             <input type="text" 
                                    name="user_email"
                                    class="form-control form-control-sm"
-                                   placeholder="email address" 
+                                   placeholder="Correo Electronico" 
                                    required />
                         </div>
                         <div class="col-md-6 mb-3">
@@ -56,7 +56,7 @@
                                    name="user_password_new"
                                    class="form-control form-control-sm"
                                    pattern=".{5,}" 
-                                   placeholder="Password" 
+                                   placeholder="Contraseña" 
                                    required autocomplete="off" />
                         </div>
                         <div class="col-md-6">
@@ -65,7 +65,7 @@
                                    class="form-control form-control-sm"
                                    pattern=".{5,}" 
                                    required 
-                                   placeholder="Repeat your password" 
+                                   placeholder="Repita contraseña" 
                                    autocomplete="off" />
                         </div>
                     </div>
