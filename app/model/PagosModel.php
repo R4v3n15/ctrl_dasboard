@@ -70,8 +70,14 @@ class PagosModel
 
     public static function renderPayTable($course, $ciclo){
         $database = DatabaseFactory::getFactory()->getConnection();
-        $curso = (int)$course;
-        $students = GeneralModel::tablePayByCourse($curso);
+
+        switch ($course) {
+            case 'all': 
+                    $students = GeneralModel::tablePayAll(); break;
+            default: 
+                    $curso = (int)$course;
+                    $students = GeneralModel::tablePayByCourse($curso); break;
+        }
 
         $datos = [];
         if ($students !== null) {

@@ -14,6 +14,10 @@
                             </button>
                         <?php endforeach ?>
                     <?php endif ?>
+                    <button class="btn btn-sm btn-outline-secondary pays_view" id="table_all" data-table="all">
+                        TODOS
+                        <span class="badge badge-dark" id="count_all">0</span>
+                    </button>
                 </div>
             </div>
         </div>

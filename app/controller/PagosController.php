@@ -34,11 +34,14 @@ class PagosController extends Controller
     public function numeroAlumnos(){
         $cursos   = CursoModel::getCourses();
         $counters = [];
+        $total = 0;
         foreach ($cursos as $curso) {
             $label = 'count_'.$curso->course_id;
             $count = GeneralModel::countByCourse($curso->course_id);
+            $total += $count;
             $counters[$label] = $count;
         }
+        $counters['count_all'] = $total;
         $this->View->renderJSON($counters);
     }
 

@@ -3,6 +3,7 @@
 class AlumnoModel
 {
     public static function Students($course){
+        $user_type = (int)Session::get('user_type');
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = null;
 
@@ -28,10 +29,16 @@ class AlumnoModel
                 $horario = '- - - -';
                 $dias = '';
                 $finished = false;
-                $grupo = '<a href="javascript:void(0)" 
-                             class="link btnSetGroup badge badge-warning" 
-                             data-student="'.$alumno->student_id.'"
-                             title="Agregar grupo">Agregar a Grupo</a>';
+                if ($user_type !== 3) {
+                    $grupo = '<a href="javascript:void(0)" 
+                                 class="link btnSetGroup badge badge-warning" 
+                                 data-student="'.$alumno->student_id.'"
+                                 title="Agregar grupo">Agregar a Grupo</a>';
+                } else {
+                    $grupo = '<a href="javascript:void(0)" 
+                             class="link badge badge-warning"
+                             title="Grupo">En Espera</a>';
+                }
 
                 if ($alumno->class_id !== NULL) {
                     $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, 
@@ -71,6 +78,7 @@ class AlumnoModel
 
 
                         $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
+                        if ($user_type !== 3) {
                         $grupo = '<a class="btnChangeGroup"
                                      href="javascript:void(0)"
                                      data-student="'.$alumno->student_id.'"
@@ -79,6 +87,9 @@ class AlumnoModel
                                      data-group="'.$nombre_curso.' '.$clase->group_name.'"
                                      data-reinscripcion="'.$finished.'"
                                      title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                        } else {
+                           $grupo = '<a href="javascript:void(0)" title="Grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'; 
+                        }
 
                         if ($clase->teacher_id !== null) {
                             $getUser = $database->prepare("SELECT name, lastname FROM users WHERE user_id = :teacher LIMIT 1;");
@@ -126,13 +137,16 @@ class AlumnoModel
                             <label class="custom-control-label" for="customCheck'.$counter.'">'.$counter.'</label>
                         </div>';
                             
-
+                if ($user_type !== 3) {
                 $photo = '<img class="rounded-circle btnChangeAvatar" 
                                src="'.$avatar.'"
                                data-student="'.$alumno->student_id.'" 
                                alt="foto" 
                                widt="42" 
                                height="42">';
+                } else {
+                $photo = '<img class="rounded-circle" src="'.$avatar.'" alt="foto" widt="42" height="42">';
+                }
 
                 $optClass = $finished ? 'danger' : 'primary';
 
@@ -142,6 +156,7 @@ class AlumnoModel
                          data-toggle="dropdown">Más.. <span class="caret"></span>
                       </a>';
                 $options .= '<ul class="dropdown-menu student">';
+                if ($user_type !== 3) {
                 $options .= '<li>
                             <a href="'.Config::get('URL').'alumnos/perfil/'.$alumno->student_id.'"
                                data-student="'.$alumno->student_id.'"
@@ -165,12 +180,14 @@ class AlumnoModel
                                 Cambiar Foto
                             </a>
                         </li>';
+                }
                 $options .=   '<li>
                             <a href="'.Config::get('URL').'evaluaciones/st/'.$alumno->student_id.'">
                                 <i class="ml-1 text-success fa fa-chevron-right"></i>
                                 Calificaciones
                             </a>
                         </li>';
+                if ($user_type !== 3) {
                 $options .=   '<li>
                             <a href="'.Config::get('URL').'mapa/u/'.$alumno->student_id.'">
                                 <i class="ml-1 text-dark fa fa-chevron-right"></i>
@@ -195,6 +212,7 @@ class AlumnoModel
                                 Eliminar
                             </a>
                         </li>';
+                }
                 $options .= '</ul>';
 
                 $dias = '<small>'.$dias.'</small>';
