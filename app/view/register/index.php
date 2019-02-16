@@ -45,6 +45,19 @@
                                    required />
                         </div>
                         <div class="col-md-6 mb-3">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="addon2">Teléfono:</span>
+                                </div>
+                                <input type="phone" 
+                                       name="user_phone"
+                                       class="form-control form-control-sm" 
+                                       placeholder="Número de teléfono"
+                                       autocomplete="off"
+                                       required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <input type="text" 
                                    name="user_email"
                                    class="form-control form-control-sm"

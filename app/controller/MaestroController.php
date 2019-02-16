@@ -38,18 +38,17 @@ class MaestroController extends Controller
     }
 
     public function editarMaestro() {
-        if(Request::post('user_id') && Request::post('name') && 
-           Request::post('user_name') && Request::post('user_password')){
+        if(Request::post('user_id') && Request::post('edit_name') && 
+           Request::post('edit_user_name') && Request::post('edit_user_password')){
             MaestroModel::updateTeacher(Request::post('user_id'),
-                                        Request::post('name'),
-                                        Request::post('lastname'),
-                                        Request::post('user_email'),
-                                        Request::post('user_name'),
-                                        Request::post('user_password'));
+                                        Request::post('edit_name'),
+                                        Request::post('edit_lastname'),
+                                        Request::post('edit_user_email'),
+                                        Request::post('edit_user_name'),
+                                        Request::post('edit_user_phone'),
+                                        Request::post('edit_user_password'));
             Redirect::to('maestro/index');
         } else {
-            var_dump(Request::post('user_id'), Request::post('name'), Request::post('lastname'), Request::post('user_name'));
-            exit();
             Session::add('feedback_negative','No se pudo actualizar los datos del maestro por falta de información.');
             Redirect::to('maestro/index');
         }

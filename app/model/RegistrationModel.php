@@ -13,6 +13,7 @@ class RegistrationModel
         $user_type = strip_tags(Request::post('user_type'));
         $user_name = strip_tags(Request::post('user_name'));
         $user_email = strip_tags(Request::post('user_email'));
+        $user_phone = strip_tags(Request::post('user_phone'));
         $user_password_new = Request::post('user_password_new');
         $user_password_repeat = Request::post('user_password_repeat');
         $user_access_code = Request::post('user_password_new');
@@ -54,7 +55,7 @@ class RegistrationModel
         $user_activation_hash = sha1(uniqid(mt_rand(), true));
 
         // write user data to database
-        if (!self::writeNewUserToDatabase($real_name, $last_name, $user_type, $user_name, $user_password_hash, $user_email, time(), $user_activation_hash, $user_access_code)) {
+        if (!self::writeNewUserToDatabase($real_name, $last_name, $user_type, $user_phone, $user_name, $user_password_hash, $user_email, time(), $user_activation_hash, $user_access_code)) {
             Session::add('feedback_negative', Text::get('FEEDBACK_ACCOUNT_CREATION_FAILED'));
             return false; // no reason not to return false here
         }
@@ -177,7 +178,7 @@ class RegistrationModel
     /**
      * Writes the new user's data to the database
      */
-    public static function writeNewUserToDatabase($real_name, $lastname, $user_type, $user_name, 
+    public static function writeNewUserToDatabase($real_name, $lastname, $user_type, $user_phone, $user_name, 
                                                   $user_password_hash, $user_email, $user_creation_timestamp, 
                                                   $user_activation_hash, $user_access_code) {
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -186,7 +187,8 @@ class RegistrationModel
         $sql = "INSERT INTO users (name, 
                                    lastname, 
                                    user_type,
-                                   user_name, 
+                                   user_name,
+                                   user_phone, 
                                    user_password_hash, 
                                    user_email,
                                    user_access_code,
@@ -195,7 +197,8 @@ class RegistrationModel
                     VALUES (:real_name, 
                             :lastname, 
                             :user_type,
-                            :user_name, 
+                            :user_name,
+                            :user_phone,
                             :user_password_hash, 
                             :user_email,
                             :access_code, 
@@ -207,6 +210,7 @@ class RegistrationModel
                               ':lastname' => $lastname,
                               ':user_type' => $user_type,
                               ':user_name' => $user_name,
+                              ':user_phone' => $user_phone,
                               ':user_password_hash' => $user_password_hash,
                               ':user_email' => $user_email,
                               ':access_code' => $user_access_code,

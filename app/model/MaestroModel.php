@@ -6,7 +6,7 @@ class MaestroModel
     public static function getTeachers() {
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT user_id, name, lastname, user_email, user_avatar
+        $sql = "SELECT user_id, name, lastname, user_email, user_phone, user_avatar
                 FROM users
                 WHERE user_type = 3
                   AND user_deleted = 0;";
@@ -39,20 +39,22 @@ class MaestroModel
                       echo '<th>Nombre</th>';
                       echo '<th>Apellido</th>';
                       echo '<th>Correo Electronico</th>';
+                      echo '<th>Teléfono</th>';
                       echo '<th class="text-center">Opciones</th>';
                    echo '</tr>';
                 echo '</thead>';
                 echo '<tbody>'; 
-                    foreach ($maestros as $maestro) {
+                    foreach ($maestros as $index => $maestro) {
                         $img = $maestro->user_avatar === NULL ? 'male' : $maestro->user_avatar;
                         $file = Config::get('URL').Config::get('PATH_AVATAR_USER').$img;
                         $avatar = '<img class="rounded-circle" src="'.$file.'.jpg" alt="avatar" widt="45" height="45">';
                         echo '<tr>';
-                        echo '<td>'.$maestro->user_id.'</td>';
+                        echo '<td>'.($index + 1).'</td>';
                         echo '<td>'.$avatar.'</td>';
                         echo '<td>'.$maestro->name.'</td>';
                         echo '<td>'.$maestro->lastname.'</td>';
                         echo '<td>'.$maestro->user_email.'</td>';
+                        echo '<td>'.$maestro->user_phone.'</td>';
                         echo '<td class="text-center">
                                 <button type="button" 
                                         class="btn btn-sm btn-info btn-raised editTeacher mr-3"
@@ -85,7 +87,7 @@ class MaestroModel
 
     public static function getTeacher($id) {
         $database = DatabaseFactory::getFactory()->getConnection();
-        $sql = "SELECT user_id, name, lastname, user_name, user_email, user_access_code
+        $sql = "SELECT user_id, name, lastname, user_name, user_phone, user_email, user_access_code
                 FROM users 
                 WHERE user_id = :id AND user_type = 3;";
         $query = $database->prepare($sql);
@@ -122,13 +124,14 @@ class MaestroModel
         return array('exists' => false);
     }
 
-    public static function updateTeacher($teacher, $name, $lastname, $useremail, $username, $password){
+    public static function updateTeacher($teacher, $name, $lastname, $useremail, $username, $phone, $password){
         $database = DatabaseFactory::getFactory()->getConnection();
         $user_password_hash = password_hash($password, PASSWORD_DEFAULT);
 
         $query = $database->prepare("UPDATE users SET name       = :name,
                                                       lastname   = :lastname,
                                                       user_name  = :username,
+                                                      user_phone = :phone,
                                                       user_password_hash = :user_password,
                                                       user_email = :useremail,
                                                       user_access_code   = :user_code
@@ -137,6 +140,7 @@ class MaestroModel
         $update = $query->execute(array(':name'      => $name,
                                         ':lastname'  => $lastname,
                                         ':username'  => $username,
+                                        ':phone'     => $phone,
                                         ':user_password' => $user_password_hash,
                                         ':useremail' => $useremail,
                                         ':user_code' => $password,
