@@ -5,6 +5,7 @@ var Perfil = {
         this.setActiveForm();
         this.navigateForms();
         this.updateAvatar();
+        this.handleScholarship();
     },
 
     setActiveForm: function(){
@@ -56,6 +57,23 @@ var Perfil = {
 
             });
         });
+
+        if ($('#fecha_registro').length) {
+            pikadayResponsive(document.getElementById("fecha_registro"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de registro"
+            });
+
+            $('#fecha_registro-input').prop('autocomplete', 'off');
+        }
+
+        if ($('#fecha_solicitud').length) {
+            pikadayResponsive(document.getElementById("fecha_solicitud"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Solicitud"
+            });
+            $('#fecha_solicitud-input').prop('autocomplete', 'off');
+        }
     },
 
     getUpdateForm: function(activeForm=1) { 
@@ -200,6 +218,87 @@ var Perfil = {
                 $('#general_snack').attr('data-content', 'Error: reporte este problema por favor!');
                 $('#general_snack').snackbar('show');
                 $('.snackbar').addClass('snackbar-green');
+            }
+        });
+
+        $('.toggle_scholar').click(function(event){
+            event.preventDefault();
+            let action = $(this).data('action');
+            switch(action){
+                case 'agregar_beca': 
+                    $('#date_register').show();
+                    $('#date_request').hide();
+                    $('#select_sponsor').show();
+                    $('#scholar_text').html('¿Agregar alumno como becario?');
+                    break;
+                case 'agregar_solicitud':
+                    $('#date_register').hide();
+                    $('#select_sponsor').hide();
+                    $('#date_request').show();
+                    $('#scholar_text').html('¿Agregar alumno como solicitante de beca?');
+                    break;
+                case 'quitar_beca':
+                    $('#date_register').hide();
+                    $('#date_request').hide();
+                    $('#select_sponsor').hide();
+                    $('#scholar_text').html('¿Aliminar alumno como becario?');
+                    break;
+                case 'quitar_solicitud': 
+                    $('#date_register').hide();
+                    $('#date_request').hide();
+                    $('#select_sponsor').hide();
+                    $('#scholar_text').html('¿Eliminar alumno como solicitante de beca?');
+                    break;
+            }
+            $('#scholar_title').html($(this).data('title'));
+            $('#frmHandleScholar').prop('action', $(this).data('action'));
+            $('#scholar_idStudent').val($(this).data('student'));
+            $('#scholar_submit').text($(this).data('label'));
+            $('#scholar_modal').modal('show');
+        });
+    },
+
+    handleScholarship: function(){
+        $('#frmHandleScholar').submit(function(e){
+            e.preventDefault();
+
+            let action  = $(this).attr('action'),
+                student = $('#scholar_idStudent').val();
+
+            if (action === '' || action === undefined) {
+                $('#general_snack').attr('data-content', 'Error de ruta, reporte el problema!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-red');
+                return false;
+            }
+
+            if (student !== '' && student !== undefined) {
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    data: $('#frmHandleScholar').serialize(),
+                    url: _root_ + 'becas/' + action
+                })
+                .then(function(response){
+                    if (response.success) {
+                        // Message confirmation
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-blue');
+                        setTimeout(function(){
+                            location.reload(true);
+                        }, 680);
+                    } else {
+                        // Message Notification
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                });
+            } else {
+                $('#general_snack').attr('data-content', 'Faltan datos requeridos, reporte el problema!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-red');
             }
         });
     },

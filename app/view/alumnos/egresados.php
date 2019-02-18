@@ -12,7 +12,7 @@
             </div>
 
             <div class="col-12">
-                <table id="example" class="table table-sm table-striped" style="width:100%">
+                <table id="tabla_egresados" class="table table-sm table-striped" style="width:100%">
                     <thead>
                         <tr class="">
                             <th class="text-center">No.</th>

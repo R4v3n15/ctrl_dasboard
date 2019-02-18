@@ -265,7 +265,8 @@ class AlumnosController extends Controller
                                   'pikaday.min&assets/libs/js', 
                                   'perfil&assets/js'));
         $this->View->render('alumnos/perfil', array(
-            'alumno'  => AlumnoModel::studentProfile($alumno)
+            'alumno'  => AlumnoModel::studentProfile($alumno),
+            'padrinos' => PadrinosModel::getActiveSponsors()
         ));
     }
 
@@ -480,14 +481,15 @@ class AlumnosController extends Controller
     }
 
     public function becados() {
+        Registry::set('js', array('becados&assets/js'));
         $this->View->render('alumnos/becados', array(
-            'user_name' => Session::get('user_name'),
+            'becados' => BecasModel::getScholars()
         ));
     }
 
     public function notas() {
         $this->View->render('alumnos/calificaciones', array(
-            'user_name' => Session::get('user_name'),
+            'becados' => BecasModel::getScholars()
         ));
     }
 

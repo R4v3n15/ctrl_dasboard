@@ -118,6 +118,7 @@ var Maestros = {
                     $('#edit_name').val(res.name);
                     $('#edit_lastname').val(res.lastname);
                     $('#edit_user_name').val(res.user_name);
+                    $('#edit_user_phone').val(res.user_phone);
                     $('#edit_user_email').val(res.user_email);
                     $('#edit_user_password').val(res.user_access_code);
                     

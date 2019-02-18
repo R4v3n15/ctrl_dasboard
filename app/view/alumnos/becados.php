@@ -1,85 +1,99 @@
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-md-12 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
-            <h5 class="text-danger">Fuera de Servicio</h5>
+            <h5 class="text-info">Alumnos Becados</h5>
         </div>
 
         <div class="row">
             <div class="col-md-12 text-center">
-                <h4 class="text-info my-5">
-                    E N &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  M A N T E N I M I E N T O
-                </h4>
-                <img src="<?= Config::get('URL');?>public/assets/img/loading.gif">
+                <?php if (count($this->becados) > 0): ?>
+                <div class="table-responsive">
+                    <table id="tabla_becados" class="table table-sm table-striped" style="width:100%">
+                        <thead>
+                            <tr class="info">
+                                <th width="50" class="text-center"> N° </th>
+                                <th width="100" class="text-center">Alumno</th>
+                                <th width="80" class="text-center">Teléfono 1</th>
+                                <th width="80" class="text-center">Teléfono 2</th>
+                                <th width="100" class="text-center">Grupo</th>
+                                <th width="100" class="text-center">Horario</th>
+                                <th width="100" class="text-center">Maestro</th>
+                                <th width="100" class="text-center">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($this->becados as $key => $becado): ?> 
+                            <tr>
+                                <td><?= ($key + 1) ?></td>
+                                <td><?= $becado->name; ?></td>
+                                <td><?= $becado->cellphone; ?></td>
+                                <td>
+                                    <?php if ($becado->tutor !== null): ?>
+                                        <?php if ($becado->tutor->relationship != '' && $becado->tutor->cellphone != ''): ?>
+                                            <?= $becado->tutor->cellphone.' ('. $becado->tutor->relationship .')'; ?>
+                                        <?php endif ?>
+                                        
+                                        <?php if ($becado->tutor->phone != ''): ?>
+                                            <br>
+                                            <?= $becado->tutor->phone.' ('. $becado->tutor->relationship .')'; ?>
+                                        <?php endif ?>
+                                        <?php if ($becado->tutor->relationship_alt != '' && $becado->tutor->phone_alt != ''): ?>
+                                            <br>
+                                            <?= $becado->tutor->phone_alt.' ('. $becado->tutor->relationship_alt .')'; ?>
+                                        <?php endif ?>
+                                    <?php endif ?>
+                                </td>
+                                <td><?= $becado->clase; ?></td>
+                                <td><?= $becado->dias; ?> <br> <?= $becado->horario; ?></td>
+                                <td><?= $becado->maestro; ?></td>
+                                <td>
+                                    <!-- <button type="button" 
+                                            class="btn btn-sm btn-info mr-3 detail_scholar"
+                                            data-scholar="<?= $becado->beca_id; ?>"
+                                            data-name="<?= $becado->name; ?>"><i class="fa fa-cog"></i></button> -->
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger mr-4 remove_scholar"
+                                            data-scholar="<?= $becado->beca_id; ?>"
+                                            data-name="<?= $becado->name; ?>"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php else: ?>
+                    <h5 class="text-center text-info">No hay alumnos becados</h5>
+                <?php endif ?>
             </div>
         </div>
     </main>
 </div>
 
 
-
-
-
-
-
-<?php $user_type = (int)Session::get('user_type'); ?>
-
-<?php if ($user_type === 777): ?>
-
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a href="javascript:void(0)">Inicio</a></li>
-        <li><a href="javascript:void(0)">Alumnos</a></li>
-        <li><a href="javascript:void(0)" class="active">Becados</a></li>
-    </ol>    
-    
-    <div class="well">
-        <?php $this->renderFeedbackMessages(); ?>
-        <h3 class="text-center text-info">Becados</h3>
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="well card">
-                    <div class="card-avatar">
-                        <img src="<?php echo Config::get('URL').Config::get('PATH_AVATARS_PUBLIC'); ?>avatar.png" alt="avatar"></div>
-                    <div class="card-title"><h3 class="text-center">Avatar Name</h3></div>
-                    <div class="card-body"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque sit alias iste quisquam porro odio accusantium placeat libero itaque eius, odit molestias corporis pariatur ullam quibusdam harum nulla impedit labore.</p></div>
-                    <div class="card-footer"><label> extra information</label></div>
-                </div>
+<div class="modal fade" id="remove_scholar_modal" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header py-2 bg-danger">
+                <h5 class="modal-title text-white my-0" id="scholar_title">Eliminar alumno como becario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="col-sm-8">
-                <div class="bs-component">
-                    <ul class="nav nav-tabs well line-head" style="margin-bottom: 15px;">
-                        <li class="active">
-                            <a href="#club" data-toggle="tab">ENGLISH CLUB</a>
-                        </li>
-                        <li>
-                            <a href="#primary" data-toggle="tab">PRIMARY</a>
-                        </li>
-                        <li>
-                            <a href="#adolescent" data-toggle="tab">ADOLESCENTS</a>
-                        </li>
-                        <li>
-                            <a href="#adult" data-toggle="tab">ADULTS</a>
-                        </li>
-                    </ul>
-                    <div id="myTabContent" class="tab-content well line-body">
-                        <?php $this->renderFeedbackMessages(); ?>
-                        <div class="tab-pane fade active in" id="club">
-                            <h4>Titulo parte 1</h4>
-                          <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-                        </div>
-                        <div class="tab-pane fade" id="primary">
-                          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-                        </div>
-                        <div class="tab-pane fade" id="adolescent">
-                          <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-                        </div>
-                        <div class="tab-pane fade" id="adult">
-                          <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>
-                        </div>
+            <form id="frmHandleScholar" action="">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center text-warning">¿Eliminar alumno <strong id="scholar_name"></strong> como becario?</p>
+                        <input type="hidden" id="scholar_idStudent" name="idStudent">
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary btn-flat-lg" data-dismiss="modal">Cancelar</button>
+                <button type="submit" id="scholar_submit" class="btn btn-sm btn-danger btn-flat-lg">Eliminar</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
-<?php endif ?>
+

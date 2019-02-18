@@ -47,6 +47,67 @@
         </label>
     </div>
     <hr class="mt-3"></hr>
+    <div class="row">
+        <label class="col-sm-12">
+            ¿Esta Becado?: 
+            <?php if ($alumno->beca !== null): ?>
+                <?php if ((int)$alumno->beca->status === 1): ?>
+                    <strong>Si</strong> 
+                <?php else: ?>
+                    <strong>Solicitante</strong>         
+                <?php endif ?>                
+            <?php else: ?>
+                <strong>No</strong> 
+            <?php endif ?>
+        </label>
+        <?php if ($alumno->beca !== null): ?>
+            <?php if ((int)$alumno->beca->status === 1): ?>
+                <label class="col-sm-3">
+                    <button type="button" 
+                            class="btn btn-sm btn-danger toggle_scholar" 
+                            data-action="quitar_beca"
+                            data-title="Eliminar Becario"
+                            data-label="Eliminar"
+                            data-student="<?= $alumno->student_id; ?>">Quitar como Becario</button>
+                </label>
+            <?php else: ?>
+                <label class="col-sm-3">
+                    <button type="button" 
+                            class="btn btn-sm btn-primary toggle_scholar" 
+                            data-action="agregar_beca"
+                            data-title="Registro de Becario"
+                            data-label="Registrar"
+                            data-student="<?= $alumno->student_id; ?>">Marcar como Becario</button>
+                </label>
+                <label class="col-sm-3">
+                    <button type="button" 
+                            class="btn btn-sm btn-warning toggle_scholar" 
+                            data-action="quitar_solicitud"
+                            data-title="Eliminar Solicitante"
+                            data-label="Eliminar"
+                            data-student="<?= $alumno->student_id; ?>">Quitar como Solicitante</button>
+                </label>
+            <?php endif ?>                
+        <?php else: ?>
+            <label class="col-sm-3">
+                <button type="button" 
+                        class="btn btn-sm btn-primary toggle_scholar" 
+                        data-action="agregar_beca"
+                        data-title="Registro de Becario"
+                        data-label="Registrar"
+                        data-student="<?= $alumno->student_id; ?>">Marcar como Becario</button>
+            </label>
+            <label class="col-sm-3">
+                <button type="button" 
+                        class="btn btn-sm btn-info toggle_scholar" 
+                        data-action="agregar_solicitud"
+                        data-title="Registro de Solicitante"
+                        data-label="Registrar"
+                        data-student="<?= $alumno->student_id; ?>">Marcar como Solicitante</button>
+            </label>
+        <?php endif ?>
+    </div>
+    <hr class="mt-3"></hr>
     <div class="form-group row">
         <label class="col-12 text-center">Esta inscrito actualmente en:</label>
         <label class="col-sm-6">Curso: 

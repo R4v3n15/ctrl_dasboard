@@ -1465,8 +1465,18 @@ class AlumnoModel
                     $clase = $_sql->fetch();
                 }
             }
-
             $details->clase = $clase;
+
+            $beca = null;
+            $getBeca = $database->prepare('SELECT * FROM becas 
+                                           WHERE student_id = :student
+                                             AND status IN (1,2)
+                                           LIMIT 1;');
+            $getBeca->execute(array(':student' => $details->student_id));
+            if ($getBeca->rowCount() > 0) {
+                $beca = $getBeca->fetch();
+            }
+            $details->beca = $beca;
 
             return $details;
         }

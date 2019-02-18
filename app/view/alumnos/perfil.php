@@ -89,8 +89,8 @@
 <div class="modal fade" id="modalChangeAvatar" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteTitle">Cambiar Foto</h5>
+            <div class="modal-header py-2">
+                <h5 class="modal-title my-0" id="deleteTitle">Cambiar Foto</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -103,7 +103,7 @@
                                 <label for="avatar">Cambiar foto:</label>
                                 <div class="col-sm-12">
                                     <input type="hidden" name="avatar_student" id="avatar_student" />
-                                    <input type="file" id="avatar_file" name="avatar_file" class="form-control" />
+                                    <input type="file" id="avatar_file" name="avatar_file" class="form-control" required />
                                 </div>
                             </div>
                         </div>
@@ -162,6 +162,66 @@
                     <button type="button" id="checkin_student" class="btn btn-sm btn-second btn-raised right">Dar de Alta</button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="scholar_modal" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title my-0" id="scholar_title">Alumno Becario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="frmHandleScholar" action="">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center" id="scholar_text"></p>
+                        <input type="hidden" id="scholar_idStudent" name="idStudent">
+                    </div>
+                    <div class="col-sm-6" id="date_register">
+                        <label>Fecha de Registro</label>
+                        <input type="text" 
+                               id="fecha_registro" 
+                               class="form-control form-control-sm"
+                               placeholder="Fecha de solicitud de beca"
+                               autocomplete="off" 
+                               name="fecha_registro">
+                    </div>
+                    <div class="col-sm-6" id="date_request">
+                        <label>Fecha de Solicitud</label>
+                        <input type="text" 
+                               id="fecha_solicitud" 
+                               class="form-control form-control-sm"
+                               placeholder="Fecha de solicitud de beca"
+                               autocomplete="off" 
+                               name="fecha_solicitud">
+                    </div>
+                    <div class="col-sm-6" id="select_sponsor">
+                        <label>Padrino:</label>
+                        <select name="idPadrino" class="form-control form-control-sm">
+                            <option value="" hidden>Seleccione..</option>
+                            <?php if (count($this->padrinos) > 0): ?>
+                                <?php foreach ($this->padrinos as $padrino): ?>
+                                <option value="<?= $padrino->sponsor_id; ?>"><?= $padrino->sp_name.' '.$padrino->sp_surname; ?></option>  
+                                <?php endforeach ?>
+                            <?php else: ?>
+                                <option value="" disabled>No hay padrinos registrados</option>
+                            <?php endif ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" id="scholar_submit" class="btn btn-sm btn-primary">Dar de Alta</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
