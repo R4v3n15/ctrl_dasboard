@@ -15,7 +15,7 @@
                             <button class="btn btn-sm btn-outline-primary pays_view" 
                                     id="tabla_<?= $curso->course_id; ?>" 
                                     data-table="<?= $curso->course_id; ?>">
-                                <?= $curso->course; ?> 
+                                <?= ucwords(strtolower($curso->course)); ?> 
                                 <span class="badge badge-secondary" id="count_<?= $curso->course_id; ?>">0</span>
                             </button>
                         <?php endforeach ?>
