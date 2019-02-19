@@ -121,7 +121,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?= _active($filename, 'pagos');?>" href="<?= _root(); ?>pagos">
+                            <a class="nav-link <?= _active($filename, 'pagos');?>" href="<?= _root(); ?>pagos/pagos">
                                 <span data-feather="credit-card"></span>
                                 Pagos
                             </a>

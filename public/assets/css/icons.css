@@ -68,7 +68,7 @@
 
 .fa-check {
   color: rgb(210, 210, 210);
-  font-size: 1.3em;
+  font-size: 1.2em;
   /*font-weight: bold;*/
   padding: 0;
   margin: 0;
@@ -76,14 +76,14 @@
 
 .fa-check-circle {
   color: rgb(20, 200, 140);
-  font-size: 1.48em;
+  font-size: 1.3em;
   font-weight: bold;
   padding: 0;
   margin: 0;
 }
 
 .mdi-action-beca {
-  font-size: 1.1em;
+  font-size: 1em;
   font-weight: bold;
   color: rgb(240, 100, 10);
   padding: 0 0 5px 2px;
@@ -91,7 +91,7 @@
 }
 
 .mdi-action-na {
-  font-size: 1em;
+  font-size: 0.8em;
   font-weight: bold;
   color: rgb(120, 120, 150);
   padding: 0;

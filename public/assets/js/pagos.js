@@ -3,19 +3,308 @@ var Pagos = {
     vars  : {
         PAGE : 1,
         TABLE: null,
+        FULLTABLE: null,
         GRUPO: 1
     },
 
     initialize: function(){
         console.log('Pagos Initialize');
-
-        this.changePayTable();
-        this.savePayment();
-        this.saveComment();
-        this.reportsViews();
-
-        this.definePayTable();
+        let _this = this;
+        let path = window.location.pathname.split('/');
+        if (path[1] === 'pagos') {
+            if(path[2] === undefined || path[2] === 'index'){
+                this.changePayTable();
+                this.savePayment();
+                this.saveComment();
+                this.reportsViews();
+                this.definePayTable();
+            } else if(path[2] === 'pagos') {
+                $('.pays_view').removeClass('active');
+                $('#tabla_'+_this.vars.GRUPO).addClass('active');
+                this.changeFullPayTable();
+                this.setPayment();
+                this.setComment();
+                this.fullPayTable();
+            }
+        } 
     },
+
+    fullPayTable: function(){
+        let _this = this;
+        let pay_table = $('#tabla_pagos_completo').DataTable({
+                        "stateSave": false,
+                        "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+                        "ajax": {
+                            'url': _root_ + 'pagos/tablaPagosFull',
+                            "type": "POST",
+                            'data': {
+                                'curso': _this.vars.GRUPO,
+                                'ciclo': _ciclo
+                            }
+                        },
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0
+                        } ],
+                        "order": [[ 1, 'asc' ]],
+                        "columns": [
+                            { "data": "count" },
+                            { "data": "name" },
+                            { "data": "info", "searchable" : false, "orderable": false },
+                            { "data": "jan", "searchable" : false, "orderable": false },
+                            { "data": "feb", "searchable" : false, "orderable": false },
+                            { "data": "mar", "searchable" : false, "orderable": false },
+                            { "data": "apr", "searchable" : false, "orderable": false },
+                            { "data": "may", "searchable" : false, "orderable": false },
+                            { "data": "jun", "searchable" : false, "orderable": false },
+                            { "data": "aug", "searchable" : false, "orderable": false },
+                            { "data": "sep", "searchable" : false, "orderable": false },
+                            { "data": "oct", "searchable" : false, "orderable": false },
+                            { "data": "nov", "searchable" : false, "orderable": false },
+                            { "data": "dec", "searchable" : false, "orderable": false },
+                            { "data": "comment", "searchable" : false, "orderable": false  },
+                            { "data": "opt", "searchable" : false, "orderable": false  }
+                        ],
+                        "buttons": [
+                            { "extend": 'print',
+                              "text":'Imprimir <i class="fa fa-print"></i>',
+                              "className": 'btn btn-info btn-sm' }
+                        ],
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ filas",
+                            "search": "Buscar:",
+                            "zeroRecords": "No se encontró resultados",
+                            "info": "_PAGE_ de _PAGES_ páginas",
+                            "infoEmpty": "No records available",
+                            "infoFiltered": "(filtrado de _MAX_ resultados)"
+                        }
+                    });
+
+        this.countStudents();
+        this.vars.TABLE = pay_table;
+
+        pay_table.on( 'draw.dt', function () {
+            let PageInfo = $('#tabla_pagos_completo').DataTable().page.info();
+            pay_table.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                cell.innerHTML = i + 1 + PageInfo.start;
+                pay_table.cell(cell).invalidate('dom');
+            } );
+        } );
+
+
+        $('#tabla_pagos_completo tbody').on( 'click', '.payMonth', function () {
+            let student = $(this).data('student'),
+                month   = $(this).data('title'),
+                code    = $(this).data('month'),
+                status  = $(this).data('status');
+
+            $('#month_name').text(month);
+            $('#student_id').val(student);
+            $('#month_to_pay').val(code);
+            $("#pay_action option[value='" + status +"']").prop("selected", true);
+            $('#modalPayMonth').modal('show'); 
+        });
+
+        $('#tabla_pagos_completo tbody').on( 'click', '.payAction', function () {
+            let student   = $(this).data('student'),
+                tutor     = $(this).data('tutor'),
+                name      = $(this).data('name'),
+                relatives = $(this).data('relatives'),
+                comment   = $(this).data('comment');
+
+            $.ajax({
+                data: { alumno: student, tutor: tutor },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/infoPago'
+            })
+            .done(function(response){
+                $('#nameStudent').text(name);
+                let family = '';
+                if (response.length > 0) {
+                    response.forEach( function(element, index) {
+                        family += '<div class="custom-control custom-checkbox">\
+                                      <input type="checkbox" class="custom-control-input" name="familiares[]" id="check'+index+'" value="'+element.idStudent+'">\
+                                      <label class="custom-control-label" for="check'+index+'">'+element.name+'(<small>'+element.group+'</small>)</label>\
+                                    </div>'
+                    });
+                } else {
+                    family = '<strong>Sin Familiares</strong>';
+                }
+                $('#relativesStudent').html(family);
+                $('#payStudent').val(student);
+                $('#payComment').val(comment);
+                $('#monthToPay').html(_this.fullMonthList());
+                $('#modalPayAction').modal('show');
+            }); 
+        });
+
+        $('#tabla_pagos_completo tbody').on( 'click', '.addComment', function () {
+            let student = $(this).data('student'),
+                comment = $(this).data('comment');
+
+            $('#id_alumno').val(student);
+            $('#comment').val(comment);
+            $('#modalAddComment').modal('show'); 
+        });
+
+        $('#tabla_pagos_completo_wrapper button').removeClass('dt-button');
+    },
+
+    changeFullPayTable: function(){
+        let _this = this;
+        $('.pays_view').click(function(event){
+            event.preventDefault();
+            let grupo = $(this).data('table');
+            $('.pays_view').removeClass('active');
+            $('#tabla_'+grupo).addClass('active');
+            _this.vars.GRUPO = grupo;
+            _this.vars.PAGE  = 1;
+            // sessionStorage.setItem('payTable', grupo);
+            _this.vars.TABLE.destroy();
+            _this.fullPayTable();
+        });
+    },
+
+    setPayment: function() {
+        let _this = this;
+        // Enviar formulario de pago mensual a PHP
+        $('#toggle_pay').on('click', function(event){
+            event.preventDefault();
+            let student    = $('#student_id').val(),
+                month      = $('#month_to_pay').val(),
+                pay_action = $('#pay_action').val(); // 0/null:Adeudo, 1:pagar, 2:becado, 3:no aplica
+
+            if (student !== '' && month !== '' && pay_action !== '') {
+                $.ajax({
+                    data: { student:  student, month: month, action: pay_action },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'pagos/pagarMes',
+                    success: function(data){
+                        if (data.success) {
+                            let page = _this.vars.currentPage;
+                            $('#modalPayMonth').modal('hide');
+                            $('#general_snack').attr('data-content', 'Pago de Mensualidad Actualizado!');
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue');
+                            _this.vars.TABLE.destroy();
+                            _this.fullPayTable();
+                        } else {
+                            console.log(data);
+                            $('#response').html("Error Desconocido: Por favor reporte este problema.");
+                        }
+                        $("#pay_action").val("");
+                    }
+                });
+            } else {
+                $('#response').html('Falta Información para terminar');
+            }
+        });
+
+        $('#payForm').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                data: $('#payForm').serialize(),
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/pagoMensualidad'
+            })
+            .done(function(response){
+                if (response.success) {
+                    let page = _this.vars.currentPage;
+                    $('#modalPayAction').modal('hide'); 
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    _this.vars.TABLE.destroy();
+                    _this.fullPayTable();
+                } else {
+                    $('#response').html(response.message);
+                }
+            });
+        });
+    },
+
+    setComment: function(){
+        let _this = this;
+        $('#save_comment').click(function(event){
+            event.preventDefault();
+            let student = $('#id_alumno').val(),
+                comment = $('#comment').val();
+
+            if (student !== '') {
+                $.ajax({
+                    data: {student:  student, comment: comment },
+                    synch: 'true',
+                    type: 'POST',
+                    url: _root_ + 'pagos/guardarComentario',
+                    success: function(data){
+                        if (data.success) {
+                            var list = sessionStorage.getItem('plist_alive');
+                            $('#general_snack').attr('data-content', 'Comentario Actualizado!');
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-blue');
+                            _this.vars.TABLE.destroy();
+                            _this.fullPayTable();
+                        } else {
+                            $('#general_snack').attr('data-content', 'Error: Intente de Nuevo o reporte el problema!');
+                            $('#general_snack').snackbar('show');
+                            $('.snackbar').addClass('snackbar-red');
+                        }
+
+                        $('#modalAddComment').modal('hide');
+                    }
+                });
+            }
+        });
+    },
+
+    getRelatives: function(student, tutor){
+        if (parseInt(tutor) === 0) {
+            return [];
+        } else {
+            $.ajax({
+                data: { alumno: student, tutor: tutor },
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/infoPago'
+            })
+            .done(function(response){
+                return response;
+            });
+        }
+    },
+
+    fullMonthList: function(){
+        let months = '<option value="" hidden>Seleccione mes..</option>';
+            months += '<option value="ene">Enero</option>';
+            months += '<option value="feb">Febrero</option>';
+            months += '<option value="mar">Marzo</option>';
+            months += '<option value="abr">Abril</option>';
+            months += '<option value="may">Mayo</option>';
+            months += '<option value="jun">Junio</option>';
+            months += '<option value="ago">Agosto</option>';
+            months += '<option value="sep">Septiembre</option>';
+            months += '<option value="oct">Octubre</option>';
+            months += '<option value="nov">Noviembre</option>';
+            months += '<option value="dic">Diciembre</option>';
+
+        return months;
+    },
+
+
+
+
+
+
+
+
+
+
+
 
     definePayTable: function(){
         let _this = this;
@@ -26,16 +315,17 @@ var Pagos = {
         }
 
         // $.ajax({
-        //     data: { curso: 1, ciclo: 'A' },
+        //     // data: { curso: 1, ciclo: 'A' },
+        //     data: { curso: 1 },
         //     synch: 'true',
         //     type: 'POST',
-        //     url: _root_ + 'pagos/tablaPagos'
+        //     url: _root_ + 'pagos/tablaPagosFull'
         // })
         // .done(function(response){
+        //     console.log('response from server');
         //     console.log(response);
         // });
     },
-
 
     payTableA: function() {
         let _this = this;

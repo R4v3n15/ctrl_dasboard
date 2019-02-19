@@ -46,6 +46,21 @@ class PagosController extends Controller
     }
 
 
+    public function pagos() {
+        $this->View->render('pagos/pagos', array(
+            'cursos' => CursoModel::getCourses()
+        ));
+    }
+
+    public function tablaPagosFull() {
+        $this->View->renderJSON(PagosModel::renderFullPayTable(Request::post('curso')));
+    }
+
+    public function infoPago() {
+        $this->View->renderJSON(PagosModel::getRelatedInfo(Request::post('alumno'), Request::post('tutor')));
+    }
+
+
 
 
 
@@ -67,7 +82,7 @@ class PagosController extends Controller
         }
 
         if (!Request::post('payStatus')) {
-            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique va realizar un pago o no'));
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique si va realizar un pago o no'));
             return;
         }
         if (!Request::post('payStudent')) {
@@ -84,14 +99,40 @@ class PagosController extends Controller
         ));
     }
 
+    public function pagoMensualidad(){
+        if (!Request::post('monthToPay')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique mes a pagar'));
+            return;
+        }
+
+        if (!Request::post('payStatus')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique si va realizar un pago o no'));
+            return;
+        }
+        if (!Request::post('payStudent')) {
+            $this->View->renderJSON(array('success' => false, 
+                                          'messsage' => 'Error desconocido: reporte problema (CODE: empty_st) '));
+            return;
+        }
+
+        $familiares = [];
+        if ((array)Request::post('familiares')) {
+            $familiares = (array)Request::post('familiares');
+        }
+
+        $this->View->renderJSON(PagosModel::savePayMonthly(
+                                    Request::post('payStudent'), 
+                                    Request::post('monthToPay'), 
+                                    Request::post('payStatus'),
+                                    Request::post('payComment'),
+                                    $familiares
+        ));
+    }
+
     public function guardarComentario(){
         $this->View->renderJSON(
             PagosModel::saveComment(Request::post('student'), Request::post('comment'))
         );
-    }
-
-    public function pagos() {
-        $this->View->render('pagos/pagos', array('years' => PagosModel::getPayYearList()));
     }
 
     public function mesesCiclo(){
@@ -111,14 +152,4 @@ class PagosController extends Controller
             echo date('m') == 12 ? '<option value="dic" selected>Diciembre</option>'  : '<option value="dic">Diciembre</option>';
         }
     }
-
-    public function listaAdeudos() {
-        PagosModel::searchPaylist(
-                            Request::post('grupo'),
-                            Request::post('anio'),
-                            Request::post('ciclo'),
-                            Request::post('mes'));
-    }
-
-
 }
