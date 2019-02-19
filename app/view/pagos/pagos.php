@@ -6,8 +6,8 @@
 </style>
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-12 col-md-12 px-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-0 pb-2 mb-3 border-bottom">
-            <h5 class="text-info">Pagos - <?= date('Y'); ?></h5>
+        <div class="align-items-center pt-0 pb-2 mb-3 border-bottom">
+            <h5 class="text-info text-right">Pagos - <?= date('Y'); ?></h5>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                     <?php if ($this->cursos): ?>
