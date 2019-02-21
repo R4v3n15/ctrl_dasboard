@@ -14,7 +14,7 @@
                             </button>
                         <?php endforeach ?>
                     <?php endif ?>
-                    <?php if ($this->u_type === '1' || $this->u_type === '2'): ?>
+                    <?php if ($this->u_type === 1 || $this->u_type === 2): ?>
                     <button class="btn btn-sm btn-outline-secondary students_view" id="curso_standby" data-curso="standby">
                         EN ESPERA
                         <span class="badge badge-dark" id="count_standby">0</span>

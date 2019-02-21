@@ -255,6 +255,7 @@ var Alumnos = {
             type: 'POST',
             url: _root_ + 'alumnos/alumnosCurso',
             success: function(data){
+                console.log(data);
                 $.each(data, function(i, value){
                     if (parseInt(value) > 0) {
                         $('#'+i).text(value);

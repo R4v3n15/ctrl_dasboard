@@ -15,7 +15,6 @@
     <link href="<?= _root(); ?>assets/libs/css/dashboard.css"      rel="stylesheet">
     <link href="<?= _root(); ?>assets/libs/css/dataTables.min.css" rel="stylesheet">
     <link href="<?= _root(); ?>assets/libs/css/fontawesome-all.min.css" rel="stylesheet">
-    <link href="<?= _root(); ?>assets/libs/css/main.css" rel="stylesheet">
     <link href="<?= _root(); ?>assets/libs/css/cards.css" rel="stylesheet">
     <link href="<?= _root(); ?>assets/css/icons.css" rel="stylesheet">
     <?php  
@@ -23,6 +22,7 @@
             Registry::get('css');
         }
     ?>
+    <link href="<?= _root(); ?>assets/libs/css/main.css" rel="stylesheet">
 </head>
 <body>
     <?php  if (Session::userIsLoggedIn()): 
@@ -67,7 +67,8 @@
                                 <ul class="list-group">
                                     <li class="dropdown-item student-page" id="studentPage">
                                         <a href="<?= _root(); ?>alumnos">
-                                            <i class="fa fa-chevron-right text-secondary" id="chevron"></i> Alumnos</a></li>
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron"></i> Alumnos</a>
+                                    </li>
                                     <?php if ($user_type !== 3): ?>
                                     <li class="dropdown-item student-page" id="studentPage_inscribir">
                                         <a href="<?= _root(); ?>alumnos/inscribir">
@@ -98,6 +99,10 @@
                                             <i class="fa fa-chevron-right text-secondary" id="chevron_eliminados"></i> Eliminados</a>
                                     </li>
                                     <?php endif ?>
+                                    <li class="dropdown-item student-page" id="studentPage_inasistencia">
+                                        <a href="<?= _root(); ?>alumnos/inasistencias">
+                                            <i class="fa fa-chevron-right text-secondary" id="chevron_inasistencia"></i> Registro de Inasistencia</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

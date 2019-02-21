@@ -14,13 +14,17 @@ class AlumnosController extends Controller
 
     public function index() {
         $this->View->render('alumnos/index', array(
-            'u_type'    => Session::get('user_account_type'),
+            'u_type'    => (int)Session::get('user_type'),
             'cursos'    => CursoModel::getCourses()
         ));
     }
 
     public function getAlumnos() {
-        $this->View->renderJSON(AlumnoModel::Students(Request::post('curso')));
+        if ((int)Session::get('user_type') === 3) {
+            $this->View->renderJSON(AlumnoModel::StudentsClasses(Request::post('curso')));
+        } else {
+            $this->View->renderJSON(AlumnoModel::Students(Request::post('curso')));
+        }
     }
 
     public function tablaAlumnos() {
@@ -53,9 +57,19 @@ class AlumnosController extends Controller
     }
 
     public function alumnosCurso() {
-        $this->View->renderJSON(AlumnoModel::countStudents());
+        if ((int)Session::get('user_type') === 3) {
+            $this->View->renderJSON(AlumnoModel::countStudentsByClass());
+        } else {
+            $this->View->renderJSON(AlumnoModel::countStudents());
+        }
     }
 
+
+    /**
+    |===============================================================================================
+    | C O N T R O L   D E   A S I G N A C I Ó N   Y   C A M B I O   D E   G R U P O   D E   A L U M N O (S)
+    |=============================================================================================== 
+    */
 
     public function cambiarGrupoAlumno(){
         if (Request::post('alumno')) {
@@ -80,10 +94,12 @@ class AlumnosController extends Controller
     }
 
 
-
-    ///////////////////////////////////////////////////////////////
-    //  =  =  =  =  =  = I N S C R I P C I Ó N  =  =  =  =  =  = //
-    ///////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | C O N T R O L    D E    I N S C R I P C I Ó N    D E    A L U M N O S
+    |=============================================================================================== 
+    */
+   
     public function inscribir() {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
         Registry::set('js', array('mapa&assets/js', 
@@ -253,11 +269,13 @@ class AlumnosController extends Controller
 
     }
 
-    
-    ///////////////////////////////////////////////////////
-    // =  =  = P E R F I L   D E L  A L U M N O  =  =  = //
-    ///////////////////////////////////////////////////////
 
+    /**
+    |===============================================================================================
+    | P E R F I L    D E L    A L U M N O
+    |=============================================================================================== 
+    */
+   
     public function perfil($alumno) {
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
         Registry::set('js', array('fileinput.min&assets/libs/js', 
@@ -373,9 +391,11 @@ class AlumnosController extends Controller
 
 
 
-    /////////////////////////////////////////////////////////
-    //  =  =  =  =  =  = C O N V E N I O  =  =  =  =  =  = //
-    /////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | C O N T R O L    D E    F I R M A S    D E    C O N V E N I O
+    |=============================================================================================== 
+    */
 
     public function c($student){
         $this->View->render('alumnos/convenio', array('alumno' => GeneralModel::getStudentDetail($student)));
@@ -385,16 +405,17 @@ class AlumnosController extends Controller
         $this->View->renderWithoutHeaderAndFooter('alumnos/conveniopdf');
     }
 
-    
-    
-    //////////////////////////////////////////////////////////////
-    //  =  =  =  =  =  =  =  = D E    B A J A  =  =  =  =  =  = //
-    //////////////////////////////////////////////////////////////
 
+    /**
+    |===============================================================================================
+    | A L U M N O S    D E B A J A
+    |=============================================================================================== 
+    */
+   
     public function baja() {
         Registry::set('js', array('alumnosbaja&assets/js'));
         $this->View->render('alumnos/baja', array(
-            'u_type'    => Session::get('user_account_type')
+            'u_type'    => Session::get('user_type')
         ));
     }
 
@@ -415,14 +436,16 @@ class AlumnosController extends Controller
     }
 
 
-    //////////////////////////////////////////////////////////////
-    //  =  =  =  =  =  =  =  E L I M I N A D O S  =  =  =  =  = //
-    //////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | A L U M N O S    E L I M I N A D O S
+    |=============================================================================================== 
+    */
 
     public function eliminados() {
         Registry::set('js', array('alumnoseliminados&assets/js'));
         $this->View->render('alumnos/eliminados', array(
-            'u_type'    => Session::get('user_account_type')
+            'u_type'    => Session::get('user_type')
         ));
     }
 
@@ -470,8 +493,30 @@ class AlumnosController extends Controller
         }
     }
 
+    /**
+    |===============================================================================================
+    | R E G I S T R O     D E    I N A S I S T E N C I A
+    |=============================================================================================== 
+    */
 
+    public function inasistencias() {
+        Registry::set('css',array('pikaday&assets/libs/css', 'select2.min&assets/libs/select2'));
+        Registry::set('js', array('moment.min&assets/libs/js', 
+                                  'pikaday.min&assets/libs/js',
+                                  'select2.min&assets/libs/select2', 
+                                  'inasistencias&assets/js'));
 
+        $this->View->render('alumnos/inasistencias', array(
+            'alumnos'   => GeneralModel::getAllStudentsByTeacher(Session::get('user_id'), (int)Session::get('user_type'))
+        ));
+    }
+
+    /**
+    |===============================================================================================
+    | C O N T R O L    D E   F A C T U R A C I Ó N
+    |=============================================================================================== 
+    */
+   
     public function tablaFacturacion() {
         $this->View->renderJSON(AlumnoModel::getInvoiceTable());
     }
@@ -493,6 +538,12 @@ class AlumnosController extends Controller
         ));
     }
 
+
+    /**
+    |===============================================================================================
+    | C O N T R O L    D E    A L U M N O S    D E    L A    S E P
+    |=============================================================================================== 
+    */
     public function sep() {
         $this->View->render('alumnos/sep', array(
             'students' => GeneralModel::prospectSepStudents(),

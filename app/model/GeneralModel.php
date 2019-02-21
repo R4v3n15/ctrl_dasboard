@@ -148,6 +148,60 @@ class GeneralModel
         return null;
     }
 
+    public static function studentsByTeacher($course, $teacher){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
+                                               s.lastname, s.age, s.genre, s.avatar, g.class_id,
+                                               g.convenio, sd.studies, sd.lastgrade, sd.workplace as school
+                                        FROM students as s, students_groups as g, students_details as sd, classes as c
+                                        WHERE s.status = 1
+                                          AND s.deleted  = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = c.class_id
+                                          AND s.student_id = sd.student_id
+                                          AND c.course_id  = :course
+                                          AND c.teacher_id = :teacher
+                                          AND c.status     = 1
+                                        ORDER BY s.surname ASC, s.lastname ASC;");
+        $students->execute(array(':course' => $course, ':teacher' => $teacher));
+        if ($students->rowCount() > 0) {
+            return $students->fetchAll();
+        }
+
+        return null;
+    }
+
+    public static function getAllStudentsByTeacher($teacher, $user_type){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        if ($user_type === 3) {
+            $students = $database->prepare("SELECT s.student_id, CONCAT_WS(' ', s.surname, s.lastname, s.name) as name
+                                            FROM students as s, students_groups as g, classes as c
+                                            WHERE s.status = 1
+                                              AND s.deleted  = 0
+                                              AND s.student_id = g.student_id
+                                              AND g.class_id   = c.class_id
+                                              AND c.teacher_id = :teacher
+                                              AND c.status     = 1
+                                            ORDER BY s.surname ASC, s.lastname ASC;");
+            $students->execute(array('teacher' => $teacher));
+        } else {
+            $students = $database->prepare("SELECT s.student_id, CONCAT_WS(' ', s.surname, s.lastname, s.name) as name
+                                            FROM students as s, students_groups as g, classes as c
+                                            WHERE s.status = 1
+                                              AND s.deleted  = 0
+                                              AND s.student_id = g.student_id
+                                              AND g.class_id   = c.class_id
+                                              AND c.status     = 1
+                                            ORDER BY s.surname ASC, s.lastname ASC;");
+            $students->execute();
+        }
+        if ($students->rowCount() > 0) {
+            return $students->fetchAll();
+        }
+
+        return null;
+    }
+
     public static function tablePayByCourse($course){
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, s.name, s.surname,
@@ -228,6 +282,21 @@ class GeneralModel
                                           AND g.class_id   = c.class_id
                                           AND c.course_id  = :course;");
         $students->execute(array(':course' => $course));
+
+        return $students->rowCount();
+    }
+
+    public static function countByTeacherCourse($teacher, $course){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = $database->prepare("SELECT s.student_id, c.course_id
+                                        FROM students as s, students_groups as g, classes as c
+                                        WHERE s.status     = 1
+                                          AND s.deleted    = 0
+                                          AND s.student_id = g.student_id
+                                          AND g.class_id   = c.class_id
+                                          AND c.teacher_id = :teacher
+                                          AND c.course_id  = :course;");
+        $students->execute(array(':teacher' => $teacher, ':course' => $course));
 
         return $students->rowCount();
     }

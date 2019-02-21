@@ -285,6 +285,264 @@ class AlumnoModel
     }
 
 
+    /**
+    |===============================================================================================
+    | Request Student For Teachers
+    |=============================================================================================== 
+    */
+   
+    public static function StudentsClasses($course){
+        $user_type = (int)Session::get('user_type');
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $students = null;
+
+        // Obtener Lista de Alumnos
+        $curso = (int)$course;
+        $students = GeneralModel::studentsByTeacher($curso, Session::get('user_id'));
+
+        // Si existe al menos 1, se procesa y pasa a la vista
+        $datos = [];
+        if ($students !== null) {
+            $counter = 1;
+            foreach ($students as $alumno) {
+                $id_grupo = 0;
+                $nombre_curso = '';
+                $maestro = '- - - -';
+                $horario = '- - - -';
+                $dias = '';
+                $finished = false;
+                if ($user_type !== 3) {
+                    $grupo = '<a href="javascript:void(0)" 
+                                 class="link btnSetGroup badge badge-warning" 
+                                 data-student="'.$alumno->student_id.'"
+                                 title="Agregar grupo">Agregar a Grupo</a>';
+                } else {
+                    $grupo = '<a href="javascript:void(0)" 
+                             class="link badge badge-warning"
+                             title="Grupo">En Espera</a>';
+                }
+
+                if ($alumno->class_id !== NULL) {
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, 
+                                                        cu.course, g.group_name, h.date_end, h.hour_init, h.hour_end
+                                                 FROM classes as c, courses as cu, groups as g, schedules as h
+                                                 WHERE c.class_id   = :clase
+                                                   AND c.course_id  = cu.course_id
+                                                   AND c.group_id   = g.group_id
+                                                   AND c.schedul_id = h.schedul_id
+                                                 LIMIT 1;");
+                    $clase->execute(array(':clase' => $alumno->class_id));
+
+                    if ($clase->rowCount() > 0) {
+                        $clase = $clase->fetch();
+                        $id_grupo = $clase->class_id;
+                        $nombre_curso = ucwords(strtolower($clase->course));
+                        $finished = strtotime(date('Y-m-d')) > strtotime($clase->date_end . ' + 5 days');
+
+                        $getDays = $database->prepare("SELECT d.day 
+                                                       FROM days as d, schedul_days as sd 
+                                                       WHERE sd.schedul_id = :schedul
+                                                         AND sd.day_id     = d.day_id
+                                                       ORDER BY d.day_id;");
+                        $getDays->execute(array(':schedul' => $clase->schedul_id));
+                        $days = $getDays->fetchAll();
+
+                        $pointer = 1;
+                        foreach ($days as $day) {
+                            if(count($days) > $pointer) {
+                                $dias .= ucwords(strtolower($day->day)) . ', ';
+                            } else {
+                                $dias .= ucwords(strtolower($day->day));
+                            }
+                            $pointer++;
+                        }
+
+
+
+                        $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
+                        if ($user_type !== 3) {
+                        $grupo = '<a class="btnChangeGroup"
+                                     href="javascript:void(0)"
+                                     data-student="'.$alumno->student_id.'"
+                                     data-class="'.$clase->class_id.'"
+                                     data-course="'.$clase->course_id.'"
+                                     data-group="'.$nombre_curso.' '.$clase->group_name.'"
+                                     data-reinscripcion="'.$finished.'"
+                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                        } else {
+                           $grupo = '<a href="javascript:void(0)" title="Grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'; 
+                        }
+
+                        if ($clase->teacher_id !== null) {
+                            $getUser = $database->prepare("SELECT name, lastname FROM users WHERE user_id = :teacher LIMIT 1;");
+                            $getUser->execute(array(':teacher' => $clase->teacher_id));
+
+                            if ($getUser->rowCount() > 0) {
+                                $getUser = $getUser->fetch();
+                                $maestro = $getUser->name . ' ' . $getUser->lastname;
+                            }
+                        }
+                    }
+                }
+
+                //-> Tutor del Alumno
+                $id_tutor     = 0;
+                $nombre_tutor = '- - - -';
+                if ($alumno->id_tutor !== NULL) {
+                    $tutor = $database->prepare("SELECT id_tutor, namet, surnamet, lastnamet
+                                                    FROM tutors
+                                                    WHERE id_tutor = :tutor
+                                                 LIMIT 1;");
+                    $tutor->execute(array(':tutor' => $alumno->id_tutor));
+                    if ($tutor->rowCount() > 0) {
+                        $tutor = $tutor->fetch();
+                        $id_tutor = $tutor->id_tutor;
+                        $nombre_tutor = $tutor->namet.' '.$tutor->surnamet;
+                    }
+                }
+
+                $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').$alumno->avatar.'.jpg';
+                $realPath = Config::get('PATH_AVATARS_STUDENTS').$alumno->avatar.'.jpg';
+                if (!file_exists($realPath)) {
+                    $avatar = Config::get('URL').Config::get('PATH_AVATAR_STUDENT').strtolower($alumno->genre).'.jpg';
+                }
+                
+                $convenio = $alumno->convenio == "0" ?
+                                '<i data-toggle="tooltip" title="Convenio Pendiente" class="fa fa-file"></i>' : '';
+                            
+                $check = '<div class="custom-control custom-checkbox">
+                            <input type="checkbox" 
+                                   class="custom-control-input check-item" 
+                                   id="customCheck'.$counter.'"
+                                   data-inscribir="'.($finished ? 1 : 0).'" 
+                                   value="'.$alumno->student_id.'">
+                            <label class="custom-control-label" for="customCheck'.$counter.'">'.$counter.'</label>
+                        </div>';
+                            
+                if ($user_type !== 3) {
+                $photo = '<img class="rounded-circle btnChangeAvatar" 
+                               src="'.$avatar.'"
+                               data-student="'.$alumno->student_id.'" 
+                               alt="foto" 
+                               widt="42" 
+                               height="42">';
+                } else {
+                $photo = '<img class="rounded-circle" src="'.$avatar.'" alt="foto" widt="42" height="42">';
+                }
+
+                $optClass = $finished ? 'danger' : 'primary';
+
+                $options = '<a href="javascript:void(0)"
+                         data-target="#"
+                         class="btn btn-outline-'.$optClass.' btn-sm dropdown-toggle"
+                         data-toggle="dropdown">Más.. <span class="caret"></span>
+                      </a>';
+                $options .= '<ul class="dropdown-menu student">';
+                if ($user_type !== 3) {
+                $options .= '<li>
+                            <a href="'.Config::get('URL').'alumnos/perfil/'.$alumno->student_id.'"
+                               data-student="'.$alumno->student_id.'"
+                               data-tutor="'.$id_tutor.'"
+                               data-clase="'.$id_grupo.'"
+                               data-curso="'.$nombre_curso.'">
+                                <i class="ml-1 text-dark fa fa-chevron-right"></i>
+                                Perfil
+                            </a>
+                        </li>';
+                $options .=    '<li>
+                            <a href="'.Config::get('URL').'alumnos/c/'.$alumno->student_id.'">
+                                <i class="ml-1 text-primary fa fa-chevron-right"></i>
+                                Convenio
+                            </a></li>';
+                $options .=    '<li>
+                            <a href="javascript:void(0)"
+                               class="btnChangeAvatar"
+                               data-student="'.$alumno->student_id.'">
+                                <i class="ml-1 text-info fa fa-chevron-right"></i>
+                                Cambiar Foto
+                            </a>
+                        </li>';
+                }
+                $options .=   '<li>
+                            <a href="'.Config::get('URL').'evaluaciones/st/'.$alumno->student_id.'">
+                                <i class="ml-1 text-success fa fa-chevron-right"></i>
+                                Calificaciones
+                            </a>
+                        </li>';
+                if ($user_type !== 3) {
+                $options .=   '<li>
+                            <a href="'.Config::get('URL').'mapa/u/'.$alumno->student_id.'">
+                                <i class="ml-1 text-dark fa fa-chevron-right"></i>
+                                Croquis
+                            </a>
+                        </li>';
+                $options .=   '<li>
+                            <a  href="javascript:void(0)" 
+                                class="btnUnsuscribeStudent" 
+                                data-student="'.$alumno->student_id.'"
+                                data-name="'.$alumno->name.' '.$alumno->surname.'">
+                                <i class="ml-1 text-warning fa fa-chevron-right"></i>
+                                Dar de Baja
+                            </a>
+                        </li>';
+                $options .=   '<li>
+                            <a  href="javascript:void(0)" 
+                                class="btnDeleteStudent" 
+                                data-student="'.$alumno->student_id.'"
+                                data-name="'.$alumno->name.' '.$alumno->surname.'">
+                                <i class="ml-1 text-danger fa fa-chevron-right"></i>
+                                Eliminar
+                            </a>
+                        </li>';
+                }
+                $options .= '</ul>';
+
+                $dias = '<small>'.$dias.'</small>';
+
+                $info = array(
+                    'count'      => $check,
+                    'avatar'     => $photo,
+                    'surname'    => $alumno->surname.' '.$alumno->lastname,
+                    'name'       => $alumno->name,
+                    'studies'    => $alumno->studies.' '.$alumno->lastgrade,
+                    'age'        => $alumno->age,
+                    'group_name' => $grupo,
+                    'teacher'    => ucwords(strtolower($maestro)),
+                    'horary'     => $dias . '<br>' . $horario,
+                    'options'    => $options,
+                    'finished'   => $finished
+                );
+
+                array_push($datos, $info);
+                $counter++;
+            }
+        }
+
+        return array('data' => $datos);   
+    }
+
+    public static function countStudentsByClass(){
+        $teacher  = Session::get('user_id');
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $courses  =  $database->prepare("SELECT course_id FROM courses WHERE status = 1;");
+        $courses->execute();
+
+        $counters = array();
+
+        // Alumnos por cada curso que exista
+        if($courses->rowCount() > 0){
+            $cursos = $courses->fetchAll();
+            foreach ($cursos as $curso) {
+                $label = 'count_'.$curso->course_id;
+                $count = GeneralModel::countByTeacherCourse($teacher, $curso->course_id);
+                $counters[$label] = $count;
+            }
+        }
+
+        return $counters;
+    }
+
+
 
     /////////////////////////////////////////////////////////////////////
     // =  =  =  =  R E Q U I R E   I N V O I C E   L I S T  =  =  =  = //
