@@ -39,8 +39,8 @@
 <div class="modal fade" id="modalSuscribeStudent" tabindex="-1" role="dialog" aria-labelledby="suscribeTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="suscribeTitle">Dar de Alta Alumno</h5>
+            <div class="modal-header bg-info py-2">
+                <h6 class="modal-title text-white my-0" id="suscribeTitle">Alta de Alumno</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -60,12 +60,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary btn-flat-sm" data-dismiss="modal">Cancelar</button>
+            <div class="row mb-2 py-2 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Cancelar</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="suscribeStudent" class="btn btn-primary">Der de Alta</button>
+                <div class="col-6 text-right">
+                    <button type="button" id="suscribeStudent" class="btn btn-info btn-sm btn-flat-md">Continuar</button>
                 </div>
             </div>
         </div>
@@ -76,8 +76,8 @@
 <div class="modal fade" id="modalDeleteStudent" tabindex="-1" role="dialog" aria-labelledby="deleteTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteTitle">Eliminar Alumno</h5>
+            <div class="modal-header bg-danger py-2">
+                <h6 class="modal-title text-white my-0" id="deleteTitle">Eliminar Alumno</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -92,12 +92,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <div class="row mb-2 py-2 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Cancelar</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="deleteStudent" class="btn btn-danger">Eliminar</button>
+                <div class="col-6 text-right">
+                    <button type="button" id="deleteStudent" class="btn btn-danger btn-sm btn-flat-md">Eliminar</button>
                 </div>
             </div>
         </div>

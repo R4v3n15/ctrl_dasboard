@@ -39,10 +39,8 @@
                       class="row" 
                       enctype="multipart/form-data">
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <input type="file" id="avatar" name="avatar_file" class="form-control form-control-sm" />
-                            </div>
+                        <div class="form-group form-group-sm">
+                            <input type="file" id="avatar" name="avatar_file" class="form-control form-control-sm" />
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -57,6 +55,9 @@
                                    placeholder="Nombre(s)"
                                    aria-label="Nombre"
                                    aria-describedby="addon1"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Información requerida"
                                    autocomplete="off" 
                                    required />
                         </div>
@@ -73,6 +74,9 @@
                                    placeholder="Apellido(s)"
                                    aria-label="Apellido"
                                    aria-describedby="addon2"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Información requerida"
                                    autocomplete="off"
                                    required />
                         </div>
@@ -100,6 +104,9 @@
                                    class="form-control form-control-sm" 
                                    placeholder="Número de teléfono"
                                    autocomplete="off"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Información requerida"
                                    required />
                         </div>
                     </div>
@@ -207,11 +214,9 @@
                       class="row" 
                       enctype="multipart/form-data">
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <div class="form-group form-group-sm">
                             <label for="avatar">Cambiar foto:</label>
-                            <div class="col-sm-12">
-                                <input type="file" id="avatar_file" name="avatar_file" class="form-control form-control-sm" />
-                            </div>
+                            <input type="file" id="avatar_file" name="avatar_file" class="form-control form-control-sm" />
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -339,8 +344,8 @@
 <div class="modal fade" id="modalDeleteTeacher" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenterTitle">Eliminar Maestro</h5>
+            <div class="modal-header py-2">
+                <h5 class="modal-title my-0" id="ModalCenterTitle">Eliminar Maestro</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -353,12 +358,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-5">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <div class="row mb-2 py-2 px-4">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Cancelar</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="confirm_delete_teacher" class="btn btn-danger">Eliminar</button>
+                <div class="col-6 text-right">
+                    <button type="button" id="confirm_delete_teacher" class="btn btn-danger btn-sm btn-flat-md">Eliminar</button>
                 </div>
             </div>
         </div>

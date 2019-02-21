@@ -1,7 +1,8 @@
 var Becados = {
     initialize: function(){
         console.log('Becados Initialize');
-        this.handleModals()
+        this.handleModals();
+        this.handleScholarForms();
     },
 
     handleModals: function(){
@@ -12,6 +13,15 @@ var Becados = {
             $('#scholar_idStudent').val(scholar);
             $('#scholar_name').text(name);
             $('#remove_scholar_modal').modal('show');
+        });
+    },
+
+    handleScholarForms: function(){
+        $('#frmDeleteScholar').submit(function(event){
+            event.preventDefault();
+            $('#general_snack').attr('data-content', 'Funcionalidad no Agregada');
+            $('#general_snack').snackbar('show');
+            $('.snackbar').addClass('snackbar-green');
         });
     },
 

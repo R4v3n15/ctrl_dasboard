@@ -54,218 +54,217 @@
 <div class="modal fade" id="modalAddClasse" tabindex="-1" role="dialog" aria-labelledby="ModalClassTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success py-2">
+            <div class="modal-header bg-info py-2">
                 <h6 class="modal-title text-white m-0" id="ModalClassTitle">NUEVA CLASE</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form id="frmCreateClase" method="POST" class="form-horizontal">
             <div class="modal-body">
-                <form id="frmCreateClase" method="POST" class="form-horizontal">
-                    <div class="row justify-content-center">
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="inputname" class="col-12" >Curso: </label>
-                                <div class="col-12">
-                                    <select class="form-control"  name="curso" required="true">
-                                        <option value="" hidden>Seleccione...</option>
-                                        <?php  
-                                        if ($this->cursos) {
-                                            foreach ($this->cursos as $curso) {
-                                                echo '<option value="'.$curso->course_id.'">'.$curso->course.'</option>';
-                                            }
+                <div class="row justify-content-center">
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="inputname" class="col-12" >Curso: </label>
+                            <div class="col-12">
+                                <select class="form-control"  name="curso" required="true">
+                                    <option value="" hidden>Seleccione...</option>
+                                    <?php  
+                                    if ($this->cursos) {
+                                        foreach ($this->cursos as $curso) {
+                                            echo '<option value="'.$curso->course_id.'">'.$curso->course.'</option>';
                                         }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="inputname" class="col-12 control-label">Grupo: </label>
-                                <div class="col-12">
-                                    <select class="form-control" id="" name="grupo" required="true">
-                                        <option value="" hidden>Seleccione...</option>
-                                        <?php  
-                                        if ($this->niveles) {
-                                            foreach ($this->niveles as $nivel) {
-                                                echo '<option value="'.$nivel->group_id.'">'.$nivel->group_name.'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="f_inicio" class="col-12">Fecha de Inicio: </label>
-                                <div class="col-12">
-                                    <input type="text" 
-                                           id="date_init" 
-                                           class="form-control"
-                                           placeholder="Inicia.." 
-                                           name="f_inicio"
-                                           autocomplete="off" 
-                                           required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="f_fin" class="col-12 control-label">Fecha Fin: </label>
-                                <div class="col-12">
-                                    <input type="text" 
-                                           id="date_end" 
-                                           class="form-control"
-                                           placeholder="Finaliza.." 
-                                           name="f_fin"
-                                           autocomplete="off" 
-                                           required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="periodo" class="col-12">Periodo: </label>
-                                <div class="col-12">
-                                    <select class="form-control" name="ciclo" required="true">
-                                       <?php date("Y"); $anioAnt=date("Y")-1; $anioNext=date("Y")+1; ?>
-                                       <option value="" hidden>Seleccione...</option>
-                                       <option value="<?= $anioNext;?> A"><?php echo $anioNext; ?> A</option>
-                                       <option value="<?= $anioNext;?> B"><?php echo $anioNext; ?> B</option>
-                                       <option value="<?= date('Y');?> A"><?php echo date("Y"); ?> A</option>
-                                       <option value="<?= date('Y');?> B"><?php echo date("Y"); ?> B</option>
-                                       <option value="<?= $anioAnt;?> A"><?php echo $anioAnt; ?> A</option>
-                                       <option value="<?= $anioAnt;?> B"><?php echo $anioAnt; ?> B</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <label for="dias" class="col-12 control-label">Dias: </label>
-                                <div class="col-12">
-                                    <select name="dias[]" id="dias" style="width: 100%;" class="form-control" multiple>
-                                        <?php  
-                                        if ($this->dias) {
-                                            foreach ($this->dias as $dia) {
-                                                echo '<option value="'.$dia->day_id.'">'.$dia->day.'</option>';
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label for="h_inicio" class="col-12">Hora de Inicio: </label>
-                               <div class="col-12">
-                                  <input type="text"
-                                         id="timepick" 
-                                         name="h_inicio" 
-                                         class="form-control" 
-                                         placeholder="2:00" 
-                                         required>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label for="h_salida" class="col-12 control-label">Hora de Salida: </label>
-                               <div class="col-12">
-                                  <input type="text"
-                                         id="timepick2"
-                                         name="h_salida" 
-                                         class="form-control" 
-                                         placeholder="2:00" required>
-                               </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label class="col-12">Costo Normal: </label>
-                               <div class="col-12">
-                                  <input type="text" 
-                                         class="form-control" 
-                                         name="c_normal" 
-                                         id="c_normal" 
-                                         placeholder="200">
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label class="col-12 control-label">Costo Promocional: </label>
-                               <div class="col-12">
-                                  <input type="text" 
-                                         class="form-control" 
-                                         name="c_promocional" 
-                                         id="c_promocional" 
-                                         placeholder="200">
-                               </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label class="col-12">Costo Inscripción: </label>
-                               <div class="col-12">
-                                  <input type="text" 
-                                         class="form-control" 
-                                         name="inscripcion" 
-                                         id="inscripcion" 
-                                         placeholder="200">
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label for="h_salida" class="col-12 control-label">Maestro: </label>
-                               <div class="col-12">
-                                  <select class="form-control" id="" name="maestro">
-                                        <option value="">Seleccione...</option>
-                                        <?php if ($this->teachers) {
-                                            foreach ($this->teachers as $maestro) {
-                                                echo '<option value="'.$maestro->user_id.'">
-                                                        '.ucwords(strtolower($maestro->name)).' '.
-                                                        ucwords(strtolower($maestro->lastname)).'
-                                                      </option>';
-                                            }
-                                        } ?>
-                                    </select>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-4">
-                            <div class="form-group">
-                               <label class="col-12">Libro: </label>
-                               <div class="col-12">
-                                  <input type="text" 
-                                         class="form-control" 
-                                         name="libro" 
-                                         id="libro" 
-                                         placeholder="Nombre del libro">
-                               </div>
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row justify-content-center mb-3">
-                        <div class="col-6 col-md-4 text-center">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div>
-                        <div class="col-6 col-md-4 text-center">
-                            <input type="submit"  class="btn btn-primary" value="Guardar">
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="inputname" class="col-12 control-label">Grupo: </label>
+                            <div class="col-12">
+                                <select class="form-control" id="" name="grupo" required="true">
+                                    <option value="" hidden>Seleccione...</option>
+                                    <?php  
+                                    if ($this->niveles) {
+                                        foreach ($this->niveles as $nivel) {
+                                            echo '<option value="'.$nivel->group_id.'">'.$nivel->group_name.'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </form>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="f_inicio" class="col-12">Fecha de Inicio: </label>
+                            <div class="col-12">
+                                <input type="text" 
+                                       id="date_init" 
+                                       class="form-control"
+                                       placeholder="Inicia.." 
+                                       name="f_inicio"
+                                       autocomplete="off" 
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="f_fin" class="col-12 control-label">Fecha Fin: </label>
+                            <div class="col-12">
+                                <input type="text" 
+                                       id="date_end" 
+                                       class="form-control"
+                                       placeholder="Finaliza.." 
+                                       name="f_fin"
+                                       autocomplete="off" 
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="periodo" class="col-12">Periodo: </label>
+                            <div class="col-12">
+                                <select class="form-control" name="ciclo" required="true">
+                                   <?php date("Y"); $anioAnt=date("Y")-1; $anioNext=date("Y")+1; ?>
+                                   <option value="" hidden>Seleccione...</option>
+                                   <option value="<?= $anioNext;?> A"><?php echo $anioNext; ?> A</option>
+                                   <option value="<?= $anioNext;?> B"><?php echo $anioNext; ?> B</option>
+                                   <option value="<?= date('Y');?> A"><?php echo date("Y"); ?> A</option>
+                                   <option value="<?= date('Y');?> B"><?php echo date("Y"); ?> B</option>
+                                   <option value="<?= $anioAnt;?> A"><?php echo $anioAnt; ?> A</option>
+                                   <option value="<?= $anioAnt;?> B"><?php echo $anioAnt; ?> B</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="dias" class="col-12 control-label">Dias: </label>
+                            <div class="col-12">
+                                <select name="dias[]" id="dias" style="width: 100%;" class="form-control" multiple>
+                                    <?php  
+                                    if ($this->dias) {
+                                        foreach ($this->dias as $dia) {
+                                            echo '<option value="'.$dia->day_id.'">'.$dia->day.'</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label for="h_inicio" class="col-12">Hora de Inicio: </label>
+                           <div class="col-12">
+                              <input type="text"
+                                     id="timepick" 
+                                     name="h_inicio" 
+                                     class="form-control" 
+                                     placeholder="2:00" 
+                                     required>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label for="h_salida" class="col-12 control-label">Hora de Salida: </label>
+                           <div class="col-12">
+                              <input type="text"
+                                     id="timepick2"
+                                     name="h_salida" 
+                                     class="form-control" 
+                                     placeholder="2:00" required>
+                           </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label class="col-12">Costo Normal: </label>
+                           <div class="col-12">
+                              <input type="text" 
+                                     class="form-control" 
+                                     name="c_normal" 
+                                     id="c_normal" 
+                                     placeholder="200">
+                           </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label class="col-12 control-label">Costo Promocional: </label>
+                           <div class="col-12">
+                              <input type="text" 
+                                     class="form-control" 
+                                     name="c_promocional" 
+                                     id="c_promocional" 
+                                     placeholder="200">
+                           </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label class="col-12">Costo Inscripción: </label>
+                           <div class="col-12">
+                              <input type="text" 
+                                     class="form-control" 
+                                     name="inscripcion" 
+                                     id="inscripcion" 
+                                     placeholder="200">
+                           </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label for="h_salida" class="col-12 control-label">Maestro: </label>
+                           <div class="col-12">
+                              <select class="form-control" id="" name="maestro">
+                                    <option value="">Seleccione...</option>
+                                    <?php if ($this->teachers) {
+                                        foreach ($this->teachers as $maestro) {
+                                            echo '<option value="'.$maestro->user_id.'">
+                                                    '.ucwords(strtolower($maestro->name)).' '.
+                                                    ucwords(strtolower($maestro->lastname)).'
+                                                  </option>';
+                                        }
+                                    } ?>
+                                </select>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                           <label class="col-12">Libro: </label>
+                           <div class="col-12">
+                              <input type="text" 
+                                     class="form-control" 
+                                     name="libro" 
+                                     id="libro" 
+                                     placeholder="Nombre del libro">
+                           </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="row mb-1 py-2 px-4">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-flat-md btn-sm" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-right">
+                    <input type="submit"  class="btn btn-info btn-flat-md btn-sm" value="Guardar">
+                </div>
+            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -319,12 +318,14 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="btn_remove_class" class="btn btn-info">Mover</button>
+            <div class="modal-footer">
+                <div class="row mb-1 py-2 px-3 ">
+                    <div class="col-6 text-left">
+                        <button type="button" class="btn btn-secondary btn-flat-md btn-sm" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    <div class="col-6 text-right">
+                        <button type="button" id="btn_remove_class" class="btn btn-warning btn-flat-md btn-sm">Mover</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -335,7 +336,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger py-2">
-                <h5 class="modal-title text-white my-0" id="ModalCenterTitle">Eliminar Clase</h5>
+                <h6 class="modal-title text-white my-0" id="ModalCenterTitle">Eliminar Clase</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -349,12 +350,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <div class="row mb-1 py-2 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Cancelar</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="btn_delete_class" class="btn btn-primary">Eliminar</button>
+                <div class="col-6 text-right">
+                    <button type="button" id="btn_delete_class" class="btn btn-danger btn-sm btn-flat-md">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -364,7 +365,7 @@
 <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success py-2">
+            <div class="modal-header bg-info py-2">
                 <h6 class="modal-title text-white m-0" id="ModalCenterTitle">NUEVO CURSO</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -381,14 +382,12 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <div class="row">
-                    <div class="col-6 text-center">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="col-6 text-center">
-                        <button type="button" id="new_course"  class="btn btn-primary">Save changes</button>
-                    </div>
+            <div class="row mb-1 py-2 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Close</button>
+                </div>
+                <div class="col-6 text-right">
+                    <button type="button" id="new_course"  class="btn btn-info btn-sm btn-flat-md">Guardar</button>
                 </div>
             </div>
         </div>

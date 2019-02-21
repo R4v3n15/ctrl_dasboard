@@ -16,11 +16,11 @@
                                     id="tabla_<?= $curso->course_id; ?>" 
                                     data-table="<?= $curso->course_id; ?>">
                                 <?= ucwords(strtolower($curso->course)); ?> 
-                                <span class="badge badge-secondary" id="count_<?= $curso->course_id; ?>">0</span>
+                                <span class="badge badge-dark" id="count_<?= $curso->course_id; ?>">0</span>
                             </button>
                         <?php endforeach ?>
                     <?php endif ?>
-                    <button class="btn btn-sm btn-outline-secondary pays_view" id="table_all" data-table="all">
+                    <button class="btn btn-sm btn-outline-success pays_view" id="tabla_all" data-table="all">
                         TODOS
                         <span class="badge badge-dark" id="count_all">0</span>
                     </button>

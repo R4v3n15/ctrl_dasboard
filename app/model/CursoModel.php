@@ -291,12 +291,12 @@ class CursoModel {
 
                     $rowClase = 'border-l-success';
                     $options  = '<button type="button" id="'.$clase->id.'" data-horario="'.$clase->horario_id.'"
-                                        class="btn btn-info updateClase mr-2"
+                                        class="btn btn-info btn-sm updateClase mr-2"
                                         title="Editar Clase">
                                             <i class="fas fa-edit"></i>
                                 </button>
                                 <button type="button" id="'.$clase->id.'" data-name="'.$clase->name.'" 
-                                        class="btn btn-danger deleteClase"
+                                        class="btn btn-danger btn-sm deleteClase"
                                         title="Eliminar Clase">
                                             <i class="fas fa-trash"></i>
                                 </button>';

@@ -31,7 +31,7 @@ class MaestroModel
 
             // Tabla de maestros
             echo '<div class="table-responsive">';
-            echo '<table class="table table-bordered table-hover table-striped">';
+            echo '<table class="table table-sm table-bordered table-hover table-striped text-centered">';
                 echo '<thead>';
                    echo '<tr class="info">';
                       echo '<th>ID</th>';
@@ -55,7 +55,7 @@ class MaestroModel
                         echo '<td>'.$maestro->lastname.'</td>';
                         echo '<td>'.$maestro->user_email.'</td>';
                         echo '<td>'.$maestro->user_phone.'</td>';
-                        echo '<td class="text-center">
+                        echo '<td>
                                 <button type="button" 
                                         class="btn btn-sm btn-info btn-raised editTeacher mr-3"
                                         data-teacher="'.$maestro->user_id.'">

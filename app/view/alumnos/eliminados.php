@@ -40,7 +40,7 @@
 <div class="modal fade" id="modalReactiveStudent" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header py-2 bg-success">
+            <div class="modal-header py-2 bg-info">
                 <h6 class="modal-title mb-0 text-white" id="ModalCenterTitle">Reactivar Alumno</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -55,19 +55,19 @@
                             ¿Desea continuar con esta acción?
                         </p>
                         <h6 class="text-center text-info">
-                            El Alumno sera retornado a <strong id="returnStudentTo"></strong>
+                            El alumno sera retornado a <strong id="returnStudentTo"></strong>
                         </h6>
                         <input type="hidden" id="idStudentToActivate">
                         <input type="hidden" id="idClassToReturn">
                     </div>
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-6 text-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <div class="row mb-2 py-2 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-flat-md" data-dismiss="modal">Cancelar</button>
                 </div>
-                <div class="col-6 text-center">
-                    <button type="button" id="reactiveStudent" class="btn btn-primary">Continuar</button>
+                <div class="col-6 text-right">
+                    <button type="button" id="reactiveStudent" class="btn btn-info btn-sm btn-flat-md">Continuar</button>
                 </div>
             </div>
         </div>
