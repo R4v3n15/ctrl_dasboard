@@ -32,7 +32,7 @@ var Pagos = {
     fullPayTable: function(){
         let _this = this;
         let pay_table = $('#tabla_pagos_completo').DataTable({
-                        "stateSave": false,
+                        "stateSave": true,
                         "lengthMenu": [[25, 50, 100], [25, 50, 100]],
                         "ajax": {
                             'url': _root_ + 'pagos/tablaPagosFull',
