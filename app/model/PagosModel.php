@@ -689,28 +689,25 @@ class PagosModel
             $ciclo = self::getCiclo(date('m'));
         }
 
+
         // Validar si el alumno esta en la tabla pagos de la lista actual
         $get_student =  $database->prepare("SELECT student_id 
                                             FROM students_pays 
                                             WHERE student_id = :student
-                                              AND year  = :year
-                                              AND ciclo = :ciclo;");
+                                              AND year  = :year;");
         $get_student->execute(array(':student' => $student,
-                                    ':year'    => $year,
-                                    ':ciclo'   => $ciclo));
+                                    ':year'    => $year));
 
         $saved = false;
         if ($get_student->rowCount() > 0) {
             // Si esta en la tabla agregamos su pago en el mes correspondiente
             $set_comment =  $database->prepare("UPDATE students_pays 
-                                            SET comment = :comment
-                                            WHERE student_id = :student
-                                              AND year = :year
-                                              AND ciclo = :ciclo;");
+                                                SET comment = :comment
+                                                WHERE student_id = :student
+                                                  AND year  = :year;");
             $saved = $set_comment->execute(array(':student' => $student,
-                                             ':comment'  => $comment,
-                                             ':year'    => $year,
-                                             ':ciclo'   => $ciclo));
+                                                 ':comment'  => $comment,
+                                                 ':year'     => $year));
         } else {
             // Si no esta en la tabla lo agregamos como una nueva entrada
             $set_comment =  $database->prepare("INSERT INTO students_pays(student_id, year, ciclo, comment)
