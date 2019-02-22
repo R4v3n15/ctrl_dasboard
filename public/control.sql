@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-02-2019 a las 19:28:03
+-- Tiempo de generación: 22-02-2019 a las 01:55:17
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 5.6.38
 
@@ -431,7 +431,10 @@ INSERT INTO `address` (`id_address`, `user_id`, `user_type`, `street`, `st_numbe
 (379, 305, 1, '65', '', '62 Y 64', NULL, 'CENTRO', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-13 21:31:58', '2019-02-13 21:31:58'),
 (380, 447, 2, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-13 21:39:41', '2019-02-13 21:39:41'),
 (381, 306, 1, '68', '', '43 Y 45', NULL, 'JUAN BAUTISTA VEGA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-14 19:48:51', '2019-02-14 19:48:51'),
-(382, 307, 1, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-14 23:28:33', '2019-02-14 23:28:33');
+(382, 307, 1, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-14 23:28:33', '2019-02-14 23:28:33'),
+(383, 449, 2, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-18 20:27:18', '2019-02-18 20:27:18'),
+(384, 308, 1, '75', '', '56 Y 58', NULL, 'LEONA VICARIO', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-18 20:48:25', '2019-02-18 20:48:25'),
+(385, 309, 1, '49', '', 'AV. CONSTITUYENTES', NULL, 'CONSTITUYENTES', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-02-18 20:58:35', '2019-02-18 20:58:35');
 
 -- --------------------------------------------------------
 
@@ -443,15 +446,21 @@ CREATE TABLE `becas` (
   `beca_id` int(11) NOT NULL,
   `student_id` int(10) DEFAULT NULL,
   `sponsor_id` int(10) DEFAULT NULL,
-  `applicant` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Solicitante?',
-  `granted` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Becado?',
-  `year` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Año',
-  `ciclo` char(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'En que ciclo fue becado',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '0:nada, 1:becado, 2:solicitante',
   `percentage` int(10) DEFAULT NULL,
   `applicant_at` date DEFAULT NULL COMMENT 'Fecha en que solicito beca',
-  `granted_at` date DEFAULT NULL,
+  `granted_at` date DEFAULT NULL COMMENT 'Fecha de inicio de beca',
+  `removed_at` date DEFAULT NULL COMMENT 'Fecha en la se le quito beca',
   `emailed` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Ya envio email al sponsor?'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `becas`
+--
+
+INSERT INTO `becas` (`beca_id`, `student_id`, `sponsor_id`, `status`, `percentage`, `applicant_at`, `granted_at`, `removed_at`, `emailed`) VALUES
+(1, 345, NULL, 1, NULL, NULL, '2018-09-03', NULL, 0),
+(2, 344, 1, 1, NULL, NULL, '2018-09-03', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -830,6 +839,13 @@ CREATE TABLE `sponsors` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'eliminado?',
   `deleted_at` datetime DEFAULT NULL COMMENT 'fecha de eliminacion'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `sponsors`
+--
+
+INSERT INTO `sponsors` (`sponsor_id`, `sp_name`, `sp_surname`, `sp_type`, `sp_email`, `sp_description`, `sp_status`, `created_at`, `updated_at`, `deleted`, `deleted_at`) VALUES
+(1, 'suge', 'santiago', '', '', '', 1, '2019-02-20 19:09:45', '2019-02-20 19:09:45', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1309,7 +1325,30 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (445, 0, 'Maria Paula', 'May', 'Chan', '1993-02-17', 25, 'Femenino', 'Soltero(a)', '9838095622', '', '', '', NULL, '', 1, '2018-09-01 05:00:00', '2019-02-13 21:02:43', 0, '2019-02-13 16:02:43'),
 (446, 305, 'Manuel Adrian', 'Varela', 'Silveira', '2000-10-22', 18, 'Masculino', 'Soltero(a)', '', '', '', '', NULL, '', 1, '2018-09-01 05:00:00', '2019-02-13 21:33:23', 0, '2019-02-13 16:33:23'),
 (447, 0, 'Blanca Esther', 'Vega', 'Puc', '1994-07-09', 24, 'Femenino', 'Soltero(a)', '9838096704', '', '', '', NULL, '', 1, '2018-09-08 05:00:00', '2019-02-13 21:39:41', 0, '2019-02-13 16:39:41'),
-(448, 307, 'Lluvia Del Mar', 'Garcia', 'Uicab', NULL, NULL, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_448_055011', '', 1, '2019-01-12 05:00:00', '2019-02-14 23:29:37', 0, '2019-02-14 18:29:37');
+(448, 307, 'Lluvia Del Mar', 'Garcia', 'Uicab', NULL, NULL, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_448_055011', '', 1, '2019-01-12 05:00:00', '2019-02-14 23:29:37', 0, '2019-02-14 18:29:37'),
+(449, 0, 'Estrella Yareni', 'Chi', 'Tamayo', '1997-09-09', 21, 'Femenino', 'Soltero(a)', '9837003448', '', '', '', NULL, '', 1, '2019-01-19 05:00:00', '2019-02-18 20:27:18', 0, '2019-02-18 15:27:18'),
+(450, 308, 'Israel Alfredo', 'Itza', 'Mendez', '2004-09-11', 14, 'Masculino', 'Soltero(a)', '', '', '', '', NULL, '', 1, '2018-12-18 05:00:00', '2019-02-18 20:49:25', 0, '2019-02-18 15:49:25'),
+(451, 309, 'Dayari Amarely', 'Yah', 'May', '2007-01-21', 12, 'Femenino', 'Soltero(a)', '', '', '', '', NULL, '', 1, '2019-01-09 05:00:00', '2019-02-18 21:00:10', 0, '2019-02-18 16:00:10');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `students_absences`
+--
+
+CREATE TABLE `students_absences` (
+  `absence_id` int(11) UNSIGNED NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `course` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `horary` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teacher_id` int(10) NOT NULL,
+  `absence_note` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teacher_note` text COLLATE utf8mb4_unicode_ci,
+  `absence_date` date DEFAULT NULL,
+  `contact_date` date DEFAULT NULL,
+  `return_date` date DEFAULT NULL,
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1779,7 +1818,10 @@ INSERT INTO `students_details` (`detail_id`, `student_id`, `convenio`, `facturac
 (440, 445, 0, 0, 0, 1, 'Ninguno', '', 'Licenciatura', 'Concluido', 0, ''),
 (441, 446, 0, 0, 0, 1, 'Ninguno', '', '', '', 0, ''),
 (442, 447, 0, 0, 0, 1, 'Ninguno', '', 'Licenciatura', 'Concluido', 0, ''),
-(443, 448, 0, 0, 0, 0, 'Ninguno', '', '', '', 0, '');
+(443, 448, 0, 0, 0, 0, 'Ninguno', '', '', '', 0, ''),
+(444, 449, 0, 0, 0, 1, 'Ninguno', '', 'Bachillerato', 'Concluido', 0, ''),
+(445, 450, 0, 0, 0, 1, 'Estudiante', 'LEONA VICARIO', 'Secundaria', 'Tercer Año', 0, ''),
+(446, 451, 0, 0, 0, 0, 'Estudiante', 'SEC. TECNICA', 'Secundaria', 'Primer Año', 0, '');
 
 -- --------------------------------------------------------
 
@@ -2285,7 +2327,10 @@ INSERT INTO `students_groups` (`group_id`, `class_id`, `student_id`, `date_begin
 (447, 47, 445, '2018-09-01', 0, 1, 2019, 'B', '', '2019-02-13 21:03:52', '2019-02-13 21:03:52'),
 (448, 47, 446, '2018-09-01', 0, 1, 2019, 'B', '', '2019-02-13 21:34:05', '2019-02-13 21:34:05'),
 (449, 47, 447, '2018-09-08', 0, 1, 2019, 'B', '', '2019-02-13 21:40:37', '2019-02-13 21:40:37'),
-(450, 49, 448, '2019-01-12', 0, 1, 2019, 'B', '', '2019-02-14 23:30:35', '2019-02-14 23:30:35');
+(450, 49, 448, '2019-01-12', 0, 1, 2019, 'B', '', '2019-02-14 23:30:35', '2019-02-14 23:30:35'),
+(451, 53, 449, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-18 20:30:02', '2019-02-18 20:30:02'),
+(452, 53, 450, '2019-02-19', 0, 1, 2019, 'B', '', '2019-02-18 20:50:30', '2019-02-18 20:50:30'),
+(453, 53, 451, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-18 21:01:16', '2019-02-18 21:01:16');
 
 -- --------------------------------------------------------
 
@@ -2340,8 +2385,9 @@ INSERT INTO `students_pays` (`pay_id`, `student_id`, `ene`, `feb`, `mar`, `abr`,
 (18, 248, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2017', 'B', 'PAGAN $ 725 X 2 '),
 (19, 262, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2016', 'B', ''),
 (20, 151, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '2018', NULL, NULL),
-(21, 332, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL),
-(22, 340, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, '');
+(21, 332, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, '2019', NULL, ''),
+(22, 340, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, ''),
+(23, 347, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2802,7 +2848,9 @@ INSERT INTO `tutors` (`id_tutor`, `namet`, `surnamet`, `lastnamet`, `job`, `cell
 (304, 'Carlos Emanuel', 'Nahuat', 'Romero', 'DOCENTE', '9831325327', '9838340340', 'Padre', '', '', '2019-02-13 20:33:51', '2019-02-13 20:33:51'),
 (305, 'Carlos Manuel', 'Varela', 'Pacheco', 'EMPLEADO', '9831644535', '', 'Padre', '', '', '2019-02-13 21:31:58', '2019-02-13 21:31:58'),
 (306, 'Renan Jesus', 'Borges', 'Padilla', 'EMPLEADO MUNICIPAL', '9831233334', '', 'Padre', '', '', '2019-02-14 19:48:51', '2019-02-14 19:48:51'),
-(307, '', '', '', '', '', '', '', '', '', '2019-02-14 23:28:33', '2019-02-14 23:28:33');
+(307, '', '', '', '', '', '', '', '', '', '2019-02-14 23:28:33', '2019-02-14 23:28:33'),
+(308, 'Lourdes', 'Mendez', 'Solano', 'COMERCIANTE', '9848762978', '', 'Madre', '', '', '2019-02-18 20:48:25', '2019-02-18 20:48:25'),
+(309, 'Noemi', 'May', 'Cen', 'MAESTRA', '9837001195', '8340392', 'Madre', '', '', '2019-02-18 20:58:35', '2019-02-18 20:58:35');
 
 -- --------------------------------------------------------
 
@@ -2848,9 +2896,9 @@ INSERT INTO `users` (`user_id`, `session_id`, `name`, `lastname`, `user_type`, `
 (3, NULL, 'WENDY ', 'OSORIO ARANA', 3, 'wendy', NULL, '$2y$10$drdKAph93YyM9ae2ji4z4OVKwmzpQiJ261Pp8mJgFq1UTPaktaKWq', 'wendy@test.com', 'CHRIS', 1, 1, 1, 0, 'teacher_3', NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (4, NULL, 'CESAR GERMAN', 'MANRIQUE MANZANERO', 3, 'cesar', NULL, '$2y$10$5EVuT.B0zKoHjJnMjfnFKu2PjqYdbYccxxPanp3JjP6WmQyaGefiG', 'cesar@test.com', 'MANRIQUE', 1, 1, 1, 0, NULL, NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (5, NULL, 'PAUL', 'ALLEN', 3, 'Paul', NULL, '$2y$10$R8mK9Cy0P50/nrSslTPAkuiV33gZdB.rriqdCc5I89QNb6I6LatWy', 'paul@test.com', 'Allen', 1, 1, 1, 0, NULL, NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(6, NULL, 'Luis', 'admin', 777, 'admin', NULL, '$2y$10$Ma2cqYIgJfVa1QI3NXGqIemK2C0jAAERMPpP8AZVkgr0qCM9xgwAq', 'admin@admin.com', 'admin', 1, 0, 1, 0, NULL, NULL, 1526254465, NULL, 1538252590, 0, NULL, NULL, NULL, NULL, NULL),
+(6, 'cb3vmp41ujhm1h95nrqo8ijs50', 'Luis', 'admin', 777, 'admin', NULL, '$2y$10$Ma2cqYIgJfVa1QI3NXGqIemK2C0jAAERMPpP8AZVkgr0qCM9xgwAq', 'admin@admin.com', 'admin', 1, 0, 1, 0, NULL, NULL, 1526254465, NULL, 1550601657, 0, NULL, NULL, NULL, NULL, NULL),
 (7, '', 'Silvia', 'Diaz Rubio', 1, 'silvia', NULL, '$2y$10$urOtS1Y083EFKSXia2.Ch.K5uJpMAIG.oSIpBJLIB4BaSEYJnwG5i', 'silvia@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917586, NULL, 1527918962, 0, NULL, NULL, NULL, NULL, NULL),
-(8, '8u3082j9u8i59q9o6pgq8qkhq5', 'Sugeidy', 'Santiago', 1, 'suge', NULL, '$2y$10$kZ6Jss/3EtwZhBCIoe7tyuvARI86fYLwDSEAwlMEKmMyjAlg./6Le', 'suge@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917657, NULL, 1550330862, 0, NULL, NULL, NULL, NULL, NULL),
+(8, NULL, 'Sugeidy', 'Santiago', 1, 'suge', NULL, '$2y$10$kZ6Jss/3EtwZhBCIoe7tyuvARI86fYLwDSEAwlMEKmMyjAlg./6Le', 'suge@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917657, NULL, 1550601978, 0, NULL, NULL, NULL, NULL, NULL),
 (9, NULL, 'Claudia', 'Pacheco', 1, 'ClauPachecoB', NULL, '$2y$10$xcOKjIloqfLRB8vQ7u7iJOdDsfbHRWqrjGCZlymVRU.TJ5wHYUv3q', 'claudia@correo.com', 'Pacheco021', 1, 0, 1, 0, NULL, NULL, 1527917764, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (10, NULL, 'HANNAH', 'PATCHING', 3, 'HANNAH', '0', '$2y$10$jUy75LpjWhC/29zt51viJO0I6WEmSijKMcyHqotrhpss7qLjPGHzm', 'hannahmpatching@gmail.com', '12345', 1, 0, 1, 0, NULL, NULL, 1541550328, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (11, NULL, 'DANIELLE', 'LITTLE', 3, 'DANIE', NULL, '$2y$10$i2tFtW4tLczIWce87SdwBOWfUTqJmP6hM3U2.4ehZQwGcDPrOduu2', 'danijeanne@gmail.com', '12345', 1, 0, 1, 0, 'teacher_11', NULL, 1541550616, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
@@ -2858,7 +2906,7 @@ INSERT INTO `users` (`user_id`, `session_id`, `name`, `lastname`, `user_type`, `
 (13, NULL, 'STEVEN', 'NORTON', 3, 'STEVEN', NULL, '$2y$10$.uBh37isx0jdgAFvCyePWuYee0AeCiNGt1maQOKfnoDI8r8/QMhQK', 'sdnorton.naatik@gmail.com', '12345', 1, 0, 1, 0, NULL, NULL, 1541718285, NULL, 1547070082, 0, NULL, NULL, NULL, NULL, NULL),
 (14, NULL, 'WENDY', 'OSORIO', 3, 'WEND', NULL, '$2y$10$eFjjAMivq58oPXWLIjQQiuVTkVrRHWDLB8KMw1FFWIM0bahDSMBqG', 'KARK1824MEEN@HOTMAIL.COM', '67890', 1, 1, 1, 0, NULL, NULL, 1541718410, NULL, 1547070380, 0, NULL, NULL, NULL, NULL, NULL),
 (15, NULL, 'CESAR', 'MANRIQUE', 3, 'GERMAN', NULL, '$2y$10$DbAo8sVVWccEAf8v5LYyP.W5tGgs5eFv6HlkxgMExTUW5E1uCX3mO', 'DOLCEBIEN@GMAIL.COM', '09876', 1, 0, 1, 0, NULL, NULL, 1547070303, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(16, NULL, 'mari', 'caceres', 2, 'mary', NULL, '$2y$10$BHTpR9wjUYP7SdkMH8.v3OOyFMRSxwCwWxLom7wbOn95td2dFfa4i', 'naatik.recepcion@gmail.com', '052103', 1, 0, 1, 0, NULL, NULL, 1550241008, NULL, 1550329578, 0, NULL, NULL, NULL, NULL, NULL);
+(16, 'u0sripo3etopb6h7fari5ols40', 'mari', 'caceres', 2, 'mary', NULL, '$2y$10$BHTpR9wjUYP7SdkMH8.v3OOyFMRSxwCwWxLom7wbOn95td2dFfa4i', 'naatik.recepcion@gmail.com', '052103', 1, 0, 1, 0, NULL, NULL, 1550241008, NULL, 1550796109, 0, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -2917,6 +2965,12 @@ ALTER TABLE `sponsors`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`student_id`);
+
+--
+-- Indices de la tabla `students_absences`
+--
+ALTER TABLE `students_absences`
+  ADD PRIMARY KEY (`absence_id`);
 
 --
 -- Indices de la tabla `students_details`
@@ -2988,13 +3042,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `address`
 --
 ALTER TABLE `address`
-  MODIFY `id_address` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=383;
+  MODIFY `id_address` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=386;
 
 --
 -- AUTO_INCREMENT de la tabla `becas`
 --
 ALTER TABLE `becas`
-  MODIFY `beca_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `beca_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `classes`
@@ -3030,19 +3084,25 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT de la tabla `sponsors`
 --
 ALTER TABLE `sponsors`
-  MODIFY `sponsor_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sponsor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=449;
+  MODIFY `student_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=452;
+
+--
+-- AUTO_INCREMENT de la tabla `students_absences`
+--
+ALTER TABLE `students_absences`
+  MODIFY `absence_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `students_details`
 --
 ALTER TABLE `students_details`
-  MODIFY `detail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=444;
+  MODIFY `detail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=447;
 
 --
 -- AUTO_INCREMENT de la tabla `students_evaluations`
@@ -3054,13 +3114,13 @@ ALTER TABLE `students_evaluations`
 -- AUTO_INCREMENT de la tabla `students_groups`
 --
 ALTER TABLE `students_groups`
-  MODIFY `group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=451;
+  MODIFY `group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=454;
 
 --
 -- AUTO_INCREMENT de la tabla `students_pays`
 --
 ALTER TABLE `students_pays`
-  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `students_sep`
@@ -3090,7 +3150,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT de la tabla `tutors`
 --
 ALTER TABLE `tutors`
-  MODIFY `id_tutor` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
+  MODIFY `id_tutor` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=310;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
