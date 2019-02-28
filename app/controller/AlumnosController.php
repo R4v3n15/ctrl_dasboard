@@ -507,7 +507,10 @@ class AlumnosController extends Controller
                                   'inasistencias&assets/js'));
 
         $this->View->render('alumnos/inasistencias', array(
-            'alumnos'   => GeneralModel::getAllStudentsByTeacher(Session::get('user_id'), (int)Session::get('user_type'))
+            'user_type' => Session::get('user_type'),
+            'current'   => Session::get('user_id'),
+            'alumnos'   => GeneralModel::getAllStudentsByTeacher(Session::get('user_id'), (int)Session::get('user_type')),
+            'maestros'  => GeneralModel::getTeachers()
         ));
     }
 

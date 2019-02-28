@@ -51,6 +51,7 @@ var Pagos = {
                         "columns": [
                             { "data": "count" },
                             { "data": "name" },
+                            { "data": "status", "searchable" : false, "orderable": false },
                             { "data": "info", "searchable" : false, "orderable": false },
                             { "data": "jan", "searchable" : false, "orderable": false },
                             { "data": "feb", "searchable" : false, "orderable": false },
@@ -147,6 +148,15 @@ var Pagos = {
             $('#id_alumno').val(student);
             $('#comment').val(comment);
             $('#modalAddComment').modal('show'); 
+        });
+
+        $('#tabla_pagos_completo tbody').on( 'click', '.addStatus', function () {
+            let student = $(this).data('student'),
+                comment = $(this).data('status');
+
+            $('#status_idStudent').val(student);
+            $('#status').val(comment);
+            $('#modalAddStatus').modal('show'); 
         });
 
         $('#tabla_pagos_completo_wrapper button').removeClass('dt-button');
@@ -259,6 +269,29 @@ var Pagos = {
                     }
                 });
             }
+        });
+
+        $('#frmSaveStatus').submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                data: $('#frmSaveStatus').serialize(),
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/guardarEstado'
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#modalAddStatus').modal('hide'); 
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    _this.vars.TABLE.destroy();
+                    _this.fullPayTable();
+                } else {
+                    $('#response').html(response.message);
+                }
+            });
         });
     },
 

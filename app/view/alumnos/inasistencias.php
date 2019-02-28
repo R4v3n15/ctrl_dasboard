@@ -49,7 +49,7 @@
                             <select class="form-control form-control-sm"  name="alumno" id="alumno" style="width: 100%;" required="true">
                                 <option hidden>Seleccione alumno...</option>
                                 <?php if (count($this->alumnos) > 0): ?>
-                                    <?php foreach ($this->alumnos as $alumno): ?>
+                                    <?php foreach ($this->alumnos as $index => $alumno): ?>
                                         <option value="<?= $alumno->student_id; ?>"><?= $alumno->name; ?></option>
                                     <?php endforeach ?>
                                 <?php endif ?>
@@ -67,6 +67,27 @@
                                    name="fecha_falta"
                                    autocomplete="off" 
                                    required>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 px-2">
+                        <div class="form-group">
+                            <label for="inputname">Maestro: </label>
+                            <?php if ((int)$this->user_type !== 3): ?>
+                            <select class="form-control form-control-sm"  name="maestro" id="maestro" style="width: 100%;" required="true">
+                                <option>Seleccione maestro...</option>
+                                <?php foreach ($this->maestros as $index => $maestro): ?>
+                                    <option value="<?= $maestro->user_id; ?>"><?= $maestro->name; ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <?php else: ?>
+                                <?php foreach ($this->maestros as $maestro): ?>
+                                    <?php if ((int)$this->current === (int)$maestro->user_id): ?>
+                                    <label><u><?= $maestro->name; ?></u></label>
+                                    <input type="hidden" name="maestro" value="<?= $maestro->user_id; ?>">
+                                    <?php endif ?>
+                                <?php endforeach ?>
+                            <?php endif ?>
                         </div>
                     </div>
 

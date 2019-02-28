@@ -135,6 +135,12 @@ class PagosController extends Controller
         );
     }
 
+    public function guardarEstado(){
+        $this->View->renderJSON(
+            PagosModel::saveStatus(Request::post('student_id'), Request::post('status'))
+        );
+    }
+
     public function mesesCiclo(){
         if (Request::post('ciclo') == 'B') {
             echo date('m') == 1 ? '<option value="ene" selected >Enero</option>'   : '<option value="ene">Enero</option>';

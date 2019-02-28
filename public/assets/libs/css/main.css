@@ -216,7 +216,7 @@ table.dataTable td {
     border: 1px solid #d2d6de;
     border-radius: 0;
     padding: 6px 12px;
-    height: 34px;
+    height: 30px;
 }
 
 .select2-container--default.select2-container--focus, .select2-selection.select2-container--focus, .select2-container--default:focus, .select2-selection:focus, .select2-container--default:active, .select2-selection:active {

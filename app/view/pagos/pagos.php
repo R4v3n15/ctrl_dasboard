@@ -35,6 +35,7 @@
                             <tr class="info">
                                 <th class="text-center">#</th>
                                 <th class="text-center">Alumno</th>
+                                <th class="text-center">Estado</th>
                                 <th class="text-center">Tutor</th>
                                 <th class="text-center">Ene</th>
                                 <th class="text-center">Feb</th>
@@ -186,6 +187,45 @@
                     <button type="button" id="save_comment" class="btn btn-info btn-sm btn-shadown">Guardar</button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAddStatus" tabindex="-1" role="dialog" aria-labelledby="commentTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header py-2 bg-info">
+                <h6 class="modal-title my-0 text-white" id="commentTitle">AGREGAR ESTADO</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="frmSaveStatus">
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <input type="hidden" id="status_idStudent" name="student_id" class="form-control">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <textarea class="form-control" 
+                                          rows="3" 
+                                          id="status" 
+                                          name="status"
+                                          placeholder="Agregue aquí la información"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-shadown" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-right">
+                    <button type="submit" class="btn btn-info btn-sm btn-shadown">Guardar</button>
+                </div>
+            </div>
+            </form>
         </div>
     </div>
 </div>

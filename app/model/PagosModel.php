@@ -54,7 +54,8 @@ class PagosModel
             $_sql = $database->prepare("SELECT CONCAT_WS(' ',name, surname) as relative
                                         FROM students
                                         WHERE id_tutor    = :tutor
-                                          AND student_id != :student");
+                                          AND student_id != :student
+                                          AND deleted    != 1");
             $_sql->execute(array(':tutor' => $tutor, ':student' => $student));
             $relatives = '';
             if ($_sql->rowCount() > 0) {
@@ -80,6 +81,7 @@ class PagosModel
                                         FROM students as s, students_groups as sg, classes as c, courses as cu, groups as g
                                         WHERE s.id_tutor    = :tutor
                                           AND s.student_id != :student
+                                          AND s.deleted    != 1
                                           AND s.student_id = sg.student_id
                                           AND sg.class_id  = c.class_id
                                           AND c.course_id  = cu.course_id
@@ -332,7 +334,6 @@ class PagosModel
 
                 $pagos = self::studentPayList($alumno->student_id);
 
-
                 $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
                                          data-comment="">Agregar <i class="fa fa-comment"></i></a></a>';
 
@@ -343,6 +344,19 @@ class PagosModel
                     $comment .= '.. <a href="javascript:void(0)" class="addComment" 
                                     data-student="'.$alumno->student_id.'"
                                     data-comment="'.$pagos->comment.'"><i class="fa fa-edit"></i></a>';
+
+                }
+
+                $estatus =  '<a href="javascript:void(0)" class="addStatus" data-student="'.$alumno->student_id.'"
+                            data-status="">Escribir <i class="fa fa-edit"></i></a></a>';
+
+                if ($pagos !== null) {
+                    if ($pagos->estado !== null && $pagos->estado !== '') {
+                        $estatus =  '<a href="javascript:void(0)" 
+                                        class="addStatus" 
+                                        data-student="'.$alumno->student_id.'"
+                                        data-status="'.$pagos->estado.'">'.$pagos->estado.' <i class="fa fa-edit"></i></a></a>';
+                    }
                 }
 
                 $opt = '<a href="javascript:void(0)"
@@ -470,6 +484,7 @@ class PagosModel
                     'nov'        => $nov,
                     'dec'        => $dic,
                     'comment'    => $comment,
+                    'status'     => $estatus,
                     'opt'        => $opt
                 );
 
@@ -676,6 +691,52 @@ class PagosModel
         }
 
         return array('success' => $payed, 'message' => 'Pago de mensualidad realizado con éxito');
+    }
+
+    public static function saveStatus($student, $status, $year=null, $ciclo=null){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        // Si no se especifica año y ciclo, se toman los actuales
+        if ($year == null || $year == '') {
+            $year = date('Y');
+        }
+
+        if ($ciclo == null || $ciclo == '') {
+            $ciclo = self::getCiclo(date('m'));
+        }
+
+
+        // Validar si el alumno esta en la tabla pagos de la lista actual
+        $get_student =  $database->prepare("SELECT student_id 
+                                            FROM students_pays 
+                                            WHERE student_id = :student
+                                              AND year  = :year;");
+        $get_student->execute(array(':student' => $student,
+                                    ':year'    => $year));
+
+        $saved = false;
+        if ($get_student->rowCount() > 0) {
+            // Si esta en la tabla agregamos su pago en el mes correspondiente
+            $set_status =  $database->prepare("UPDATE students_pays 
+                                                SET estado = :estado
+                                                WHERE student_id = :student
+                                                  AND year       = :year;");
+            $saved = $set_status->execute(array(':student'   => $student,
+                                                 ':estado'   => $status,
+                                                 ':year'     => $year));
+        } else {
+            // Si no esta en la tabla lo agregamos como una nueva entrada
+            $set_status =  $database->prepare("INSERT INTO students_pays(student_id, year, ciclo, estado)
+                                                     VALUES(:student, :year, :ciclo, :estado);");
+            $set_status->execute(array(':student'  => $student,
+                                        ':estado'   => $status,
+                                        ':year'     => $year,
+                                        ':ciclo'    => $ciclo));
+            if ($set_status->rowCount() > 0) {
+                $saved = true;
+            }
+        }
+
+        return array('success' => $saved, 'message' => 'Información actualizado correctamente!');
     }
 
     public static function saveComment($student, $comment, $year=null, $ciclo=null){

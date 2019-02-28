@@ -173,7 +173,7 @@ class GeneralModel
 
     public static function getAllStudentsByTeacher($teacher, $user_type){
         $database = DatabaseFactory::getFactory()->getConnection();
-        if ($user_type === 3) {
+        if ($user_type == 3) {
             $students = $database->prepare("SELECT s.student_id, CONCAT_WS(' ', s.surname, s.lastname, s.name) as name
                                             FROM students as s, students_groups as g, classes as c
                                             WHERE s.status = 1
@@ -187,7 +187,7 @@ class GeneralModel
         } else {
             $students = $database->prepare("SELECT s.student_id, CONCAT_WS(' ', s.surname, s.lastname, s.name) as name
                                             FROM students as s, students_groups as g, classes as c
-                                            WHERE s.status = 1
+                                            WHERE s.status   = 1
                                               AND s.deleted  = 0
                                               AND s.student_id = g.student_id
                                               AND g.class_id   = c.class_id
@@ -200,6 +200,23 @@ class GeneralModel
         }
 
         return null;
+    }
+
+    public static function getTeachers(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $teachers = $database->prepare("SELECT t.user_id, CONCAT_WS(' ', t.name, t.lastname) as name
+                                        FROM classes as c, users as t
+                                        WHERE c.status = 1
+                                          AND c.teacher_id = t.user_id
+                                        GROUP BY teacher_id
+                                        ORDER BY t.name ASC;");
+        $teachers->execute();
+
+        if ($teachers->rowCount() > 0) {
+            return $teachers->fetchAll();
+        }
+
+        return [];
     }
 
     public static function tablePayByCourse($course){
