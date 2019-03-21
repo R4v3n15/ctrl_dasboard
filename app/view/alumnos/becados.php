@@ -53,7 +53,7 @@
                                             data-name="<?= $becado->name; ?>"><i class="fa fa-cog"></i></button> -->
                                     <button type="button" 
                                             class="btn btn-sm btn-danger remove_scholar"
-                                            data-scholar="<?= $becado->beca_id; ?>"
+                                            data-scholar="<?= $becado->student_id; ?>"
                                             data-name="<?= $becado->name; ?>"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
@@ -70,31 +70,22 @@
 </div>
 
 
-<div class="modal fade" id="remove_scholar_modal" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header py-2 bg-danger">
-                <h6 class="modal-title text-white my-0" id="scholar_title">Eliminar alumno como becario</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="frmDeleteScholar">
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="text-center text-info">¿Eliminar alumno <strong id="scholar_name"></strong> como becario?</p>
-                        <input type="hidden" id="scholar_idStudent" name="idStudent">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer mb-1 py-2 px-2">
-                <div class="col-6 text-left">
-                    <button type="button" class="btn btn-sm btn-secondary btn-flat-lg" data-dismiss="modal">Cancelar</button>
-                </div>
-                <div class="col-6 text-right">
-                    <button type="submit" id="scholar_submit" class="btn btn-sm btn-danger btn-flat-lg">Eliminar</button>
-                </div>
+<div class="modal fade" id="remove_scholar_modal" tabindex="-1" role="dialog"
+aria-labelledby="delete" aria-hidden="true"> <div class="modal-dialog"
+role="document"> <div class="modal-content"> <div class="modal-header py-2
+bg-danger"> <h6 class="modal-title text-white my-0"
+id="scholar_title">Eliminar alumno como becario</h6> <button type="button"
+class="close" data-dismiss="modal" aria-label="Close"> <span
+aria-hidden="true">&times;</span> </button> </div> <form
+id="frmDeleteScholar"> <div class="modal-body"> <div class="row"> <div
+class="col-md-12"> <p class="text-center text-info">¿Eliminar alumno <strong
+id="scholar_name"></strong> como becario?</p> <input type="hidden"
+id="scholar_idStudent" name="idStudent"> </div> </div> </div> <div
+class="modal-footer mb-1 py-2 px-2"> <div class="col-6 text-left"> <button
+type="button" class="btn btn-sm btn-secondary btn-flat-lg"
+data-dismiss="modal">Cancelar</button> </div> <div class="col-6 text-right">
+<button type="submit" id="scholar_submit" class="btn btn-sm btn-danger
+btn-flat-lg">Eliminar</button> </div>
                 
             </div>
             </form>

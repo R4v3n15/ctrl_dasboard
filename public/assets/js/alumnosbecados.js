@@ -19,9 +19,32 @@ var Becados = {
     handleScholarForms: function(){
         $('#frmDeleteScholar').submit(function(event){
             event.preventDefault();
-            $('#general_snack').attr('data-content', 'Funcionalidad no Agregada');
-            $('#general_snack').snackbar('show');
-            $('.snackbar').addClass('snackbar-green');
+            $.ajax({
+                synch: 'true',
+                type: 'POST',
+                data: $('#frmDeleteScholar').serialize(),
+                url: _root_ + 'becas/quitar_beca'
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-green');
+                    $('#remove_scholar_modal').modal('hide');
+                    setTimeout(()=>{
+                        location.reload(true);
+                    }, 1000);
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red');
+                }
+            })
+            .fail(function(errno){
+                $('#general_snack').attr('data-content', 'ERROR:500, Error desconocido, reporte el incidente!');
+                $('#general_snack').snackbar('show');
+                $('.snackbar').addClass('snackbar-red');
+            });
         });
     },
 
@@ -32,8 +55,8 @@ var Becados = {
             $.ajax({
                 synch: 'true',
                 type: 'POST',
-                data: $('#loginForm').serialize(),
-                url: _root_ + 'login/login'
+                data: $('#frmDeleteScholar').serialize(),
+                url: _root_ + 'becas/quitar_beca'
             })
             .done(function(response){
                 if (response.success) {
@@ -47,11 +70,9 @@ var Becados = {
                 }
             })
             .fail(function(errno){
-                console.log(errno.message)
                 $('#general_snack').attr('data-content', 'ERROR:500, Error desconocido, reporte el incidente!');
                 $('#general_snack').snackbar('show');
                 $('.snackbar').addClass('snackbar-red');
-                console.log(errno);
             });
         });
     }

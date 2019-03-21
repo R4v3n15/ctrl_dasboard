@@ -12,6 +12,7 @@ class BecasModel
         			   s.cellphone, 
         			   s.avatar,
         			   sg.class_id,
+        			   b.beca_id,
         			   b.sponsor_id
                 FROM students as s, students_groups as sg, becas as b
                 WHERE s.student_id = sg.student_id
@@ -131,7 +132,9 @@ class BecasModel
 
 		$removed_at = H::getTime('Y-m-d');
 
-		$becario = $database->prepare("UPDATE becas SET status = 0, removed_at = :date_removed WHERE student_id = :student AND status = 1;");
+		$becario = $database->prepare("UPDATE becas 
+									   SET status = 0, removed_at = :date_removed 
+									   WHERE student_id = :student AND status = 1;");
 		return $becario->execute([':student' => $student, ':date_removed' => $removed_at]);
 	}
 

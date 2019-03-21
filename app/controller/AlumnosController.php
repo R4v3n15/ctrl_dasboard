@@ -528,8 +528,15 @@ class AlumnosController extends Controller
         AlumnoModel::getStudentsInvoiceList();
     }
 
+
+    /**
+    |===============================================================================================
+    | C O N T R O L    D E   B E C A D O S
+    |=============================================================================================== 
+    */
+
     public function becados() {
-        Registry::set('js', array('becados&assets/js'));
+        Registry::set('js', array('alumnosbecados&assets/js'));
         $this->View->render('alumnos/becados', array(
             'becados' => BecasModel::getScholars()
         ));
