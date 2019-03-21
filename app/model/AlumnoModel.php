@@ -2056,6 +2056,14 @@ class AlumnoModel
     public static function updateAbsence($absence, $absence_date, $teacher, $teacher_note, $absence_note, $contact_date, $return_date){
         $database = DatabaseFactory::getFactory()->getConnection();
 
+        if ((int)Session::get('user_type') !== 3) {
+            $getDates = $database->prepare("SELECT contact_date, return_date FROM students_absences WHERE absence_id = :absence LIMIT 1;");
+            $getDates->execute([':absence' => $absence]);
+            $setDates = $getDates->fetch();
+            $contact_date = $setDates->contact_date;
+            $return_date  = $setDates->return_date;
+        }
+
         $commit   = true;
         $database->beginTransaction();
         try{
