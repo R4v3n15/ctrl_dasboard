@@ -76,7 +76,6 @@ class AlumnoModel
                         }
 
 
-
                         $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
                         if ($user_type !== 3) {
                         $grupo = '<a class="btnChangeGroup"
@@ -287,7 +286,7 @@ class AlumnoModel
 
     /**
     |===============================================================================================
-    | Request Student For Teachers
+    | S T U D E N T    F O R    T E A C H E R S
     |=============================================================================================== 
     */
    
@@ -544,9 +543,11 @@ class AlumnoModel
 
 
 
-    /////////////////////////////////////////////////////////////////////
-    // =  =  =  =  R E Q U I R E   I N V O I C E   L I S T  =  =  =  = //
-    /////////////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | R E Q U I R E   I N V O I C E   L I S T  [REQUIEREN FACTURA]
+    |=============================================================================================== 
+    */
     
     //->Obtener Alumnos que requieren de factura tras pago de colegiatura
     public static function getInvoiceTable(){
@@ -698,10 +699,11 @@ class AlumnoModel
 
 
 
-
-    //////////////////////////////////////////////////////////////////
-    //  =  =  =  =  =  C H A N G E   G R O U P  =  =  =  =  =  =  = //
-    //////////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | C H A N G E   G R O U P  [CAMBIAR/ASIGNAR GRUPO]
+    |=============================================================================================== 
+    */
 
     public static function ChangeStudentGroup($alumno, $clase, $reinscribir){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -987,9 +989,11 @@ class AlumnoModel
 
 
 
-    ////////////////////////////////////////////////////////////////////
-    //= = = = = = = C R E A T E   N E W   S T U D E N T = = = = = = = //
-    ////////////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | C R E A T E   N E W   S T U D E N T  [INSCRIBIR]
+    |=============================================================================================== 
+    */
 
     public static function tutorExist($name, $surname, $lastname){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -1389,10 +1393,12 @@ class AlumnoModel
 
 
 
-    ///////////////////////////////////////////////////////////////////////
-    //  =  =  =   =  U N S U S C R I B E   S T U D E N T   =  =  =  =  = //
-    ///////////////////////////////////////////////////////////////////////
-
+    /**
+    |===============================================================================================
+    | U N S U S C R I B E   S T U D E N T  [DAR DE BAJA]
+    |=============================================================================================== 
+    */
+   
     // TABLA DE ALUMNOS DE BAJA
     public static function unsuscribeStudentsTable(){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -1570,10 +1576,12 @@ class AlumnoModel
 
 
 
-
-    //////////////////////////////////////////////////////////////////
-    //  =  =  =  =  =  = U P D A T E   S T U D E N T  =  =  =  =  = //
-    //////////////////////////////////////////////////////////////////
+    /**
+    |===============================================================================================
+    | S T U D E N T    P R O F I L E  [PERFIL]
+    |=============================================================================================== 
+    */
+   
     
     public static function studentProfile($student){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -1743,6 +1751,12 @@ class AlumnoModel
     }
 
 
+    /**
+    |===============================================================================================
+    | U P D A T E   S T U D E N T    I N F O R M A T I O N  [ACTUALIZAR]
+    |=============================================================================================== 
+    */
+   
     public static function updateTutor($tutor, $name, $surname, $lastname, $ocupation, $relation, $phone, $cellphone, $relation_alt, $phone_alt){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
@@ -1926,11 +1940,199 @@ class AlumnoModel
 
 
 
-    ///////////////////////////////////////////////////////////////////
-    //  =  =  =  =   =  D E L E T E   S T U D E N T S  =  =  =  =  = //
-    ///////////////////////////////////////////////////////////////////
+
+    /**
+    |===============================================================================================
+    | A B S E N C E S   S T U D E N T S  [FALTAS]
+    |=============================================================================================== 
+    */
+   
+    public static function getAbsencesList($year=null, $month=null){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $year = $year === null ? H::getTime('Y') : $year;
+        $month = $month === null ? H::getTime('m') : $month;
+
+        $getList =  $database->prepare("SELECT CONCAT_WS(' ', s.name, s.surname, s.lastname) as student,
+                                               ab.course,
+                                               REPLACE(ab.horary,'&','<br>') as horario,
+                                               CONCAT_WS(' ', t.name, t.lastname) as teacher,
+                                               ab.absence_note,
+                                               ab.teacher_note,
+                                               ab.absence_date,
+                                               ab.contact_date,
+                                               ab.return_date,
+                                               ab.teacher_id,
+                                               ab.absence_id
+                                        FROM students_absences as ab, students as s, users as t
+                                        WHERE YEAR(ab.absence_date) = :year
+                                          AND MONTH(ab.absence_date) = :month
+                                          AND ab.student_id = s.student_id
+                                          AND ab.teacher_id = t.user_id
+                                          AND ab.status     = 1
+                                        ORDER BY ab.absence_date DESC;");
+        $getList->execute([':year' => $year, ':month' => $month]);
+        return $getList->fetchAll();
+    }
+   
+    public static function saveAbsence($student, $absence_date, $teacher, $comment){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $getClase = $database->prepare("SELECT cu.course, g.group_name, c.teacher_id, c.schedul_id, h.hour_init, h.hour_end
+                                        FROM classes as c, courses as cu, groups as g, students_groups as sg, schedules as h
+                                        WHERE sg.student_id = :student
+                                          AND sg.class_id   = c.class_id
+                                          AND c.course_id   = cu.course_id
+                                          AND c.group_id    = g.group_id
+                                          AND c.schedul_id  = h.schedul_id
+                                        LIMIT 1;");
+        $getClase->execute([':student' => $student]);
+
+        if ($getClase->rowCount() === 0) {
+            return ['success' => false, 'message' => '&#x2718; Alumno no valido!'];
+        }
+
+        $clase = $getClase->fetch();
+
+        if ($clase->teacher_id !== $teacher) {
+            return ['success' => false, 'message' => '&#x2718; Usted no es el profesor del alumno!'];
+        }
+
+        $horario = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
+        $dias    = GeneralModel::getScheduleClass($clase->schedul_id);
+
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $sql = $database->prepare("INSERT INTO students_absences(
+                                                                    student_id, 
+                                                                    course, 
+                                                                    horary, 
+                                                                    teacher_id, 
+                                                                    teacher_note,
+                                                                    absence_date,
+                                                                    created_by
+                                                                ) 
+                                                        VALUES(
+                                                            :student,
+                                                            :course,
+                                                            :horary,
+                                                            :teacher,
+                                                            :teacher_note,
+                                                            :absence_date,
+                                                            :created_by
+                                                        );");
+            $sql->execute([
+                ':student'      => $student,
+                ':course'      => $clase->course.' '.$clase->group_name,
+                ':horary'       => $dias.'&'.$horario,
+                ':teacher'      => $teacher,
+                ':teacher_note' => $comment,
+                ':absence_date' => $absence_date,
+                ':created_by'   => Session::get('user_id')
+            ]);
+
+            $commit = $sql->rowCount() > 0;
+                       
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; Error desconocido, intente de nuevo o reporte el error!'
+                    );
+        }else {
+            $database->commit();
+            return array(
+                        'success' => true, 
+                        'message' => '&#x2713; Registro guardado correctamente!!'
+                    );
+        }
+    }
+
+    public static function updateAbsence($absence, $absence_date, $teacher, $teacher_note, $absence_note, $contact_date, $return_date){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $sql =  $database->prepare("UPDATE students_absences
+                                        SET teacher_id   = :teacher, 
+                                            teacher_note = :teacher_note,
+                                            absence_date = :absence_date,
+                                            absence_note = :absence_note,
+                                            contact_date = :contact_date,
+                                            return_date  = :return_date
+                                        WHERE absence_id = :absence;");
+            $commit = $sql->execute([
+                ':teacher'      => $teacher,
+                ':teacher_note' => $teacher_note,
+                ':absence_date' => $absence_date,
+                ':absence_note' => $absence_note,
+                ':contact_date' => $contact_date,
+                ':return_date'  => $return_date,
+                ':absence'      => $absence
+            ]);            
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; Error desconocido, intente de nuevo o reporte el error!'
+                    );
+        }else {
+            $database->commit();
+            return array(
+                        'success' => true, 
+                        'message' => '&#x2713; Registro Actualizado correctamente!!'
+                    );
+        }
+    }
+
+    public static function deleteAbsence($absence){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $commit   = true;
+        $database->beginTransaction();
+        try{
+            $sql =  $database->prepare("UPDATE students_absences
+                                        SET status   = 0
+                                        WHERE absence_id = :absence;");
+            $commit = $sql->execute([':absence' => $absence]);            
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $database->rollBack();
+            return array(
+                        'success' => false, 
+                        'message' => '&#x2718; Error desconocido, intente de nuevo o reporte el error!'
+                    );
+        }else {
+            $database->commit();
+            return array(
+                        'success' => true, 
+                        'message' => '&#x2713; Registro Eliminado correctamente!!'
+                    );
+        }
+    }
 
 
+
+
+    /**
+    |===============================================================================================
+    | D E L E T E   S T U D E N T S  [ELIMINAR]
+    |=============================================================================================== 
+    */
+   
     //We don´t erase the student info from de DB, just give a deleted status
     public static function tableDeletedStudents(){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -2044,10 +2246,6 @@ class AlumnoModel
             $database->commit();
             return array('success' => true, 'message' => '&#x2713; Alumno eliminado correctamente!!');
         }
-
-        
-
-        return 0;
     }
 
     // Verificar si la clase aun esta activa; de lo contrario retornar al alumno a lista de espera

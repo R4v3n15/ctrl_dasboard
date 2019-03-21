@@ -507,11 +507,102 @@ class AlumnosController extends Controller
                                   'inasistencias&assets/js'));
 
         $this->View->render('alumnos/inasistencias', array(
+            'absences'  => AlumnoModel::getAbsencesList(),
             'user_type' => Session::get('user_type'),
             'current'   => Session::get('user_id'),
             'alumnos'   => GeneralModel::getAllStudentsByTeacher(Session::get('user_id'), (int)Session::get('user_type')),
             'maestros'  => GeneralModel::getTeachers()
         ));
+    }
+
+    public function guardar_inasistencia(){
+        if(!Request::post('alumno')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Seleccione un alumno!']);
+            exit();
+        }
+
+        if(!Request::post('fecha_falta')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Especifique fecha de falta']);
+            exit();
+        }
+
+        if(!Request::post('maestro')){
+            $this->View->renderJSON(['success' => false, 'message' => 'No tiene permisos para esta sección']);
+            exit();
+        }
+
+        if(!Request::post('comentario_maestro')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Escriba comentario']);
+            exit();
+        }
+
+        $this->View->renderJSON(AlumnoModel::saveAbsence(
+                                                Request::post('alumno'), 
+                                                Request::post('fecha_falta'), 
+                                                Request::post('maestro'), 
+                                                Request::post('comentario_maestro')
+                                ));
+    }
+
+    public function actualizar_inasistencia(){
+        if(!Request::post('inasistencia')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Acción no valida, reporte problema']);
+            exit();
+        }
+
+        if(!Request::post('fecha_falta')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Especifique fecha de falta']);
+            exit();
+        }
+
+        if(!Request::post('maestro')){
+            $this->View->renderJSON(['success' => false, 'message' => 'No tiene permisos para esta sección']);
+            exit();
+        }
+
+        if(!Request::post('comentario_maestro')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Escriba comentario']);
+            exit();
+        }
+
+        $contact_date = null;
+        $return_date = null;
+        if ((int)Session::get('user_type') !== 3) {
+            if(!Request::post('motivo_falta')){
+                $this->View->renderJSON(['success' => false, 'message' => 'Escriba motivo de la falta']);
+                exit();
+            }
+
+            if(Request::post('fecha_contacto')){
+                $contact_date = Request::post('fecha_contacto');
+            }
+
+            if(Request::post('fecha_regreso')){
+                $return_date = Request::post('fecha_regreso');
+            }
+        }
+
+        $this->View->renderJSON(AlumnoModel::updateAbsence(
+                                                Request::post('inasistencia'),
+                                                Request::post('fecha_falta'), 
+                                                Request::post('maestro'), 
+                                                Request::post('comentario_maestro'),
+                                                Request::post('motivo_falta'),
+                                                $contact_date,
+                                                $return_date
+                                ));
+    }
+
+    public function eliminar_inasistencia(){
+        if(!Request::post('inasistencia')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Acción no valida, reporte problema']);
+            exit();
+        }
+
+
+        $this->View->renderJSON(AlumnoModel::deleteAbsence(
+                                                Request::post('inasistencia')
+                                ));
     }
 
     /**

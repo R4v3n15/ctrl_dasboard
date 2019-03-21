@@ -342,13 +342,43 @@ class GeneralModel
         return $students->rowCount();
     }
 
-     public static function countEgresadosStudent() {
+    public static function countEgresadosStudent() {
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT student_id FROM students WHERE status = 3;");
         $students->execute();
 
         return $students->rowCount();
     }
+
+    public static function getScheduleClass($schedule){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $getDias =  $database->prepare("SELECT d.day as nombre
+                                        FROM days as d, schedul_days as sd 
+                                        WHERE sd.schedul_id = :schedule
+                                          AND sd.day_id     = d.day_id
+                                        ORDER BY d.day_id;");
+        $getDias->execute(array(':schedule' => $schedule));
+        $dias   = $getDias->fetchAll();
+        $total  = count($dias);
+
+        $pointer  = 1;
+        $response = '';
+        foreach ($dias as $dia) {
+            if($total > $pointer) {
+                $response .= ucwords(strtolower($dia->nombre)) . ', ';
+            } else {
+                $response .= ucwords(strtolower($dia->nombre));
+            }
+            $pointer++;
+        }
+
+        return $response;
+    }
+
+
+
+
 
 
     // Prevencion de Duplicidad

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-02-2019 a las 01:49:43
+-- Tiempo de generación: 21-03-2019 a las 06:24:44
 -- Versión del servidor: 10.1.28-MariaDB
 -- Versión de PHP: 7.1.11
 
@@ -39,7 +39,9 @@ CREATE TABLE `students_absences` (
   `absence_date` date DEFAULT NULL,
   `contact_date` date DEFAULT NULL,
   `return_date` date DEFAULT NULL,
-  `created_by` int(11) NOT NULL
+  `created_by` int(11) NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
