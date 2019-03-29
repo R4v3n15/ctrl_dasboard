@@ -1994,9 +1994,9 @@ class AlumnoModel
 
         $clase = $getClase->fetch();
 
-        if ($clase->teacher_id !== $teacher) {
-            return ['success' => false, 'message' => '&#x2718; Usted no es el profesor del alumno!'];
-        }
+        // if ($clase->teacher_id !== $teacher) {
+        //     return ['success' => false, 'message' => '&#x2718; Usted no es el profesor del alumno!'];
+        // }
 
         $horario = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
         $dias    = GeneralModel::getScheduleClass($clase->schedul_id);
