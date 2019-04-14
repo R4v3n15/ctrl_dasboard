@@ -9,26 +9,18 @@
                 <table id="example" class="table table-sm table-striped" style="width:100%">
                     <thead>
                         <tr class="">
-                            <th class="text-center">No.</th>
-                            <th class="text-center">Foto</th>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Edad</th>
-                            <th class="text-center">Grupo</th>
-                            <th class="text-center">Tutor</th>
-                            <th class="text-center">Opciones</th>
+                            <th width="60" class="text-center">No.</th>
+                            <th width="80" class="text-center">Foto</th>
+                            <th width="100" class="text-center">Nombre</th>
+                            <th width="100" class="text-center">Edad</th>
+                            <th width="100" class="text-center">Grupo</th>
+                            <th width="100" class="text-center">Tutor</th>
+                            <th width="100" class="text-center">Fecha Baja</th>
+                            <th width="130" class="text-center">Motivo</th>
+                            <th width="100" class="text-center">Opciones</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th class="text-center">No.</th>
-                            <th class="text-center">Foto</th>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Edad</th>
-                            <th class="text-center">Grupo</th>
-                            <th class="text-center">Tutor</th>
-                            <th class="text-center">Opciones</th>
-                        </tr>
-                    </tfoot>
+
                 </table>
                 
             </div>

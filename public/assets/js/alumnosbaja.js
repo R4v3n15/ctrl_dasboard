@@ -37,6 +37,8 @@ var Baja = {
                             { "data": "age" },
                             { "data": "group" },
                             { "data": "tutor" },
+                            { "data": "fecha" },
+                            { "data": "motivo" },
                             { "data": "options" }
                         ],
                         "language": {

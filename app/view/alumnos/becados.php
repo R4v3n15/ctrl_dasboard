@@ -17,6 +17,7 @@
                                 <th width="80" class="text-center">Teléfono 2</th>
                                 <th width="100" class="text-center">Grupo</th>
                                 <th width="100" class="text-center">Horario</th>
+                                <th width="100" class="text-center">Padrino</th>
                                 <th width="100" class="text-center">Maestro</th>
                                 <th width="100" class="text-center">Opciones</th>
                             </tr>
@@ -45,6 +46,7 @@
                                 </td>
                                 <td><?= $becado->clase; ?></td>
                                 <td><?= $becado->dias; ?> <br> <?= $becado->horario; ?></td>
+                                <td><?= $becado->padrino; ?></td>
                                 <td><?= $becado->maestro; ?></td>
                                 <td>
                                     <!-- <button type="button" 

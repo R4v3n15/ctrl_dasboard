@@ -213,16 +213,26 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form id="frmUnsuscribeStudent">
             <div class="modal-body">
                 <div class="row justify-content-center">
                     <div class="col-10">
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <input type="hidden" class="form-control text-center" id="unsuscribe_student" />
+                                <input type="hidden" class="form-control text-center" id="unsuscribe_student" name="alumno_baja" />
                                 <h6 class="text-center">
                                     ¿Está seguro de querer dar de baja a: <br> 
                                     <strong class="text-info" id="unsuscribe_name"></strong>?
                                 </h6>
+                                <div class="form-grup mb-3">
+                                    <label for="">Fecha de Baja:</label>
+                                    <input type="text" class="form-control" id="fecha_baja" name="fecha_baja" required/>
+                                </div>
+
+                                <div class="form-grup">
+                                    <label for="">Motivo de Baja:</label>
+                                    <textarea rows="4" class="form-control" id="motivo_baja" name="motivo_baja" placeholder="Escriba el motivo de la baja" required></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -233,9 +243,10 @@
                     <button type="button" class="btn btn-secondary box-shadown btn-flat-sm" data-dismiss="modal">Cancelar</button>
                 </div>
                 <div class="col-6 text-center">
-                    <button type="button" id="unsuscribeStudent" class="btn btn-info box-shadown">Dar de Baja</button>
+                    <button type="submit" class="btn btn-info box-shadown">Dar de Baja</button>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <?php if(count($this->absences) > 0): ?>
                 <table id="example" class="table table-sm table-striped" style="width:100%">
                     <thead>
                         <tr class="">
@@ -64,7 +65,9 @@
                         <?php endforeach ?>
                     </tbody>
                 </table>
-                
+                <?php else: ?>
+                    <h5 class="text-info text-center">Lista Vacia</h4>
+                <?php endif ?>
             </div>
         </div>
     </main>
@@ -113,7 +116,7 @@
                         <div class="form-group">
                             <?php if ((int)$this->user_type !== 3): ?>
                             <label for="inputname">Maestro: </label>
-                            <select class="form-control form-control-sm"  name="maestro" id="maestro" style="width: 100%;" required="true">
+                            <select class="form-control form-control-sm" name="maestro" id="maestro" style="width: 100%;" required="true">
                                 <option>Seleccione maestro...</option>
                                 <?php foreach ($this->maestros as $index => $maestro): ?>
                                     <option value="<?= $maestro->user_id; ?>"><?= $maestro->name; ?></option>

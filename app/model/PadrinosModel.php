@@ -45,22 +45,30 @@ class PadrinosModel
             $paginacion = $paginator->getView('pagination_ajax', 'sponsors');
 
             echo '<div class="table-responsive">';
-                echo '<table class="table table-bordered table-hover table-striped">';
-                    echo '<thead>';
+                echo '<table class="table table-bordered table-hover table-striped table-sm">';
+                    echo '<thead class="bg-info text-white">';
                         echo '<tr class="info">';
-                            echo '<th>ID</th>';
-                            echo '<th>Nombre</th>';
-                            echo '<th>Tipo</th>';
-                            echo '<th>Correo Electronico</th>';
-                            echo '<th>Descripción</th>';
-                            echo '<th>Estatus</th>';
-                            echo '<th>Alumnos Becados</th>';
-                            echo '<th class="text-center">Opciones</th>';
+                            echo '<th width="50">ID</th>';
+                            echo '<th width="100">Nombre</th>';
+                            echo '<th width="100">Tipo</th>';
+                            echo '<th width="80">Correo Electronico</th>';
+                            echo '<th width="150">Descripción</th>';
+                            echo '<th width="80">Estado</th>';
+                            echo '<th width="150">Alumnos Becados</th>';
+                            echo '<th width="100" class="text-center">Opciones</th>';
                         echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
                     $count = 1;
                     foreach ($sponsors as $sponsor) {
+                        $sponsored= $database->prepare("SELECT CONCAT_WS(' ', s.name, s.surname, s.lastname) as student
+                                                        FROM students as s, becas as b
+                                                        WHERE b.sponsor_id = :sponsor
+                                                          AND b.status     = 1
+                                                          AND b.student_id = s.student_id
+                                                          AND s.status     IN (1,2)");
+                        $sponsored->execute([':sponsor' => $sponsor->sponsor_id]);
+
                         $status = $sponsor->sp_status === '1' ? 'Acivo' : 'Inactivo';
 
                         echo '<tr>';
@@ -70,7 +78,18 @@ class PadrinosModel
                             echo '<td>'.$sponsor->sp_email.'</td>';
                             echo '<td>'.$sponsor->sp_description.'</td>';
                             echo '<td>'.$status.'</td>';
-                            echo '<td>Alumnos Becados</td>';
+                            echo '<td>';
+                            // Show students sponsored list if exist
+                            if (count($sponsored) > 0) {
+                                echo '<ul>';
+                                foreach ($sponsored->fetchAll() as $row) {
+                                    echo '<li>'.$row->student . '</li>';
+                                }
+                                echo '</ul>';
+                            } else {
+                                echo 'Sin becarios';
+                            }
+                            echo '</td>';
                             echo '<td class="text-center">';
                                 echo '<button type="buton"
                                               title="Editar Datos"

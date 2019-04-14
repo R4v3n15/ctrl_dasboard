@@ -60,6 +60,27 @@ class PagosController extends Controller
         $this->View->renderJSON(PagosModel::getRelatedInfo(Request::post('alumno'), Request::post('tutor')));
     }
 
+    public function actualizar_costos(){
+        if (!Request::post('course_id')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'No se encuentra el curso seleccionado'));
+            return;
+        }
+
+        if (!Request::post('costo_normal')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique el costo normal del curso'));
+            return;
+        }
+
+        if (!Request::post('costo_descuento')) {
+            $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique el costo con descuento del curso'));
+            return;
+        }
+
+        $this->View->renderJSON(
+            CursoModel::updateCoursePrice(Request::post('course_id'), Request::post('costo_normal'), Request::post('costo_descuento'))
+        );
+    }
+
 
 
 

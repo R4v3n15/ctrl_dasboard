@@ -3,6 +3,7 @@ var Inasistencias = {
         console.log('Registro Initialize');
         this.handleModals();
         this.handleAbsencesForms();
+        this.setTeacher();
     },
 
     handleModals: function(){
@@ -92,6 +93,35 @@ var Inasistencias = {
 
             $('#edit_return_date-input').prop('autocomplete', 'off');
         }
+    },
+
+    setTeacher: function(){
+        let _this = this;
+        $('#alumno').change(function(event) {
+            let student = $(this).val();
+            if(student !== 0 && student !== undefined && student !== ''){
+                $.ajax({
+                    synch: 'true',
+                    type: 'POST',
+                    data: { alumno: student },
+                    url: _root_ + 'alumnos/buscar_maestro'
+                })
+                .done(function(response){
+                    if (response.success) {
+                        $("#maestro option[value='" + response.teacher +"']").prop("selected", true);
+                    } else {
+                        $('#general_snack').attr('data-content', response.message);
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-red');
+                    }
+                })
+                .fail(function(errno){
+                    $('#general_snack').attr('data-content', 'ERROR:500, Error desconocido, reporte el incidente!');
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red');
+                });
+            }
+        });
     },
 
     handleAbsencesForms: function(){

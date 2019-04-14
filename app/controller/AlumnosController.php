@@ -13,6 +13,10 @@ class AlumnosController extends Controller
     }
 
     public function index() {
+        Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
+        Registry::set('js', array('moment.min&assets/libs/js', 
+                                  'pikaday.min&assets/libs/js',
+                                  'alumnos&assets/js'));
         $this->View->render('alumnos/index', array(
             'u_type'    => (int)Session::get('user_type'),
             'cursos'    => CursoModel::getCourses()
@@ -424,7 +428,24 @@ class AlumnosController extends Controller
     }
 
     public function bajaAlumno(){
-        $this->View->renderJSON(AlumnoModel::unsuscribeStudent(Request::post('student')));
+        if(!Request::post('alumno_baja')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Seleccione un alumno!']);
+            exit();
+        }
+
+        if(!Request::post('fecha_baja')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Especifique fecha de baja']);
+            exit();
+        }
+
+        if(!Request::post('motivo_baja')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Agregue el motivo de la baja']);
+            exit();
+        }
+        $this->View->renderJSON(AlumnoModel::unsuscribeStudent(
+                                                Request::post('alumno_baja'),
+                                                Request::post('fecha_baja'),
+                                                Request::post('motivo_baja')));
     }
 
     public function bajaAlumnos(){
@@ -532,16 +553,48 @@ class AlumnosController extends Controller
         }
 
         if(!Request::post('comentario_maestro')){
-            $this->View->renderJSON(['success' => false, 'message' => 'Escriba comentario']);
+            $this->View->renderJSON(['success' => false, 'message' => 'Agregue comentario del maestro']);
             exit();
+        }
+
+        $contact_date = null;
+        $return_date  = null;
+        $absence_note = null;
+        if ((int)Session::get('user_type') !== 3) {
+            if(!Request::post('motivo_falta')){
+                $this->View->renderJSON(['success' => false, 'message' => 'Escriba motivo de la falta']);
+                exit();
+            }
+
+            $absence_note = Request::post('motivo_falta');
+
+            if(Request::post('fecha_contacto')){
+                $contact_date = Request::post('fecha_contacto');
+            }
+
+            if(Request::post('fecha_regreso')){
+                $return_date = Request::post('fecha_regreso');
+            }
         }
 
         $this->View->renderJSON(AlumnoModel::saveAbsence(
                                                 Request::post('alumno'), 
                                                 Request::post('fecha_falta'), 
                                                 Request::post('maestro'), 
-                                                Request::post('comentario_maestro')
+                                                Request::post('comentario_maestro'),
+                                                $absence_note,
+                                                $contact_date,
+                                                $return_date
                                 ));
+    }
+
+    public function buscar_maestro(){
+        if(!Request::post('alumno')){
+            $this->View->renderJSON(['success' => false, 'message' => 'Seleccione a un alumno de la lista']);
+            exit();
+        }
+
+        $this->View->renderJSON(AlumnoModel::findTeacherByStudent(Request::post('alumno')));
     }
 
     public function actualizar_inasistencia(){
@@ -561,7 +614,7 @@ class AlumnosController extends Controller
         }
 
         if(!Request::post('comentario_maestro')){
-            $this->View->renderJSON(['success' => false, 'message' => 'Escriba comentario']);
+            $this->View->renderJSON(['success' => false, 'message' => 'Agregue comentario del maestro']);
             exit();
         }
 

@@ -6,22 +6,46 @@
 </style>
 <div class="row" id="page-content-wrapper">
     <main role="main" class="col-12 col-md-12 px-4">
-        <div class="align-items-center pt-0 pb-2 mb-3 border-bottom">
-            <h5 class="text-info text-right">Pagos - <?= date('Y'); ?></h5>
+        <div class="align-items-center pt-0">
+            <div class="mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <?php if ($this->cursos): ?>
+                        <?php foreach ($this->cursos as $index => $curso): ?>
+                            <button class="btn btn-sm btn-outline-secondary change_costs" 
+                                    data-course="<?= $curso->course_id; ?>"
+                                    data-name="<?= ucwords(strtolower($curso->course)); ?>"
+                                    data-normal="<?= $curso->costo_normal; ?>"
+                                    data-promo="<?= $curso->costo_descuento; ?>"
+                                    style="font-size: 0.7rem;">
+                                <?= ucwords(strtolower($curso->course)); ?>
+                                <hr class="my-1">
+                                <?= 'Costo Normal: '. $curso->costo_normal; ?>
+                                <br>
+                                <?= 'Semana Desc.: '. $curso->costo_descuento; ?>
+                            </button>
+                        <?php endforeach ?>
+                    <?php endif ?>
+                    <button class="btn btn-sm btn-outline-info px-5">
+                        <h5 class="">Pagos - <?= date('Y'); ?></h5>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="align-items-center pt-2 pb-2 mb-3 border-bottom">
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                     <?php if ($this->cursos): ?>
-                        <?php foreach ($this->cursos as $curso): ?>
-                            <button class="btn btn-sm btn-outline-primary pays_view" 
+                        <?php foreach ($this->cursos as $index => $curso): ?>
+                            <button class="btn btn-sm btn-outline-primary pays_view px-3" 
                                     id="tabla_<?= $curso->course_id; ?>" 
                                     data-table="<?= $curso->course_id; ?>">
-                                <?= ucwords(strtolower($curso->course)); ?> 
+                                    <?= ucwords(strtolower($curso->course)); ?> 
                                 <span class="badge badge-dark" id="count_<?= $curso->course_id; ?>">0</span>
                             </button>
                         <?php endforeach ?>
                     <?php endif ?>
-                    <button class="btn btn-sm btn-outline-success pays_view" id="tabla_all" data-table="all">
-                        TODOS
+                    <button class="btn btn-sm btn-outline-primary pays_view px-4" id="tabla_all" data-table="all">
+                        <strong>TODOS</strong>
                         <span class="badge badge-dark" id="count_all">0</span>
                     </button>
                 </div>
@@ -36,7 +60,8 @@
                                 <th class="text-center">#</th>
                                 <th class="text-center">Alumno</th>
                                 <th class="text-center">Estado</th>
-                                <th class="text-center">Tutor</th>
+                                <!-- <th class="text-center">Tutor</th> -->
+                                <th class="text-center">Grupo</th>
                                 <th class="text-center">Ene</th>
                                 <th class="text-center">Feb</th>
                                 <th class="text-center">Mar</th>
@@ -132,7 +157,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-12 col-md-12"">
+                    <div class="col-12 col-md-12">
                         <textarea class="form-control" 
                                   rows="3" 
                                   id="payComment" 
@@ -223,6 +248,54 @@
                 </div>
                 <div class="col-6 text-right">
                     <button type="submit" class="btn btn-info btn-sm btn-shadown">Guardar</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalChangeCourseCost" tabindex="-1" role="dialog" aria-labelledby="commentTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header py-2 bg-success">
+                <h6 class="modal-title my-0 text-white" id="commentTitle">Cambiar Precios de <span id="course_name"></span></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="frmUpdateCourseCosts">
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <input type="hidden" id="update_idCourse" name="course_id" class="form-control">
+                        <div class="input-group input-group-sm mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Costo Normal:</span>
+                            </div>
+                            <input type="text" name="costo_normal" id="edit_normal_cost" class="form-control" required>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">MXN</span>
+                            </div>
+                        </div>
+                        <div class="input-group input-group-sm mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Costo Descuento:</span>
+                            </div>
+                            <input type="text" name="costo_descuento" id="edit_promo_cost" class="form-control" required>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">MXN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3 px-3">
+                <div class="col-6 text-left">
+                    <button type="button" class="btn btn-secondary btn-sm btn-shadown btn-flat-lg" data-dismiss="modal">Cancelar</button>
+                </div>
+                <div class="col-6 text-right">
+                    <button type="submit" class="btn btn-success btn-sm btn-shadown">Guardar Cambios</button>
                 </div>
             </div>
             </form>

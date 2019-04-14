@@ -48,6 +48,17 @@ var Alumnos = {
                 console.log(sessionStorage.getItem('collapse_menu'));
             }
         });
+
+
+        if ($('#fecha_baja').length) {
+            pikadayResponsive(document.getElementById("fecha_baja"),{
+                classes : "form-control form-control-sm",
+                placeholder: "Fecha de Baja",
+                properties: 'required'
+            });
+
+            $('#fecha_baja-input').prop('autocomplete', 'off');
+        }
     },
 
     getActiveView: function(){
@@ -255,7 +266,6 @@ var Alumnos = {
             type: 'POST',
             url: _root_ + 'alumnos/alumnosCurso',
             success: function(data){
-                console.log(data);
                 $.each(data, function(i, value){
                     if (parseInt(value) > 0) {
                         $('#'+i).text(value);
@@ -481,18 +491,15 @@ var Alumnos = {
 
     unsuscribeStudent: function(){
         let _this = this;
-        $('#unsuscribeStudent').on('click', function(event){
+        $('#frmUnsuscribeStudent').on('submit', function(event){
             event.preventDefault();
 
-            let student = $('#unsuscribe_student').val();
-
             $.ajax({
-                data: { student: student },
+                data: $('#frmUnsuscribeStudent').serialize(),
                 synch: 'true',
                 type: 'POST',
                 url: _root_ + 'alumnos/bajaAlumno',
                 success: function(response){
-
                     if (response.success) {
                         $('#general_snack').attr('data-content', response.message);
                         $('#general_snack').snackbar('show');

@@ -11,7 +11,7 @@
                 </button>
             </div>
         </div>
-        <div class="col-md-12" id="sponsors_list">
+        <div class="col-md-12 p-0" id="sponsors_list">
             <div class="row">
                 <div class="col-12 text-center">
                     <img src="<?= Config::get('URL');?>public/assets/img/loader.gif">

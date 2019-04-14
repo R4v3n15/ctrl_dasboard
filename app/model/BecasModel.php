@@ -95,10 +95,25 @@ class BecasModel
                         }
 	        		}
 	        	}
+
+	        	$padrino = null;
+	        	$getSponsor  =  $database->prepare("SELECT CONCAT_WS(' ', s.sp_name, s.sp_surname) as sponsor
+	        									  	FROM sponsors as s, becas as b
+	        									  	WHERE b.student_id = :student
+	        									  	  AND b.status     = 1
+	        									  	  AND b.sponsor_id = s.sponsor_id
+	        									  	LIMIT 1;");
+	        	$getSponsor->execute([':student' => $alumno->student_id]);
+
+	        	if ($getSponsor->rowCount() > 0) {
+	        		$padrino = $getSponsor->fetch()->sponsor;
+	        	}
+
 	        	$alumno->clase   = $clase;
 	        	$alumno->maestro = $maestro;
 	        	$alumno->dias    = $dias;
 	        	$alumno->horario = $horario;
+	        	$alumno->padrino = $padrino;
         	}
         }
         // dump($alumnos);

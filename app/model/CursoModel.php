@@ -13,7 +13,7 @@ class CursoModel {
     public static function getCourses() {
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT course_id, course 
+        $sql = "SELECT course_id, course, costo_normal, costo_descuento 
                 FROM courses";
         $query = $database->prepare($sql);
         $query->execute();    
@@ -28,6 +28,24 @@ class CursoModel {
         $query->execute();
 
         return $query->fetchAll();
+    }
+
+    public static function updateCoursePrice($course, $normal_cost, $promotional_cost){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $update  =  $database->prepare("UPDATE courses 
+                                        SET costo_normal = :normal_cost,
+                                            costo_descuento = :promotional_cost 
+                                        WHERE course_id = :course;");
+        $updated = $update->execute([
+                                ':normal_cost' => $normal_cost,
+                                ':promotional_cost' => $promotional_cost,
+                                ':course' => $course]);
+        if ($updated) {
+            return ['success' => true, 'message' => 'Costos actualizados correctamente'];
+        }
+
+        return ['success' => false, 'message' => 'Error, intente de nuevo o reporte el error'];
     }
 
 

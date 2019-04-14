@@ -1465,15 +1465,19 @@ class AlumnoModel
                                     data-placement="bottom"
                                     title="Eliminar"><i class="fa fa-user-times"></i></button>';
 
+                $fecha_baja = $alumno->fecha_baja !== null ? date('d/m/Y', strtotime($alumno->fecha_baja)) : 'No especificado';
+
                 $info = array(
-                    'count' => $counter,
-                    'name'  => $alumno->name,
-                    'age'   => $alumno->age,
-                    'avatar' => $avatar,
-                    'studies' => $alumno->studies.' '.$alumno->lastgrade,
-                    'group'   => $grupo,
-                    'tutor'   => $nombre_tutor,
-                    'options' => $editar . $eliminar
+                    'count'     => $counter,
+                    'name'      => $alumno->name,
+                    'age'       => $alumno->age,
+                    'avatar'    => $avatar,
+                    'studies'   => $alumno->studies.' '.$alumno->lastgrade,
+                    'group'     => $grupo,
+                    'tutor'     => $nombre_tutor,
+                    'fecha'     => $fecha_baja,
+                    'motivo'    => $alumno->motivo_baja === null ? 'No especificado' : $alumno->motivo_baja,
+                    'options'   => $editar . $eliminar
                 );
 
                 array_push($datos, $info);
@@ -1487,15 +1491,21 @@ class AlumnoModel
     }
 
     // DAR DE BAJA ALUMNO
-    public static function unsuscribeStudent($student){
+    public static function unsuscribeStudent($student, $unsuscribe_date, $unsuscribe_note){
         $database = DatabaseFactory::getFactory()->getConnection();
         $commit   = true;
         $database->beginTransaction();
         try{
             $checkout = $database->prepare("UPDATE students
-                                            SET status       = 0
+                                            SET status       = 0,
+                                                fecha_baja   = :unsuscribe_date,
+                                                motivo_baja  = :unsuscribe_note
                                             WHERE student_id = :student;");
-            $update = $checkout->execute(array(':student' => $student));
+            $update = $checkout->execute([
+                                    ':student' => $student,
+                                    ':unsuscribe_date' => $unsuscribe_date,
+                                    ':unsuscribe_note' => $unsuscribe_note
+                                ]);
 
             if (!$update) {
                 $commit = false;
@@ -1953,29 +1963,53 @@ class AlumnoModel
         $year = $year === null ? H::getTime('Y') : $year;
         $month = $month === null ? H::getTime('m') : $month;
 
-        $getList =  $database->prepare("SELECT CONCAT_WS(' ', s.name, s.surname, s.lastname) as student,
-                                               ab.course,
-                                               REPLACE(ab.horary,'&','<br>') as horario,
-                                               CONCAT_WS(' ', t.name, t.lastname) as teacher,
-                                               ab.absence_note,
-                                               ab.teacher_note,
-                                               ab.absence_date,
-                                               ab.contact_date,
-                                               ab.return_date,
-                                               ab.teacher_id,
-                                               ab.absence_id
-                                        FROM students_absences as ab, students as s, users as t
-                                        WHERE YEAR(ab.absence_date) = :year
-                                          AND MONTH(ab.absence_date) = :month
-                                          AND ab.student_id = s.student_id
-                                          AND ab.teacher_id = t.user_id
-                                          AND ab.status     = 1
-                                        ORDER BY ab.absence_date DESC;");
-        $getList->execute([':year' => $year, ':month' => $month]);
+        if((int)Session::get('user_type') !== 3){
+            $getList =  $database->prepare("SELECT CONCAT_WS(' ', s.name, s.surname, s.lastname) as student,
+                                                   ab.course,
+                                                   REPLACE(ab.horary,'&','<br>') as horario,
+                                                   CONCAT_WS(' ', t.name, t.lastname) as teacher,
+                                                   ab.absence_note,
+                                                   ab.teacher_note,
+                                                   ab.absence_date,
+                                                   ab.contact_date,
+                                                   ab.return_date,
+                                                   ab.teacher_id,
+                                                   ab.absence_id
+                                            FROM students_absences as ab, students as s, users as t
+                                            WHERE YEAR(ab.absence_date) = :year
+                                              AND MONTH(ab.absence_date) = :month
+                                              AND ab.student_id = s.student_id
+                                              AND ab.teacher_id = t.user_id
+                                              AND ab.status     = 1
+                                            ORDER BY ab.absence_date DESC;");
+            $getList->execute([':year' => $year, ':month' => $month]);
+        } else {
+            $getList =  $database->prepare("SELECT CONCAT_WS(' ', s.name, s.surname, s.lastname) as student,
+                                                   ab.course,
+                                                   REPLACE(ab.horary,'&','<br>') as horario,
+                                                   CONCAT_WS(' ', t.name, t.lastname) as teacher,
+                                                   ab.absence_note,
+                                                   ab.teacher_note,
+                                                   ab.absence_date,
+                                                   ab.contact_date,
+                                                   ab.return_date,
+                                                   ab.teacher_id,
+                                                   ab.absence_id
+                                            FROM students_absences as ab, students as s, users as t
+                                            WHERE YEAR(ab.absence_date) = :year
+                                              AND MONTH(ab.absence_date) = :month
+                                              AND ab.student_id = s.student_id
+                                              AND ab.teacher_id = :teacher
+                                              AND ab.teacher_id = t.user_id
+                                              AND ab.status     = 1
+                                            ORDER BY ab.absence_date DESC;");
+            $getList->execute([':year' => $year, ':month' => $month, ':teacher' => Session::get('user_id')]);
+        }
+
         return $getList->fetchAll();
     }
    
-    public static function saveAbsence($student, $absence_date, $teacher, $comment){
+    public static function saveAbsence($student, $absence_date, $teacher, $comment, $absence_note, $contact_date, $return_date){
         $database = DatabaseFactory::getFactory()->getConnection();
 
         $getClase = $database->prepare("SELECT cu.course, g.group_name, c.teacher_id, c.schedul_id, h.hour_init, h.hour_end
@@ -2008,9 +2042,12 @@ class AlumnoModel
                                                                     student_id, 
                                                                     course, 
                                                                     horary, 
-                                                                    teacher_id, 
+                                                                    teacher_id,
+                                                                    absence_note, 
                                                                     teacher_note,
                                                                     absence_date,
+                                                                    contact_date,
+                                                                    return_date,
                                                                     created_by
                                                                 ) 
                                                         VALUES(
@@ -2018,8 +2055,11 @@ class AlumnoModel
                                                             :course,
                                                             :horary,
                                                             :teacher,
+                                                            :absence_note,
                                                             :teacher_note,
                                                             :absence_date,
+                                                            :contact_date,
+                                                            :return_date,
                                                             :created_by
                                                         );");
             $sql->execute([
@@ -2027,8 +2067,11 @@ class AlumnoModel
                 ':course'      => $clase->course.' '.$clase->group_name,
                 ':horary'       => $dias.'&'.$horario,
                 ':teacher'      => $teacher,
+                ':absence_note' => $absence_note,
                 ':teacher_note' => $comment,
                 ':absence_date' => $absence_date,
+                ':contact_date' => $contact_date,
+                ':return_date'  => $return_date,
                 ':created_by'   => Session::get('user_id')
             ]);
 
@@ -2056,13 +2099,24 @@ class AlumnoModel
     public static function updateAbsence($absence, $absence_date, $teacher, $teacher_note, $absence_note, $contact_date, $return_date){
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        if ((int)Session::get('user_type') !== 3) {
-            $getDates = $database->prepare("SELECT contact_date, return_date FROM students_absences WHERE absence_id = :absence LIMIT 1;");
-            $getDates->execute([':absence' => $absence]);
-            $setDates = $getDates->fetch();
-            $contact_date = $setDates->contact_date;
-            $return_date  = $setDates->return_date;
+        // Get the current absence info, to known if updated it or not
+        $getAbsence = $database->prepare("SELECT absence_note, contact_date, return_date 
+                                        FROM students_absences 
+                                        WHERE absence_id = :absence LIMIT 1;");
+        $getAbsence->execute([':absence' => $absence]);
+        $absenceInfo = $getAbsence->fetch();
+
+        if ($absenceInfo->absence_note !== null && $absence_note === null) {
+            $absence_note = $absenceInfo->absence_note;
         }
+        if ($absenceInfo->contact_date !== null && $contact_date === null) {
+            $contact_date = $absenceInfo->contact_date;
+        }
+
+        if($absenceInfo->return_date !== null && $return_date === null){
+            $return_date  = $absenceInfo->return_date;
+        }
+
 
         $commit   = true;
         $database->beginTransaction();
@@ -2101,6 +2155,24 @@ class AlumnoModel
                         'message' => '&#x2713; Registro Actualizado correctamente!!'
                     );
         }
+    }
+
+    public static function findTeacherByStudent($student){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $getTeacher = $database->prepare("SELECT c.teacher_id 
+                                          FROM students_groups as sg, classes as c 
+                                          WHERE sg.student_id = :student
+                                            AND sg.class_id   = c.class_id
+                                          LIMIT 1;");
+        $getTeacher->execute([':student' => $student]);
+
+        if ($getTeacher->rowCount() > 0) {
+            $teacher = $getTeacher->fetch();
+            return ['success' => true, 'teacher' => $teacher->teacher_id];
+        }
+
+        return ['success' => false, 'message' => 'teacher not found!'];
     }
 
     public static function deleteAbsence($absence){

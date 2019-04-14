@@ -332,6 +332,15 @@ class PagosModel
                     continue;
                 }
 
+                $getClase  =   $database->prepare("SELECT CONCAT_WS(' ', cu.course, g.group_name) as grupo 
+                                                FROM classes as c, courses as cu, groups as g
+                                                WHERE c.class_id  = :clase
+                                                  AND c.course_id = cu.course_id
+                                                  AND c.group_id  = g.group_id
+                                                LIMIT 1;");
+                $getClase->execute([':clase' => $alumno->class_id]);
+                $claseInfo = ucwords(mb_strtolower($getClase->fetch()->grupo));
+
                 $pagos = self::studentPayList($alumno->student_id);
 
                 $comment = '<a href="javascript:void(0)" class="addComment" data-student="'.$alumno->student_id.'"
@@ -471,7 +480,8 @@ class PagosModel
                     'count'      => $counter,
                     'student'    => $alumno->student_id,
                     'name'       => $alumno->name . ' ' . $alumno->surname . ' ' . $alumno->lastname,
-                    'info'       => self::getContactInfo($alumno->student_id, $alumno->id_tutor),
+                    // 'info'       => self::getContactInfo($alumno->student_id, $alumno->id_tutor),
+                    'info'       => $claseInfo,
                     'jan'        => $ene,
                     'feb'        => $feb,
                     'mar'        => $mar,

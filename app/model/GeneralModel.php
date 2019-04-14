@@ -251,7 +251,7 @@ class GeneralModel
                                           AND s.student_id = g.student_id
                                           AND g.class_id   = c.class_id
                                           AND s.student_id = sd.student_id
-                                        ORDER BY s.surname ASC, s.lastname ASC;");
+                                        ORDER BY s.surname ASC, s.lastname ASC LIMIT 50;");
         $students->execute();
         if ($students->rowCount() > 0) {
             return $students->fetchAll();
@@ -575,7 +575,7 @@ class GeneralModel
     public static function allStudentsUnsuscribe() {
         $database = DatabaseFactory::getFactory()->getConnection();
         $students = $database->prepare("SELECT s.student_id, s.id_tutor, CONCAT_WS(' ',s.name, s.surname, s.lastname) as name, 
-                                               s.age, s.genre, s.avatar, g.class_id,
+                                               s.age, s.genre, s.avatar, s.fecha_baja, s.motivo_baja, g.class_id,
                                                g.convenio, sd.studies, sd.lastgrade
                                         FROM students as s, students_groups as g, students_details as sd
                                         WHERE s.status     = 0

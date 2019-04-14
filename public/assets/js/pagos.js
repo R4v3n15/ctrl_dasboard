@@ -25,6 +25,8 @@ var Pagos = {
                 this.setPayment();
                 this.setComment();
                 this.fullPayTable();
+                this.changeCourseCostsModal();
+                this.changeCourseCosts();
             }
         } 
     },
@@ -326,6 +328,49 @@ var Pagos = {
             months += '<option value="dic">Diciembre</option>';
 
         return months;
+    },
+
+    changeCourseCostsModal: function(){
+        let _this = this;
+        $('.change_costs').click(function(event){
+            event.preventDefault();
+            let course      = $(this).data('course'),
+                normal_cost = $(this).data('normal'),
+                promo_cost  = $(this).data('promo'),
+                course_name = $(this).data('name');
+            $('#course_name').text(course_name)
+            $('#update_idCourse').val(course);
+            $('#edit_normal_cost').val(normal_cost);
+            $('#edit_promo_cost').val(promo_cost);
+            $('#modalChangeCourseCost').modal('show');
+        });
+    },
+
+    changeCourseCosts: function(){
+        let _this = this;
+        $('#frmUpdateCourseCosts').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                data: $('#frmUpdateCourseCosts').serialize(),
+                synch: 'true',
+                type: 'POST',
+                url: _root_ + 'pagos/actualizar_costos'
+            })
+            .done(function(response){
+                if (response.success) {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-blue');
+                    setTimeout(()=>{ location.reload(true); },800);
+                    $('#modalChangeCourseCost').modal('hide');
+
+                } else {
+                    $('#general_snack').attr('data-content', response.message);
+                    $('#general_snack').snackbar('show');
+                    $('.snackbar').addClass('snackbar-red');
+                }
+            });
+        });
     },
 
 
