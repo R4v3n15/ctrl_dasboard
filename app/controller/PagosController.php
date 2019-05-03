@@ -102,7 +102,7 @@ class PagosController extends Controller
             return;
         }
 
-        if (!Request::post('payStatus')) {
+        if (Request::post('payStatus') == '' || Request::post('payStatus') == null) {
             $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique si va realizar un pago o no'));
             return;
         }
@@ -126,7 +126,7 @@ class PagosController extends Controller
             return;
         }
 
-        if (!Request::post('payStatus')) {
+        if (Request::post('payStatus') == '' || Request::post('payStatus') == null) {
             $this->View->renderJSON(array('success' => false, 'messsage' => 'Especifique si va realizar un pago o no'));
             return;
         }

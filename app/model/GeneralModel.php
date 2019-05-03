@@ -251,7 +251,7 @@ class GeneralModel
                                           AND s.student_id = g.student_id
                                           AND g.class_id   = c.class_id
                                           AND s.student_id = sd.student_id
-                                        ORDER BY s.surname ASC, s.lastname ASC LIMIT 50;");
+                                        ORDER BY s.surname ASC, s.lastname ASC;");
         $students->execute();
         if ($students->rowCount() > 0) {
             return $students->fetchAll();

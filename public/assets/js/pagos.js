@@ -54,7 +54,7 @@ var Pagos = {
                             { "data": "count" },
                             { "data": "name" },
                             { "data": "status", "searchable" : false, "orderable": false },
-                            { "data": "info", "searchable" : false, "orderable": false },
+                            { "data": "info" },
                             { "data": "jan", "searchable" : false, "orderable": false },
                             { "data": "feb", "searchable" : false, "orderable": false },
                             { "data": "mar", "searchable" : false, "orderable": false },
