@@ -1465,7 +1465,12 @@ class AlumnoModel
                                     data-placement="bottom"
                                     title="Eliminar"><i class="fa fa-user-times"></i></button>';
 
-                $fecha_baja = $alumno->fecha_baja !== null ? date('d/m/Y', strtotime($alumno->fecha_baja)) : 'No especificado';
+                // $fecha_baja = new DateTime($alumno->fecha_baja);
+                // $fecha_hoy  = new DateTime(date('Y-m-d'));
+                // $time       = $fecha_baja->diff($fecha_hoy);
+                // $anios      = $time->y > 0 ? $time->y . ' Años, ' : '';
+                // $meses      = $time->m > 0 ? $time->m . ' Meses' : '';
+                $fecha_baja = $alumno->fecha_baja !== null ? H::formatShortDate($alumno->fecha_baja) : 'No especificado';
 
                 $info = array(
                     'count'     => $counter,
@@ -1614,6 +1619,14 @@ class AlumnoModel
             }
 
             $alumno->avatar = $avatar;
+            $fecha_alta = new DateTime($alumno->created_at);
+            $fecha_hoy  = new DateTime(date('Y-m-d'));
+            $time       = $fecha_alta->diff($fecha_hoy);
+            $anios      = $time->y > 0 ? $time->y . ' Años, ' : '';
+            $meses      = $time->m > 0 ? $time->m . ' Meses' : '';
+
+
+            $alumno->tiempo = $anios . $meses;
             $alumno->created_at = H::formatDate(date('Y-m-d', strtotime($alumno->created_at)));
 
             $grupo = null;

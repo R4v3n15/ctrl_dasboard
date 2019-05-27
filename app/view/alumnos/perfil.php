@@ -74,8 +74,9 @@
                             <?php endif ?>
                         </ul>
                     </div>
-                    <div class="card-footer text-center">
-                        <label><strong>Fecha de Inscripción:</strong><br> <?= $alumno->created_at; ?> </label>
+                    <div class="card-footer text-center p-2">
+                        <label><strong>Fecha de Inscripción: </strong><br> <?= $alumno->created_at; ?> </label>
+                        <p class="m-0"><strong>Tiempo: </strong><?= $alumno->tiempo; ?> </p>
                     </div>
                 </div>
             </div>

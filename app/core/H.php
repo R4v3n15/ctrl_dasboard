@@ -62,7 +62,7 @@ class H
             case '12': $mes = 'Dic'; break;
         }
 
-        $day = $dia[2].'-'.$mes.'-'.$dia[0];
+        $day = $dia[2].'/'.$mes.'/'.$dia[0];
         return $day;
     }
 
