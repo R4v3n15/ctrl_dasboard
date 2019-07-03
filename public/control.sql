@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-04-2019 a las 18:48:46
+-- Tiempo de generación: 03-07-2019 a las 21:23:27
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 5.6.38
 
@@ -272,7 +272,7 @@ INSERT INTO `address` (`id_address`, `user_id`, `user_type`, `street`, `st_numbe
 (221, 173, 1, '61', '#', '86', NULL, 'Francisco May', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:16:51', '2018-06-08 00:16:51'),
 (222, 261, 2, '80', '#SN', '99 Y 101', NULL, 'EMILIANO ZAPATA 2', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:16:52', '2018-06-08 00:16:52'),
 (223, 174, 1, '82', '#', '47', NULL, 'Constituyentes', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:16:54', '2018-06-08 00:16:54'),
-(224, 175, 1, 'AV. SANTIAGO PACHECO CRUZ', '#', '82', NULL, 'FRANCISCO MAY', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:16:56', '2018-06-08 00:16:56'),
+(224, 175, 1, 'Av. Santiago Pacheco Cruz', '#', '82', NULL, 'Francisco May', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:16:56', '2018-06-08 00:16:56'),
 (225, 176, 1, '86', '#SN', '61 Y SPC', NULL, 'FRANCISCO MAY', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57789189450819', '-88.04557564999999', '2018-06-08 00:17:03', '2018-06-08 00:17:03'),
 (226, 177, 1, '54', '#SN', '55', NULL, 'JAVIER ROJO GOMEZ', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57169361476125', '-88.05328954999999', '2018-06-08 00:17:04', '2018-06-08 00:17:04'),
 (227, 268, 2, '54', '#SN', '41 Y 43', NULL, 'JAVIER ROJO OMEZ', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', '19.57169361476125', '-88.05328954999999', '2018-06-08 00:17:05', '2018-06-08 00:17:05'),
@@ -347,7 +347,7 @@ INSERT INTO `address` (`id_address`, `user_id`, `user_type`, `street`, `st_numbe
 (295, 238, 1, 'Avenida Benito Juarez', 's/n', '77 y 79', NULL, 'Jesus Martinez Ross', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-14 00:24:57', '2018-11-14 00:24:57'),
 (296, 239, 1, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-14 00:38:35', '2018-11-14 00:38:35'),
 (297, 240, 1, '42', 's/n', '65 y67', NULL, 'Lazaro Cardenas', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-14 00:48:42', '2018-11-14 00:48:42'),
-(298, 241, 1, '57', 'S/N', '92 Y 94', NULL, 'FRANCISCO MAY', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-21 21:34:34', '2018-11-21 21:34:34'),
+(298, 241, 1, '57', 'S/N', '92 Y 94', NULL, 'Francisco May', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-21 21:34:34', '2018-11-21 21:34:34'),
 (299, 242, 1, '93 X 60', '---', '---', NULL, 'EMILIANO ZAPATA 1', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-22 21:02:11', '2018-11-22 21:02:11'),
 (300, 243, 1, '45', 'S/N', '62', NULL, 'JUAN BAUTISTA VEGA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-22 21:24:59', '2018-11-22 21:24:59'),
 (301, 244, 1, '62', '857', '', NULL, 'Leona Vicario', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'M??xico', NULL, NULL, '2018-11-23 18:30:24', '2018-11-23 18:30:24'),
@@ -365,7 +365,7 @@ INSERT INTO `address` (`id_address`, `user_id`, `user_type`, `street`, `st_numbe
 (313, 256, 1, '66', '651', '53 Y 55', NULL, 'JUAN BAUTISTA VEGA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-28 23:00:22', '2018-11-28 23:00:22'),
 (314, 257, 1, '----', '-------', '68 /75', NULL, 'MARTINEZ ROSS', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-28 23:39:39', '2018-11-28 23:39:39'),
 (315, 258, 1, '68', 'S/N', '57 Y 55', NULL, 'Juan Bautista Vega', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-28 23:44:50', '2018-11-28 23:44:50'),
-(316, 259, 1, '56', 'S/N', '83 Y 85', NULL, 'LEONA VICARIO', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-29 00:09:48', '2018-11-29 00:09:48'),
+(316, 259, 1, '56', 'S/N', '83 Y 85', NULL, 'Leona Vicario', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-29 00:09:48', '2018-11-29 00:09:48'),
 (317, 260, 1, '73', '819', 'LAZARO CARDENAS', NULL, 'JESUS MARTINEZ ROSS', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-29 22:31:57', '2018-11-29 22:31:57'),
 (318, 261, 1, '89', 'S/N', '40 Y42', NULL, 'PLAN DE AYALA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-11-29 22:57:25', '2018-11-29 22:57:25'),
 (319, 262, 1, '61', 'S/N', '84 Y 86', NULL, 'FRANCISCO MAY', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2018-12-03 20:20:59', '2018-12-03 20:20:59'),
@@ -445,7 +445,8 @@ INSERT INTO `address` (`id_address`, `user_id`, `user_type`, `street`, `st_numbe
 (393, 312, 1, '66', '', 'DIAGONAL 54', NULL, 'EMILIANO ZAPATA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-03-14 23:33:00', '2019-03-14 23:33:00'),
 (394, 313, 1, '99', '', '72 Y 74', NULL, 'EMILIANO ZAPATA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-03-14 23:43:43', '2019-03-14 23:43:43'),
 (395, 314, 1, '66', '', '49 Y 49A', NULL, 'JUAN BAUTISTA VEGA', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-03-14 23:50:30', '2019-03-14 23:50:30'),
-(396, 315, 1, '53A', '884', '78 Y 80', NULL, 'INFONAVIT', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-03-14 23:56:15', '2019-03-14 23:56:15');
+(396, 315, 1, '53A', '884', '78 Y 80', NULL, 'INFONAVIT', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-03-14 23:56:15', '2019-03-14 23:56:15'),
+(397, 466, 2, '', '', '', NULL, '', 'Felipe Carrillo Puerto', '77200', 'Quintana Roo', 'México', NULL, NULL, '2019-05-13 22:43:59', '2019-05-13 22:43:59');
 
 -- --------------------------------------------------------
 
@@ -607,12 +608,12 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`course_id`, `course`, `description`, `costo_normal`, `costo_descuento`, `status`) VALUES
-(1, 'ENGLISH CLUB ', '', '0.00', '0.00', 1),
-(2, 'BIG TOTS ', 'description', '0.00', '0.00', 1),
-(3, 'PRIMARIA', '', '0.00', '0.00', 1),
-(4, 'ADOLESCENTES ', '', '0.00', '0.00', 1),
-(5, 'ADOLESCENTES SABADO', '', '0.00', '0.00', 1),
-(6, ' AVANZADO', '', '0.00', '0.00', 1);
+(1, 'ENGLISH CLUB ', '', '400.00', '360.00', 1),
+(2, 'BIG TOTS ', 'description', '450.00', '400.00', 1),
+(3, 'PRIMARIA', '', '450.00', '400.00', 1),
+(4, 'ADOLESCENTES ', '', '450.00', '400.00', 1),
+(5, 'ADOLESCENTES SABADO', '', '425.00', '385.00', 1),
+(6, ' AVANZADO', '', '425.00', '385.00', 1);
 
 -- --------------------------------------------------------
 
@@ -982,7 +983,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (21, 13, 'Isui Jaazai', 'Arana', 'Yah', '2007-05-28', 11, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:33:54', '2018-06-07 23:33:54', 0, '2018-06-07 12:33:54'),
 (22, 14, 'Jenell Samantha', 'Avila', 'Hau', '2011-06-25', 7, 'Masculino', 'Soltero(a)', 'S/N', 'A LA VUELTA DE NAÂ´ATIK', 'Ninguna', 'Ninguno', 'student_22_053834', '', 1, NULL, NULL, '2018-06-07 23:33:55', '2018-06-07 23:33:55', 0, '2018-06-07 12:33:55'),
 (23, 14, 'David Gilberto', 'Avila', 'Hau', '2000-08-02', 17, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_23', '', 0, NULL, NULL, '2018-06-07 23:33:56', '2018-06-07 23:33:56', 0, '2018-06-07 12:33:56'),
-(24, 15, 'Carlos Santiago', 'Azueta', 'Choc', '2012-05-16', 6, 'Masculino', 'Soltero(a)', 'S/N', 'A UN COSTADO DE LA POLLERIA MAYA', 'Ninguna', 'Ninguno', 'student_24_035323', '', 1, NULL, NULL, '2018-06-07 23:33:58', '2018-06-07 23:33:58', 0, '2018-06-07 12:33:58'),
+(24, 15, 'Carlos Santiago', 'Azueta', 'Choc', '2012-05-16', 6, 'Masculino', 'Soltero(a)', 'S/N', 'A UN COSTADO DE LA POLLERIA MAYA', 'Ninguna', 'Ninguno', 'student_24_035323', '', 0, '2019-05-06', 'tiene otras actividades que chocan con la de ingles.', '2018-06-07 23:33:58', '2018-06-07 23:33:58', 0, '2018-06-07 12:33:58'),
 (25, 0, 'Virginia Aracely', 'Balam', 'Uluac', '1989-12-31', 28, 'Femenino', 'Soltero(a)', 'S/N', 'CASA AZUL FRENTE AL TALLER DE MOTOS JAVI', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:33:59', '2018-06-07 23:33:59', 0, '2018-06-07 12:33:59'),
 (26, 16, 'Lucero Guadalupe', 'Balam', 'Garcia', '2007-01-01', 11, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:34:00', '2018-06-07 23:34:00', 0, '2018-06-07 12:34:00'),
 (27, 16, 'Juan Diego', 'Balam', 'Garcia', '2002-01-01', 16, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-07 23:34:01', '2018-06-07 23:34:01', 0, '2018-06-07 12:34:01'),
@@ -1009,7 +1010,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (48, 32, 'Hania Paola', 'Cabrera', 'Buenfil', '2003-01-01', 15, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 1, NULL, NULL, '2018-06-07 23:34:34', '2018-06-07 23:34:34', 1, '2019-02-05 19:17:15'),
 (49, 33, 'Mia Danae', 'Cabrera', 'Flores', '2013-08-11', 4, 'Femenino', 'Soltero(a)', 'S/N', 'ABARROTES Y PAPELERIA LOS ABELOS', 'Ninguna', 'Ninguno', 'mia', '', 0, NULL, NULL, '2018-06-07 23:34:35', '2018-06-07 23:34:35', 0, '2018-06-07 12:34:35'),
 (50, 34, 'Karin Alberto', 'Cabrera', 'De Los Santos', '2009-06-30', 8, 'Masculino', 'Soltero(a)', 'S/N', 'CASA COLOR CREMA CON NARANJA, EN LA EQUINA', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-07 23:34:37', '2018-06-07 23:34:37', 0, '2018-06-07 12:34:37'),
-(51, 0, 'Hannia Paola', 'Cabrera', 'Buenfil', '2003-06-06', 15, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_51_095003', '', 1, NULL, NULL, '2018-06-07 23:34:38', '2018-06-07 23:34:38', 0, '2018-06-07 12:34:38'),
+(51, 0, 'Hannia Paola', 'Cabrera', 'Buenfil', '2003-06-06', 15, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_51_095003', '', 1, NULL, NULL, '2018-06-07 23:34:38', '2018-06-07 23:34:38', 1, '2019-05-03 11:00:07'),
 (52, 35, 'Joyce Odette', 'Cahum', 'Yah', '1998-09-15', 19, 'Femenino', 'Soltero(a)', '9831768750', 'A LADO DE LA FRUTERIA LOS 4 POLOS', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:34:39', '2018-06-07 23:34:39', 0, '2018-06-07 12:34:39'),
 (53, 35, 'Hanna Naomi', 'Cahum', 'Yah', '2004-03-14', 14, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:34:40', '2018-06-07 23:34:40', 0, '2018-06-07 12:34:40'),
 (54, 6, 'Maria Guadalupe', 'Cahun', 'Cupul', '1974-01-15', 44, 'Femenino', 'Casado(a)', '9831401377', 'POR LAS OFICINAS DE LA UNTRAC', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-07 23:34:42', '2018-06-07 23:34:42', 0, '2018-06-07 12:34:42'),
@@ -1019,7 +1020,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (58, 38, 'Daniel Eduardo', 'Camarena', 'Heredia', '2002-01-01', 16, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-07 23:34:46', '2018-06-07 23:34:46', 0, '2018-06-07 12:34:46'),
 (59, 38, 'Adrian Oswaldo', 'Camarena', 'Heredia', '2006-10-23', 12, 'Masculino', 'Soltero(a)', 'S/N', 'CERA DE LA CARNICERIA 2 HERMANOS', 'Ninguna', 'Ninguno', 'student_59_100752', '', 1, NULL, NULL, '2018-06-07 23:34:47', '2018-06-07 23:34:47', 0, '2018-06-07 12:34:47'),
 (60, 0, 'Karyme Cristal', 'Can', 'Gonzalez', '2002-02-01', 16, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'karyme cristal c', '', 0, NULL, NULL, '2018-06-07 23:34:49', '2018-06-07 23:34:49', 0, '2018-06-07 12:34:49'),
-(61, 0, 'Carlos Santiago', 'Canul', 'Diaz', '1993-06-06', 25, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_61', '', 1, NULL, NULL, '2018-09-29 05:00:00', '2018-06-07 23:34:52', 0, '2018-06-07 12:34:52'),
+(61, 0, 'Carlos Santiago', 'Canul', 'Diaz', '1993-06-06', 25, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_61', '', 0, '2019-05-16', 'cuestiones laborales ', '2018-09-29 05:00:00', '2018-06-07 23:34:52', 0, '2018-06-07 12:34:52'),
 (62, 39, 'Juan Pablo', 'Canul', 'Yeh', '2007-01-01', 11, 'Masculino', 'Soltero(a)', 'S/N', 'A LADO DE LA PESCADERIA \"CHAN KAY\"', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-07 23:34:53', '2018-06-07 23:34:53', 0, '2018-06-07 12:34:53'),
 (63, 40, 'Ada Yazmin', 'Canul', 'Ek', '2000-04-24', 18, 'Femenino', 'Soltero(a)', '9831562522', 'CERCA DE ABARROTES EL TIO', 'Ninguna', 'Ninguno', 'ADA', '', 0, NULL, NULL, '2018-06-07 23:34:55', '2018-06-07 23:34:55', 0, '2018-06-07 12:34:55'),
 (64, 41, 'Andrea Fabiola', 'Canul', 'Mis', '2004-09-09', 14, 'Femenino', 'Soltero(a)', 'S/N', 'FRENTE A MAYA CABLE', 'Ninguna', 'Ninguno', 'student_64_095751', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-07 23:34:56', 0, '2018-06-07 12:34:56'),
@@ -1049,7 +1050,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (88, 58, 'Stephanie Elizabeth', 'Cherrez', 'Balam', '2009-05-05', 9, 'Femenino', 'Soltero(a)', '9831241406', 'FRENTE TIENDA \"YOLIS\"', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:05:41', '2018-06-08 00:05:41', 0, '2018-06-07 13:05:41'),
 (89, 59, 'Fausto Adair', 'Chi', 'Arana', '2008-04-08', 10, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_89_053142', '', 1, NULL, NULL, '2018-06-08 00:05:42', '2018-06-08 00:05:42', 0, '2018-06-07 13:05:42'),
 (90, 60, 'Kenia Melissa', 'Chimal', 'Cauich', '2003-01-11', 15, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_90', '', 0, NULL, NULL, '2018-06-08 00:05:43', '2018-06-08 00:05:43', 0, '2018-06-07 13:05:43'),
-(91, 0, 'Perla Lucero', 'Chin', 'Alamilla', '1992-06-28', 26, 'Femenino', 'Soltero(a)', '9838094715', '', 'Ninguna', 'Ninguno', 'student_91', '', 1, NULL, NULL, '2018-09-08 05:00:00', '2018-06-08 00:05:45', 0, '2018-06-07 13:05:45'),
+(91, 0, 'Perla Lucero', 'Chin', 'Alamilla', '1992-06-28', 26, 'Femenino', 'Soltero(a)', '9838094715', '', 'Ninguna', 'Ninguno', 'student_91', '', 0, '2019-02-28', 'cuestiones laborales ', '2018-09-08 05:00:00', '2018-06-08 00:05:45', 0, '2018-06-07 13:05:45'),
 (92, 61, 'Daniela', 'Chiquil', 'Uh', '2006-10-09', 12, 'Masculino', 'Soltero(a)', 'S/N', 'CONTRA ESQUINA DEL DOMO', 'Ninguna', 'Ninguno', 'student_92_125351', '', 1, NULL, NULL, '2018-06-08 00:05:46', '2018-06-08 00:05:46', 0, '2018-06-07 13:05:46'),
 (93, 62, 'Alonso Emiliano', 'Choc', 'Velazquez', '2007-08-22', 11, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_93_053233', '', 1, NULL, NULL, '2018-06-08 00:05:47', '2018-06-08 00:05:47', 0, '2018-06-07 13:05:47'),
 (94, 63, 'Luis Antonio', 'Chuc', 'Santos', '2000-05-02', 18, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_94', '', 0, NULL, NULL, '2018-06-08 00:05:48', '2018-06-08 00:05:48', 0, '2018-06-07 13:05:48'),
@@ -1092,7 +1093,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (134, 91, 'Manuel', 'Esquivel', 'Novelo', '2005-02-05', 13, 'Masculino', 'Soltero(a)', 'S/N', 'CASA DE DOS PISOS COLOR MELON, ULTIMA CALLE PAVIMENTADA', 'Ninguna', 'Ninguno', 'student_134', '', 0, NULL, NULL, '2018-06-08 00:06:52', '2018-06-08 00:06:52', 0, '2018-06-07 13:06:52'),
 (135, 0, 'Rubi De Los Angeles', 'Esquivel', 'Pech', '1986-09-18', 31, 'Femenino', 'Casado(a)', '9841366159', 'CERCA DE LAVADERO \"LUNA\"', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:06:53', '2018-06-08 00:06:53', 0, '2018-06-07 13:06:53'),
 (136, 92, 'Jose Armando', 'Esquivel', 'Mahla', '2002-05-30', 16, 'Masculino', 'Soltero(a)', 'S/N', 'POR LOS DOMOS DOBLES', 'Ninguna', 'Ninguno', 'student_136_012325', '', 1, NULL, NULL, '2018-06-08 00:06:54', '2018-06-08 00:06:54', 0, '2018-06-07 13:06:54'),
-(137, 93, 'Frida Daniela', 'Esquivel', 'Sanchez', '2003-08-24', 15, 'Femenino', 'Soltero(a)', '9831013502', 'CERCA DE LA CRUZ PARLANTE', 'Ninguna', 'Ninguno', 'student_137_054957', '', 1, NULL, NULL, '2018-09-01 05:00:00', '2018-06-08 00:06:56', 0, '2018-06-07 13:06:56'),
+(137, 93, 'Frida Daniela', 'Esquivel', 'Sanchez', '2003-08-24', 15, 'Femenino', 'Soltero(a)', '9831013502', 'CERCA DE LA CRUZ PARLANTE', 'Ninguna', 'Ninguno', 'student_137_054957', '', 0, '2019-02-28', '----', '2018-09-01 05:00:00', '2018-06-08 00:06:56', 0, '2018-06-07 13:06:56'),
 (138, 94, 'Regina Isabella', 'Flores', 'Espinoza', '2009-08-03', 9, 'Femenino', 'Soltero(a)', '9831068873', 'CASA DR. JACOBO FLORES', 'Ninguna', 'Ninguno', 'student_138_013931', '', 1, NULL, NULL, '2018-06-08 00:06:57', '2018-06-08 00:06:57', 0, '2018-06-07 13:06:57'),
 (139, 0, 'Ma Victoria', 'Flores', 'Perez', '1971-02-22', 47, 'Masculino', 'Soltero(a)', '2221520766', 'A UNA CUADRA DEL CENOTE O KINDER DE LA EMILIANO ZAPATA II', 'Ninguna', 'Ninguno', 'student_139', '', 0, NULL, NULL, '2018-06-08 00:06:59', '2018-06-08 00:06:59', 0, '2018-06-07 13:06:59'),
 (140, 95, 'Constanza', 'Flores', 'Monje', '2010-08-05', 8, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_140_053337', '', 1, NULL, NULL, '2018-06-08 00:07:00', '2018-06-08 00:07:00', 0, '2018-06-07 13:07:00'),
@@ -1109,7 +1110,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (151, 100, 'Arena Del Mar', 'Garcia', 'Uicab', '2011-05-11', 7, 'Masculino', 'Soltero(a)', 'S/N', 'FRENTE AL TEMPLO DE LOS MORMONES', 'Ninguna', 'Ninguno', 'student_151_054122', '', 1, NULL, NULL, '2018-06-08 00:07:20', '2018-06-08 00:07:20', 0, '2018-06-07 13:07:20'),
 (152, 101, 'Valery Estefania', 'Garcia', 'Meza', '2012-09-06', 6, 'Femenino', 'Soltero(a)', 'S/N', 'A LADO DE DERECHOS HUMANOS', 'Ninguna', 'Ninguno', 'student_152', '', 0, NULL, NULL, '2018-06-08 00:07:21', '2018-06-08 00:07:21', 0, '2018-06-07 13:07:21'),
 (153, 102, 'Enrique Aldair', 'Garcia', 'Che', '2002-02-15', 16, 'Masculino', 'Soltero(a)', '9831832635', 'carretera salida a chetumal', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-08 00:07:23', '2018-06-08 00:07:23', 0, '2018-06-07 13:07:23'),
-(154, 0, 'Jose Manuel', 'Garcias', 'Chan', '1988-02-29', 30, 'Masculino', 'Soltero(a)', '9971105324', 'A DOS CASA DEL TALLER CERVERA', 'Ninguna', 'Ninguno', 'student_154', '', 1, NULL, NULL, '2018-09-08 05:00:00', '2018-06-08 00:07:37', 0, '2018-06-07 13:07:37'),
+(154, 0, 'Jose Manuel', 'Garcias', 'Chan', '1988-02-29', 30, 'Masculino', 'Soltero(a)', '9971105324', 'A DOS CASA DEL TALLER CERVERA', 'Ninguna', 'Ninguno', 'student_154', '', 0, '2019-05-07', 'dejo de venir', '2018-09-08 05:00:00', '2018-06-08 00:07:37', 0, '2018-06-07 13:07:37'),
 (155, 103, 'Carlos Enrique', 'Gomez', 'Avila', '1999-05-23', 19, 'Masculino', 'Soltero(a)', 'S/N', 'A ESPALDAS DE LA SECUNDARIA LEONA VICARIO', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-08 00:07:38', '2018-06-08 00:07:38', 0, '2018-06-07 13:07:38'),
 (156, 104, 'Guadalupe Estephany', 'Gomez', 'Padilla', '2002-08-25', 16, 'Femenino', 'Soltero(a)', 'S/N', 'FOVISSSTE FRENTE DE LOS CUARTOS DE PIPO', 'Ninguna', 'Ninguno', 'student_156_053241', '', 1, NULL, NULL, '2018-09-01 05:00:00', '2018-06-08 00:07:39', 0, '2018-06-07 13:07:39'),
 (157, 0, 'Carlos Enrique', 'Gomez', 'Aviles', '2000-05-23', 18, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Masculino', '', 0, NULL, NULL, '2018-06-08 00:07:41', '2018-06-08 00:07:41', 0, '2018-06-07 13:07:41'),
@@ -1135,7 +1136,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (177, 121, 'Karen Daianne', 'Jimenez', 'Castro', '2000-05-21', 18, 'Femenino', 'Soltero(a)', 'S/N', 'PORTON DE MADERA', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:13:33', '2018-06-08 00:13:33', 0, '2018-06-07 13:13:33'),
 (178, 0, 'Jacqueline Andrea', 'Jimenez', 'Quijada', '1996-09-06', 21, 'Femenino', 'Soltero(a)', '9831176733', '', 'Ninguna', 'Ninguno', 'student_178', '', 0, NULL, NULL, '2018-06-08 00:13:34', '2018-06-08 00:13:34', 0, '2018-06-07 13:13:34'),
 (179, 122, 'Dylan Elian', 'Jimenz', 'Chi', '2011-04-29', 7, 'Masculino', 'Soltero(a)', '9831091427', 'ATRAS DE MINISUPER \"LA ESQUINA\"', 'ALERGICO A LA PENICILINA', 'ALERGICO A LA PENICILINA', 'Masculino', '', 0, NULL, NULL, '2018-06-08 00:13:35', '2018-06-08 00:13:35', 0, '2018-06-07 13:13:35'),
-(180, 123, 'Cinthia Esmeralda', 'Kau', 'Manzo', '2000-03-29', 18, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_180_095713', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:13:36', 0, '2018-06-07 13:13:36'),
+(180, 123, 'Cinthia Esmeralda', 'Kau', 'Manzon', '2000-03-29', 19, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_180_095713', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:13:36', 0, '2018-06-07 13:13:36'),
 (181, 123, 'Zoila Rubi', 'Kau', 'Manzo', '2001-06-18', 16, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_181', '', 0, NULL, NULL, '2018-06-08 00:13:38', '2018-06-08 00:13:38', 0, '2018-06-07 13:13:38'),
 (182, 124, 'Evelyn Yusset', 'Koyoc', 'Guzman', '1997-11-14', 20, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:13:39', '2018-06-08 00:13:39', 0, '2018-06-07 13:13:39'),
 (183, 125, 'Angeles Sinai', 'Ku', 'Calva', '2007-01-23', 11, 'Femenino', 'Soltero(a)', 'S/N', 'TAQUERA FILI', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:13:40', '2018-06-08 00:13:40', 0, '2018-06-07 13:13:40'),
@@ -1160,7 +1161,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (202, 137, 'Rosa Suyevith', 'Medina', 'Olea', '2006-10-26', 12, 'Femenino', 'Soltero(a)', 'S/N', 'CONTRA ESQUINA DE UN TALLER DE HOJALATERIA Y PINTURA', 'Ninguna', 'Ninguno', 'student_202_093727', '', 1, NULL, NULL, '2018-06-08 00:14:11', '2018-06-08 00:14:11', 0, '2018-06-07 13:14:11');
 INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`, `birthday`, `age`, `genre`, `edo_civil`, `cellphone`, `reference`, `sickness`, `medication`, `avatar`, `comment_s`, `status`, `fecha_baja`, `motivo_baja`, `created_at`, `updated_at`, `deleted`, `deleted_at`) VALUES
 (203, 0, 'Julio Daniel', 'Mendez', 'Cruz', '2001-01-01', 17, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'JULIO', '', 0, NULL, NULL, '2018-06-08 00:14:12', '2018-06-08 00:14:12', 0, '2018-06-07 13:14:12'),
-(204, 0, 'Jesus Arturo', 'Mendez', 'Cruz', '2004-11-13', 14, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_204_102545', '', 1, NULL, NULL, '2018-06-08 00:14:13', '2018-06-08 00:14:13', 0, '2018-06-07 13:14:13'),
+(204, 0, 'Jesus Arturo', 'Mendez', 'Cruz', '2004-11-13', 14, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_204_102545', '', 1, NULL, NULL, '2018-06-08 00:14:13', '2018-06-08 00:14:13', 1, '2019-05-03 11:51:29'),
 (205, 138, 'Seydi', 'Mendoza', 'Novelo', '1999-07-21', 19, 'Masculino', 'Soltero(a)', '9831062668', '', 'Ninguna', 'Ninguno', 'student_205_103009', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:14:14', 0, '2018-06-07 13:14:14'),
 (206, 139, 'Jaris Sinai', 'Mojon', 'Chan', '2001-11-26', 16, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_206', '', 0, NULL, NULL, '2018-06-08 00:14:16', '2018-06-08 00:14:16', 0, '2018-06-07 13:14:16'),
 (207, 140, 'Yuliana Gabriela', 'Molar', 'Vega', '2005-03-23', 13, 'Femenino', 'Soltero(a)', 'S/N', 'FRENTE ESCUELA TIBURCIO MAY HU', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:14:17', '2018-06-08 00:14:17', 0, '2018-06-07 13:14:17'),
@@ -1219,7 +1220,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (261, 0, 'Karen Alejnadra', 'Poot', 'Yama', '1998-11-25', 19, 'Femenino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'Femenino', '', 0, NULL, NULL, '2018-06-08 00:16:52', '2018-06-08 00:16:52', 0, '2018-06-07 13:16:52'),
 (262, 174, 'Marco Alejandro', 'Poot', 'Mendez', '2007-02-14', 11, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_262_101746', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:16:54', 0, '2018-06-07 13:16:54'),
 (263, 17, 'Abiel Adriel', 'Poot', 'Balam', '2009-06-13', 8, 'Masculino', 'Soltero(a)', 'S/N', 'CASI EN FRENTE DEL SITIO DE COMBIS A PLAYA DEL CARMEN', 'Ninguna', 'Ninguno', 'ADBIELL', '', 0, NULL, NULL, '2018-06-08 00:16:55', '2018-06-08 00:16:55', 0, '2018-06-07 13:16:55'),
-(264, 175, 'Gustavo Angel', 'Poot', 'Ake', '2000-02-19', 18, 'Masculino', 'Soltero(a)', 'S/N', 'A LADO DE LA TIENDA MARISOL', 'Ninguna', 'Ninguno', 'student_264', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:16:56', 0, '2018-06-07 13:16:56'),
+(264, 175, 'Gustavo Angel', 'Poot', 'Ake', '2000-02-19', 19, 'Masculino', 'Soltero(a)', 'S/N', 'A LADO DE LA TIENDA MARISOL', 'Ninguna', 'Ninguno', 'student_264', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:16:56', 0, '2018-06-07 13:16:56'),
 (265, 175, 'Raul Ivan', 'Poot', 'Ake', '2004-01-01', 14, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_265', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:16:58', 0, '2018-06-07 13:16:58'),
 (266, 176, 'Angel', 'Poot', 'Flores', '2006-02-02', 12, 'Masculino', 'Soltero(a)', 'S/N', 'CASA COLOR VERDE CERCA DEL  SERVIFRIO EL PICHIN', 'Ninguna', 'Ninguno', 'student_266', '', 1, NULL, NULL, '2018-06-07 05:00:00', '2018-06-08 00:17:03', 0, '2018-06-07 13:17:03'),
 (267, 177, 'Angel Amir', 'Puc', 'Azcorra', '2005-11-14', 12, 'Masculino', 'Soltero(a)', 'S/N', '', 'Ninguna', 'Ninguno', 'student_267_102454', '', 0, NULL, NULL, '2018-06-08 00:17:04', '2018-06-08 00:17:04', 0, '2018-06-07 13:17:04'),
@@ -1305,7 +1306,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (348, 238, 'Jose Gonzalo', 'Magaña', 'Colli', '2014-05-18', 4, 'Masculino', 'Soltero(a)', '', 'frente a la expo maya', '', '', 'student_348', '', 1, NULL, NULL, '2018-09-03 05:00:00', '2018-11-14 00:27:29', 0, '2018-11-13 19:27:29'),
 (349, 239, 'Karely Guadalupe', 'Alcocer', 'Gomez', NULL, NULL, 'Masculino', 'Soltero(a)', '', '', '', '', NULL, '', 0, NULL, NULL, '2018-11-14 00:39:33', '2018-11-14 00:39:33', 0, '2018-11-13 19:39:33'),
 (350, 240, 'Sastal Asali', 'Puc', 'Chable', '2012-03-25', 6, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_350_112848', '', 0, NULL, NULL, '2018-11-14 00:53:04', '2018-11-14 00:53:04', 0, '2018-11-13 19:53:04'),
-(351, 241, 'Athena Guadalupe', 'Sanchez', 'Salinas', '2012-05-31', 6, 'Femenino', 'Soltero(a)', '', 'A LADO DEL TEMPLO EL ALFARERO', '', '', 'student_351', '', 1, NULL, NULL, '2018-11-21 21:36:40', '2018-11-21 21:36:40', 0, '2018-11-21 16:36:40'),
+(351, 241, 'Athena Guadalupe', 'Sanchez', 'Salinas', '2012-05-31', 6, 'Femenino', 'Soltero(a)', '', 'a un costado del templo ', '', '', 'student_351', '', 1, NULL, NULL, '2018-11-21 21:36:40', '2018-11-21 21:36:40', 0, '2018-11-21 16:36:40'),
 (352, 242, 'Evelyn Guadalupe', 'Dzul', 'Puc', '2011-02-01', 7, 'Femenino', 'Soltero(a)', '', 'A DOS CUADRAS DE LA TIENDA BELEM', '', '', 'student_352_112145', '', 0, NULL, NULL, '2018-11-22 21:17:50', '2018-11-22 21:17:50', 0, '2018-11-22 16:17:50'),
 (353, 243, 'Valentina', 'Madrigal', 'Peregrino', '2011-08-07', 7, 'Femenino', 'Soltero(a)', '', '-----', '', '', 'student_353', '', 1, NULL, NULL, '2018-11-22 21:38:21', '2018-11-22 21:38:21', 0, '2018-11-22 16:38:21'),
 (354, 244, '--------------------------', '------', '----------------', '2011-04-26', 7, 'Masculino', 'Soltero(a)', '', '', '', '', NULL, '', 1, NULL, NULL, '2018-11-23 18:32:03', '2018-11-23 18:32:03', 1, '2018-11-26 17:20:14'),
@@ -1368,14 +1369,14 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (410, 286, 'Geysi Marilu', 'Santos', 'Tec', '1999-05-14', 19, 'Femenino', 'Soltero(a)', '9831370382', 'FRENTE A LAS OFICINAS DE COOPEL, CERCA DE DONOSUSA', '', '', 'student_410_095630', '', 1, NULL, NULL, '2019-01-21 23:23:53', '2019-01-21 23:23:53', 0, '2019-01-21 18:23:53'),
 (411, 287, 'Irving', 'Mendoza', 'Che', '2004-09-21', 14, 'Masculino', 'Soltero(a)', '', 'FRENTE A LA GOSOLINERA SALIDA A CHETUMAL', '', '', 'student_411_100211', '', 1, NULL, NULL, '2019-01-21 23:41:44', '2019-01-21 23:41:44', 0, '2019-01-21 18:41:44'),
 (412, 288, 'Paola Guadalupe', 'Pech', 'Ake', '2006-12-12', 12, 'Femenino', 'Soltero(a)', '', 'FRENTE AL TEMPLO EL SINAI', '', '', NULL, '', 0, NULL, NULL, '2019-01-21 23:57:00', '2019-01-21 23:57:00', 0, '2019-01-21 18:57:00'),
-(413, 289, 'Manuel', 'Ruiz', 'Azcue', '2000-04-14', 18, 'Masculino', 'Soltero(a)', '', 'FRENTE EL KINDER FELIPE CARRILLO PUERTO', '', '', 'student_413_095652', '', 1, NULL, NULL, '2019-01-22 00:29:22', '2019-01-22 00:29:22', 0, '2019-01-21 19:29:22'),
+(413, 289, 'Manuel', 'Ruiz', 'Azcue', '2000-04-14', 18, 'Masculino', 'Soltero(a)', '', 'FRENTE EL KINDER FELIPE CARRILLO PUERTO', '', '', 'student_413_095652', '', 0, '2019-05-16', 'porque no tiene tiempo, tiene muchas actividades en su escuela ', '2019-01-22 00:29:22', '2019-01-22 00:29:22', 0, '2019-01-21 19:29:22'),
 (414, 290, 'Priscila Abigail', 'Pech', 'Mendez', '1999-03-09', 19, 'Femenino', 'Soltero(a)', '9831127870', 'CONTRA ESQUINA DEL CENTRO DE SALUD', '', '', 'student_414_101430', '', 1, NULL, NULL, '2019-01-22 20:54:17', '2019-01-22 20:54:17', 0, '2019-01-22 15:54:17'),
 (415, 260, 'Alejandra Sinahi', 'Canto', 'Castro', '2000-09-20', 18, 'Femenino', 'Soltero(a)', '9831199140', 'CASA AZUL A LADO DE LAS COMBIS DE PDC (UNTRAC)', '', '', 'student_415_100820', '', 1, NULL, NULL, '2019-01-22 20:59:32', '2019-01-22 20:59:32', 0, '2019-01-22 15:59:32'),
-(416, 291, 'Nelson Aldemar', 'Lopez', 'Uuh', '2001-07-05', 17, 'Masculino', 'Soltero(a)', '9837532792', '', '', '', 'student_416_101357', '', 1, NULL, NULL, '2019-01-22 21:05:59', '2019-01-22 21:05:59', 0, '2019-01-22 16:05:59'),
+(416, 291, 'Nelson Aldemar', 'Lopez', 'Uuh', '2001-07-05', 17, 'Masculino', 'Soltero(a)', '9837532792', '', '', '', 'student_416_101357', '', 0, '2019-04-08', 'porque no tiene tiempo, tiene muchas actividades en su escuela ', '2019-01-22 21:05:59', '2019-01-22 21:05:59', 0, '2019-01-22 16:05:59'),
 (417, 285, 'Felipe De Jesus', 'Su', '', '2004-02-06', 14, 'Masculino', 'Soltero(a)', '86720043192', '', '', '', 'student_417_092937', '', 1, NULL, NULL, '2019-01-22 21:51:32', '2019-01-22 21:51:32', 0, '2019-01-22 16:51:32'),
-(418, 292, 'Sharon Cristina', 'Cruz', 'Novelo', '1992-12-17', 26, 'Femenino', 'Soltero(a)', '9831147028', 'POR EL  MINISUPER EL MANANTIAL.', '', '', 'student_418_094649', '', 1, NULL, NULL, '2019-01-23 21:29:11', '2019-01-23 21:29:11', 0, '2019-01-23 16:29:11'),
+(418, 292, 'Sharon Cristina', 'Cruz', 'Novelo', '1992-12-17', 26, 'Femenino', 'Soltero(a)', '9831147028', 'POR EL  MINISUPER EL MANANTIAL.', '', '', 'student_418_094649', '', 0, '2019-05-16', 'porque esta trabajando en otra ciudad ', '2019-01-23 21:29:11', '2019-01-23 21:29:11', 0, '2019-01-23 16:29:11'),
 (419, 293, 'Fatima Del Rosario', 'Chi', 'Ay', '1989-11-06', 29, 'Femenino', 'Soltero(a)', '9831135447', '', '', '', NULL, '', 0, NULL, NULL, '2019-01-23 21:35:55', '2019-01-23 21:35:55', 0, '2019-01-23 16:35:55'),
-(420, 0, 'Ruth Noemi', 'Itza', 'Mendez', '1995-11-15', 23, 'Femenino', 'Soltero(a)', '9841695579 O 9841312', 'A UNA CUADRA DE LA FISCALIA', '', '', 'student_420_125405', '', 1, NULL, NULL, '2019-01-23 23:46:01', '2019-01-23 23:46:01', 0, '2019-01-23 18:46:01'),
+(420, 0, 'Ruth Noemi', 'Itza', 'Mendez', '1995-11-15', 23, 'Femenino', 'Soltero(a)', '9841695579 O 9841312', 'A UNA CUADRA DE LA FISCALIA', '', '', 'student_420_125405', '', 0, '2019-05-13', 'ESTUDIARA FUERA DE LA CIUDAD', '2019-01-23 23:46:01', '2019-01-23 23:46:01', 0, '2019-01-23 18:46:01'),
 (421, 0, 'Kevin Marvel', 'BriceÑo', 'Pech', NULL, NULL, 'Masculino', 'Soltero(a)', '9981812506', 'A LA VUELTA DE LA PASTELERIA DELICIS', '', '', NULL, '', 0, NULL, NULL, '2019-01-23 23:52:39', '2019-01-23 23:52:39', 0, '2019-01-23 18:52:39'),
 (422, 0, 'Victor Manuel', 'Chan', 'Chan', '1997-03-22', 21, 'Masculino', 'Soltero(a)', '', '', '', '', 'student_422_092422', 'ESTE ALUMNO ESTA INSCRITO TAMBIEN EN ADOLESCENTES SABADO (7)', 1, NULL, NULL, '2019-01-24 20:19:07', '2019-01-24 20:19:07', 0, '2019-01-24 15:19:07'),
 (423, 0, 'Azucena Del Carmen', 'Can', 'Pech', '1996-06-07', 22, 'Femenino', 'Soltero(a)', '9831144034', '', '', '', 'student_423_014818', '', 1, NULL, NULL, '2019-01-24 21:13:36', '2019-01-24 21:13:36', 0, '2019-01-24 16:13:36'),
@@ -1384,7 +1385,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (426, 0, 'Jairo Jacobo', 'Cima', 'Pat', '1996-09-07', 22, 'Masculino', 'Soltero(a)', '9831814402', 'DZULA', '', '', 'student_426_011444', '', 0, NULL, NULL, '2019-02-07 21:22:48', '2019-02-07 21:22:48', 0, '2019-02-07 16:22:48'),
 (427, 295, 'Yasuri Anahi', 'Cahuich', 'Jimenez', '2003-07-18', 15, 'Femenino', 'Soltero(a)', '9831259197', '', '', '', 'student_427_011731', '', 1, NULL, NULL, '2019-02-07 21:30:25', '2019-02-07 21:30:25', 0, '2019-02-07 16:30:25'),
 (428, 0, 'Mayra Patricia', 'Moo', 'Castillo', '1996-02-15', 22, 'Femenino', 'Soltero(a)', '9983050899', 'JOSE MARIA MORELOS', '', '', NULL, '', 1, NULL, NULL, '2019-02-07 21:35:11', '2019-02-07 21:35:11', 0, '2019-02-07 16:35:11'),
-(429, 296, 'Xochitl Monserrat', 'Reyes', 'Bahena', '2005-07-09', 13, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_429_071205', '', 1, NULL, NULL, '2019-02-07 21:40:40', '2019-02-07 21:40:40', 0, '2019-02-07 16:40:40'),
+(429, 296, 'Xochitl Monserrat', 'Reyes', 'Bahena', '2005-07-09', 13, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_429_071205', '', 0, '2019-04-09', 'cuestiones economicas', '2019-02-07 21:40:40', '2019-02-07 21:40:40', 0, '2019-02-07 16:40:40'),
 (430, 297, 'Kellyn Joselyn', 'Maldonado', 'Cruz', '2001-07-28', 17, 'Femenino', 'Soltero(a)', '9841328025', '', '', '', NULL, '', 0, NULL, NULL, '2019-02-08 16:36:13', '2019-02-08 16:36:13', 0, '2019-02-08 11:36:13'),
 (431, 298, 'Fatima De La Cruz', 'Yeh', 'Puc', '2004-11-08', 14, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_431_071234', '', 0, NULL, NULL, '2019-02-08 16:43:08', '2019-02-08 16:43:08', 0, '2019-02-08 11:43:08'),
 (432, 299, 'Isis Daniela', 'Poot', 'Catzin', '2004-05-15', 14, 'Femenino', 'Soltero(a)', '9831301453', 'HAZIL', '', '', 'student_432_071302', '', 0, NULL, NULL, '2019-02-08 17:23:30', '2019-02-08 17:23:30', 0, '2019-02-08 12:23:30'),
@@ -1393,7 +1394,7 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (435, 301, 'Jesus Jonas', 'Quiterio', 'Chi', '2006-07-05', 12, 'Masculino', 'Soltero(a)', '', '', '', '', 'student_435_071151', '', 1, NULL, NULL, '2019-02-08 17:53:58', '2019-02-08 17:53:58', 0, '2019-02-08 12:53:58'),
 (436, 302, 'Citlali Isabel', 'Tah', 'Arana', '2002-11-17', 16, 'Femenino', 'Soltero(a)', '9831068353', '', '', '', 'student_436_121423', '', 1, NULL, NULL, '2019-02-08 18:00:57', '2019-02-08 18:00:57', 0, '2019-02-08 13:00:57'),
 (437, 0, 'Brisa Jareimy', 'Sanchez', 'Navarrete', '2000-02-15', 18, 'Femenino', 'Soltero(a)', '9831766402', '', '', '', NULL, '', 0, NULL, NULL, '2019-02-08 18:04:49', '2019-02-08 18:04:49', 0, '2019-02-08 13:04:49'),
-(438, 296, 'Eymi Lizeth', 'Reyes', 'Bahena', '2001-11-26', 17, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_438_082835', '', 1, NULL, NULL, '2019-02-08 18:33:05', '2019-02-08 18:33:05', 0, '2019-02-08 13:33:05'),
+(438, 296, 'Eymi Lizeth', 'Reyes', 'Bahena', '2001-11-26', 17, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_438_082835', '', 0, '2019-04-09', 'cuestiones economicas', '2019-02-08 18:33:05', '2019-02-08 18:33:05', 0, '2019-02-08 13:33:05'),
 (439, 298, 'Noe Azael', 'Yeh', 'Puc', '2000-11-13', 18, 'Masculino', 'Soltero(a)', '', '', '', '', 'student_439_082856', '', 1, NULL, NULL, '2019-02-08 18:43:31', '2019-02-08 18:43:31', 0, '2019-02-08 13:43:31'),
 (440, 0, 'Aranza Alejandra', 'Aguilar', 'Tafoya', '1998-06-17', 20, 'Femenino', 'Soltero(a)', '9831763407', '', '', '', NULL, '', 0, NULL, NULL, '2019-02-08 19:06:11', '2019-02-08 19:06:11', 0, '2019-02-08 14:06:11'),
 (441, 0, 'Adda Priscila', 'Ramirez', 'Puc', '1991-11-14', 27, 'Femenino', 'Soltero(a)', '9831557487', 'JOSE MARIA MORELOS', '', '', NULL, '', 1, NULL, NULL, '2019-02-08 19:13:37', '2019-02-08 19:13:37', 0, '2019-02-08 14:13:37'),
@@ -1407,17 +1408,21 @@ INSERT INTO `students` (`student_id`, `id_tutor`, `name`, `surname`, `lastname`,
 (449, 0, 'Estrella Yareni', 'Chi', 'Tamayo', '1997-09-09', 21, 'Femenino', 'Soltero(a)', '9837003448', '', '', '', 'student_449_010449', '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-02-18 20:27:18', 0, '2019-02-18 15:27:18'),
 (450, 308, 'Israel Alfredo', 'Itza', 'Mendez', '2004-09-11', 14, 'Masculino', 'Soltero(a)', '', '', '', '', 'student_450_010949', '', 1, NULL, NULL, '2018-12-18 05:00:00', '2019-02-18 20:49:25', 0, '2019-02-18 15:49:25'),
 (451, 309, 'Dayari Amarely', 'Yah', 'May', '2007-01-21', 12, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_451_010930', '', 1, NULL, NULL, '2019-01-09 05:00:00', '2019-02-18 21:00:10', 0, '2019-02-18 16:00:10'),
-(452, 0, 'Niltza', 'Vazquez', 'Garcia', NULL, NULL, 'Masculino', 'Soltero(a)', '8671991626', '', '', '', NULL, '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-02-26 23:11:59', 0, '2019-02-26 18:11:59'),
-(453, 0, 'Roberto Carlos', 'Poot', 'May', '1997-05-07', 21, 'Masculino', 'Soltero(a)', '9971169378', 'FRENTE AL DOMO DE LA COLONIA', '', '', 'student_453_010647', '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-02-26 23:16:43', 0, '2019-02-26 18:16:43'),
+(452, 0, '------', 'Vazquez', 'Garcia', '0000-00-00', 255, 'Masculino', 'Soltero(a)', '8671991626', '', '', '', NULL, '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-02-26 23:11:59', 1, '2019-05-08 19:09:59'),
+(453, 0, 'Roberto Carlos', 'Poot', 'May', '1997-05-07', 21, 'Masculino', 'Soltero(a)', '9971169378', 'FRENTE AL DOMO DE LA COLONIA', '', '', 'student_453_010647', '', 0, '2019-05-14', 'porque esta trabajando en otra ciudad ', '2019-01-19 05:00:00', '2019-02-26 23:16:43', 0, '2019-02-26 18:16:43'),
 (454, 310, 'Valeria Del Rosario', 'Beltran', 'Barboza', '2006-08-02', 12, 'Femenino', 'Soltero(a)', '9831849286', '', '', '', 'student_454_010612', '', 1, NULL, NULL, '2019-01-12 05:00:00', '2019-02-26 23:23:16', 0, '2019-02-26 18:23:16'),
 (455, 311, 'Faisuly Neftaly', 'Yam', 'Nah', '2007-06-26', 11, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_455_010720', '', 1, NULL, NULL, '2019-01-14 05:00:00', '2019-02-26 23:34:11', 0, '2019-02-26 18:34:11'),
 (456, 0, 'Jocelin Yuridiana', 'May', 'Torres', '2000-02-12', 19, 'Femenino', 'Soltero(a)', '9837007401', '', '', '', 'student_456_010425', '', 1, NULL, NULL, '2019-01-14 05:00:00', '2019-02-26 23:46:01', 0, '2019-02-26 18:46:01'),
-(457, 0, 'Adam Jair', 'Benirez', 'Nogueron', '1998-05-13', 20, 'Masculino', 'Soltero(a)', '9831214620', 'FRENTE A LA ESCUELA TIBURCIO MAY', '', '', 'student_457_010507', '', 1, NULL, NULL, '2019-01-14 05:00:00', '2019-02-26 23:52:10', 0, '2019-02-26 18:52:10'),
+(457, 0, 'Adam Jair', 'Benitez', 'Nogueron', '1998-05-13', 21, 'Masculino', 'Soltero(a)', '9831214620', 'FRENTE A LA ESCUELA TIBURCIO MAY', '', '', 'student_457_010507', '', 1, NULL, NULL, '2019-01-14 05:00:00', '2019-02-26 23:52:10', 0, '2019-02-26 18:52:10'),
 (458, 0, 'Lizbeth', 'Garcia', 'Morales', '1999-03-01', 20, 'Femenino', 'Soltero(a)', '9841679544', 'ENFRENTE DE COMPUSER', '', '', 'student_458_010048', '', 1, NULL, NULL, '2019-03-11 05:00:00', '2019-03-14 23:20:07', 0, '2019-03-14 18:20:07'),
 (459, 312, 'Karen Paoli', 'Poot', 'Tamer', '2004-07-22', 14, 'Femenino', 'Soltero(a)', '', 'FRENTE A LA NORMAL', '', '', 'student_459_124019', '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-03-14 23:34:31', 0, '2019-03-14 18:34:31'),
-(460, 313, 'Julissa Belem', 'Cach', 'May', '2007-01-01', 12, 'Femenino', 'Soltero(a)', '', 'A UNA CASA ANTES DEL JARDIN DE NIÑOS', '', '', 'student_460_124832', '', 1, NULL, NULL, '2019-01-14 05:00:00', '2019-03-14 23:45:20', 0, '2019-03-14 18:45:20'),
+(460, 313, 'Julissa Belem', 'Cach', 'May', '2007-01-01', 12, 'Femenino', 'Soltero(a)', '', 'A UNA CASA ANTES DEL JARDIN DE NIÑOS', '', '', 'student_460_124832', '', 0, '2019-05-14', 'no tine tiempo para asistir a las clases ', '2019-01-14 05:00:00', '2019-03-14 23:45:20', 0, '2019-03-14 18:45:20'),
 (461, 314, 'Paula Sofia', 'Vega', 'Xiu', '2007-07-16', 11, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_461_125401', '', 1, NULL, NULL, '2019-01-15 05:00:00', '2019-03-14 23:51:21', 0, '2019-03-14 18:51:21'),
-(462, 315, 'Aylin Monserrat', 'Jara', 'Salazar', '2002-03-10', 17, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_462_125958', '', 1, NULL, NULL, '2019-01-16 05:00:00', '2019-03-14 23:57:54', 0, '2019-03-14 18:57:54');
+(462, 315, 'Aylin Monserrat', 'Jara', 'Salazar', '2002-03-10', 17, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_462_125958', '', 1, NULL, NULL, '2019-01-16 05:00:00', '2019-03-14 23:57:54', 0, '2019-03-14 18:57:54'),
+(463, 32, 'Hannia Paola', 'Cabrera', 'Buenfil', '2003-06-06', 15, 'Femenino', 'Soltero(a)', '', '', '', '', 'student_463_060000', '', 1, NULL, NULL, '2018-08-22 05:00:00', '2019-05-03 15:51:56', 0, '2019-05-03 10:51:56'),
+(464, 259, 'Jesus Arturo', 'Mendez', 'Cruz', '2004-11-13', 14, 'Masculino', 'Soltero(a)', '', '', '', '', 'student_464_065138', '', 1, NULL, NULL, '2018-08-22 05:00:00', '2019-05-03 16:49:11', 0, '2019-05-03 11:49:11'),
+(465, 285, 'Niltza', 'Vazquez', 'Garcia', NULL, NULL, 'Masculino', 'Soltero(a)', '', '', '', '', NULL, '', 1, NULL, NULL, '2019-01-19 05:00:00', '2019-05-09 00:10:46', 0, '2019-05-08 19:10:46'),
+(466, 0, 'Jesus Salvador', 'Ku', 'Tuz', '1994-01-07', 25, 'Masculino', 'Soltero(a)', '', 'CASA DE COLOR BLANCO CON VERDE', '', '', 'student_466_122251', '', 1, NULL, NULL, '2019-05-06 05:00:00', '2019-05-13 22:43:59', 0, '2019-05-13 17:43:59');
 
 -- --------------------------------------------------------
 
@@ -1431,13 +1436,25 @@ CREATE TABLE `students_absences` (
   `course` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `horary` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `teacher_id` int(10) NOT NULL,
-  `absence_note` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `absence_note` text COLLATE utf8mb4_unicode_ci,
   `teacher_note` text COLLATE utf8mb4_unicode_ci,
   `absence_date` date DEFAULT NULL,
   `contact_date` date DEFAULT NULL,
   `return_date` date DEFAULT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '1',
   `created_by` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `students_absences`
+--
+
+INSERT INTO `students_absences` (`absence_id`, `student_id`, `course`, `horary`, `teacher_id`, `absence_note`, `teacher_note`, `absence_date`, `contact_date`, `return_date`, `status`, `created_by`) VALUES
+(1, 2, 'PRIMARIA (2A)', 'Martes, Jueves&4:30 pm - 6:00 pm', 12, 'cual es el motivo', 'a 2 clases no ha asistido ', '2019-04-18', NULL, NULL, 0, 16),
+(2, 425, 'ADOLESCENTES  (2)', 'Lunes, Miercoles&7:00 pm - 8:30 pm', 10, NULL, 'Esto es solo una prueba de funcionamiento', '2019-04-22', NULL, NULL, 0, 10),
+(3, 15, 'PRIMARIA 2(1AA)', 'Martes, Jueves&6:30 pm - 8:00 pm', 10, NULL, 'no a asistido a 2 clases es una prueba', '2019-04-02', NULL, NULL, 0, 10),
+(4, 15, 'PRIMARIA 2(1AA)', 'Martes, Jueves&6:30 pm - 8:00 pm', 10, 'POR CUESTIONES DE SALUD', '.....', '2019-04-30', '2019-04-30', '2019-05-02', 1, 10),
+(5, 2, 'PRIMARIA (2A)', 'Martes, Jueves&4:30 pm - 6:00 pm', 12, NULL, 'a falta dos veces', '2019-07-01', NULL, NULL, 0, 12);
 
 -- --------------------------------------------------------
 
@@ -1921,7 +1938,11 @@ INSERT INTO `students_details` (`detail_id`, `student_id`, `convenio`, `facturac
 (454, 459, 0, 0, 0, 0, 'Estudiante', 'LEONA VICARIO', 'Secundaria', 'Tercer Año', 0, ''),
 (455, 460, 0, 0, 0, 1, 'Estudiante', 'BENITO JUAREZ', 'Primaria', 'Sexto Año', 0, ''),
 (456, 461, 0, 0, 0, 0, 'Estudiante', 'TIBURCIO MAY UH', 'Primaria', 'Sexto Año', 0, ''),
-(457, 462, 0, 0, 0, 1, 'Estudiante', 'CEB 5/10', 'Bachillerato', 'Segundo Año', 0, '');
+(457, 462, 0, 0, 0, 1, 'Estudiante', 'CEB 5/10', 'Bachillerato', 'Segundo Año', 0, ''),
+(458, 463, 0, 0, 0, 1, 'Estudiante', '', 'Bachillerato', 'Primer Año', 0, ''),
+(459, 464, 0, 0, 0, 1, 'Estudiante', 'MOISES SAENZ', 'Secundaria', 'Segundo Año', 0, ''),
+(460, 465, 0, 0, 0, 0, 'Ninguno', '', 'Bachillerato', 'Concluido', 0, ''),
+(461, 466, 0, 0, 0, 1, 'Ninguno', '', 'Licenciatura', 'Concluido', 0, '');
 
 -- --------------------------------------------------------
 
@@ -2028,7 +2049,7 @@ INSERT INTO `students_groups` (`group_id`, `class_id`, `student_id`, `date_begin
 (48, 40, 48, '2015-08-24', 0, 0, NULL, NULL, NULL, '2015-08-24 11:00:00', '2018-06-07 23:34:34'),
 (49, 20, 49, '2018-01-24', 0, 1, NULL, NULL, NULL, '2018-01-24 11:00:00', '2018-06-07 23:34:35'),
 (50, 21, 50, '2016-09-06', 0, 1, NULL, NULL, NULL, '2016-09-06 11:00:00', '2018-06-07 23:34:37'),
-(51, 40, 51, '2017-08-29', 0, 1, NULL, NULL, NULL, '2017-08-29 11:00:00', '2018-06-07 23:34:38'),
+(51, 40, 51, '2017-08-29', 0, 0, NULL, NULL, NULL, '2017-08-29 11:00:00', '2018-06-07 23:34:38'),
 (52, 18, 52, '2017-09-30', 0, 1, NULL, NULL, NULL, '2017-09-30 11:00:00', '2018-06-07 23:34:39'),
 (53, 15, 53, '2017-09-03', 0, 1, NULL, NULL, NULL, '2017-09-03 11:00:00', '2018-06-07 23:34:40'),
 (54, 12, 54, '2017-08-29', 0, 1, NULL, NULL, NULL, '2017-08-29 11:00:00', '2018-06-07 23:34:42'),
@@ -2178,7 +2199,7 @@ INSERT INTO `students_groups` (`group_id`, `class_id`, `student_id`, `date_begin
 (198, 43, 201, '2018-03-05', 0, 1, NULL, NULL, NULL, '2018-03-05 11:00:00', '2018-06-08 00:14:10'),
 (199, 43, 202, '0000-00-00', 0, 1, NULL, NULL, NULL, '0000-00-00 00:00:00', '2018-06-08 00:14:11'),
 (200, 14, 203, '2017-08-28', 0, 1, NULL, NULL, NULL, '2017-08-28 11:00:00', '2018-06-08 00:14:12'),
-(201, 33, 204, '2016-08-30', 0, 1, NULL, NULL, NULL, '2016-08-30 11:00:00', '2018-06-08 00:14:13'),
+(201, 33, 204, '2016-08-30', 0, 0, NULL, NULL, NULL, '2016-08-30 11:00:00', '2018-06-08 00:14:13'),
 (202, 43, 205, '2017-09-08', 0, 1, NULL, NULL, NULL, '2017-09-08 11:00:00', '2018-06-08 00:14:14'),
 (203, 15, 206, '2016-09-05', 0, 1, NULL, NULL, NULL, '2016-09-05 11:00:00', '2018-06-08 00:14:16'),
 (204, 8, 207, '2017-08-28', 0, 1, NULL, NULL, NULL, '2017-08-28 11:00:00', '2018-06-08 00:14:17'),
@@ -2431,7 +2452,7 @@ INSERT INTO `students_groups` (`group_id`, `class_id`, `student_id`, `date_begin
 (451, 53, 449, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-18 20:30:02', '2019-02-18 20:30:02'),
 (452, 53, 450, '2019-02-19', 0, 1, 2019, 'B', '', '2019-02-18 20:50:30', '2019-02-18 20:50:30'),
 (453, 53, 451, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-18 21:01:16', '2019-02-18 21:01:16'),
-(454, 53, 452, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-26 23:12:44', '2019-02-26 23:12:44'),
+(454, 53, 452, '2019-01-19', 0, 0, 2019, 'B', '', '2019-02-26 23:12:44', '2019-02-26 23:12:44'),
 (455, 53, 453, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-26 23:18:11', '2019-02-26 23:18:11'),
 (456, 53, 454, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-26 23:24:11', '2019-02-26 23:24:11'),
 (457, 53, 455, '2019-01-19', 0, 1, 2019, 'B', '', '2019-02-26 23:35:16', '2019-02-26 23:35:16'),
@@ -2441,7 +2462,11 @@ INSERT INTO `students_groups` (`group_id`, `class_id`, `student_id`, `date_begin
 (461, 53, 459, '2019-01-19', 0, 1, 2019, 'B', '', '2019-03-14 23:35:58', '2019-03-14 23:35:58'),
 (462, 53, 460, '2019-01-19', 0, 1, 2019, 'B', '', '2019-03-14 23:47:02', '2019-03-14 23:47:02'),
 (463, 53, 461, '2019-01-19', 0, 1, 2019, 'B', '', '2019-03-14 23:52:58', '2019-03-14 23:52:58'),
-(464, 53, 462, '2019-01-19', 0, 1, 2019, 'B', '', '2019-03-14 23:58:50', '2019-03-14 23:58:50');
+(464, 53, 462, '2019-01-19', 0, 1, 2019, 'B', '', '2019-03-14 23:58:50', '2019-03-14 23:58:50'),
+(465, 40, 463, '2018-08-27', 0, 1, 2019, 'B', '', '2019-05-03 15:58:26', '2019-05-03 15:58:26'),
+(466, 33, 464, '2018-08-27', 0, 1, 2019, 'B', '', '2019-05-03 16:50:50', '2019-05-03 16:50:50'),
+(467, 53, 465, '2019-01-19', 0, 1, 2019, 'B', '', '2019-05-09 00:11:29', '2019-05-09 00:11:29'),
+(468, 33, 466, '2019-05-06', 0, 1, 2019, 'B', '', '2019-05-13 22:44:50', '2019-05-13 22:44:50');
 
 -- --------------------------------------------------------
 
@@ -2498,39 +2523,217 @@ INSERT INTO `students_pays` (`pay_id`, `student_id`, `ene`, `feb`, `mar`, `abr`,
 (19, 262, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2016', 'B', NULL, ''),
 (20, 151, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, '2018', NULL, NULL, NULL),
 (21, 332, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, '2019', NULL, 'no paga es hijo de trabajadora', ''),
-(22, 340, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Perez Torres pagan $680 al mes', ''),
-(23, 347, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, '', NULL),
-(24, 339, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Perez Torres pagan $680 al mes', ''),
-(25, 339, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Perez Torres pagan $680 al mes', ''),
-(26, 341, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
-(27, 342, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
-(28, 348, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
-(29, 409, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
-(30, 338, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
-(31, 344, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Pacho Ucan pagan $180 al mes', ''),
-(32, 363, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
-(33, 358, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam May Puc pagan $490 en semana de descuento o $540 normal', ''),
-(34, 231, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Pacho Ucan pagan $90 al mes ', NULL),
-(35, 345, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becado paga $90 al mes', NULL),
-(36, 334, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Cabrera Buenfil pagan $725 al mes ', NULL),
+(22, 340, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Perez Torres pagan $680 al mes', ''),
+(23, 347, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, '', NULL),
+(24, 339, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Perez Torres pagan $680 al mes', ''),
+(25, 339, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Perez Torres pagan $680 al mes', ''),
+(26, 341, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(27, 342, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(28, 348, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(29, 409, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(30, 338, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(31, 344, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Pacho Ucan pagan $180 al mes', ''),
+(32, 363, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(33, 358, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam May Puc pagan $490 en semana de descuento o $540 normal', ''),
+(34, 231, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Pacho Ucan pagan $90 al mes ', ''),
+(35, 345, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becado paga $90 al mes', NULL),
+(36, 334, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Cabrera Buenfil pagan $725 al mes ', ''),
 (37, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Cabrera Buenfil pagan $725 al mes ', NULL),
-(38, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'paga 200 al mes es homestay', NULL),
-(39, 359, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Berzunza Perera pagan $765 al mes', NULL),
-(40, 395, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Berzunza Perera pagan $765 al mes', NULL),
-(41, 199, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam May Puc pagan $490 en semana de descuento o $540 normal', NULL),
-(42, 351, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Sanchez Salinas pagan $765 al mes', NULL),
-(43, 281, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Sanchez Salinas pagan $765 al mes', NULL),
-(44, 264, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', NULL, ''),
-(45, 265, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', NULL, ''),
-(46, 401, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', NULL, 'becada'),
-(47, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado paga 90 al mes', NULL),
-(48, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'no paga es hijo de trabajador', NULL),
-(49, 355, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado para $90 al mes', NULL),
-(50, 367, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
-(51, 368, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
-(52, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
-(53, 373, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Gomez España pagan $ 765 al mes', NULL),
-(54, 328, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Gomez España pagan $ 765 al mes', NULL);
+(38, 29, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'paga 200 al mes es homestay', NULL),
+(39, 359, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Berzunza Perera pagan $765 al mes', ''),
+(40, 395, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Berzunza Perera pagan $765 al mes', ''),
+(41, 199, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam May Puc pagan $490 en semana de descuento o $540 normal', ''),
+(42, 351, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Sanchez Salinas pagan $765 al mes', NULL),
+(43, 281, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Sanchez Salinas pagan $765 al mes', ''),
+(44, 264, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Poot Ake Becados pagan $180 al mes', ''),
+(45, 265, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Poot Ake Becados pagan $180 al mes', ''),
+(46, 401, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'paga $90 al mes ', 'becada'),
+(47, 180, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado paga 90 al mes', NULL),
+(48, 83, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, '2019', 'B', 'no paga es hijo de trabajador', NULL),
+(49, 355, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado para $90 al mes', NULL),
+(50, 367, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
+(51, 368, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
+(52, 375, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'fam Dzib paga $900 x 3', NULL),
+(53, 373, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Gomez España pagan $ 765 al mes', ''),
+(54, 328, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Gomez España pagan $ 765 al mes', ''),
+(55, 333, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(56, 335, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(57, 336, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(58, 337, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(59, 463, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Cabrera Buenfil pagan $725 al mes ', ''),
+(60, 80, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(61, 357, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(62, 353, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(63, 361, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(64, 24, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(65, 55, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(66, 158, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(67, 174, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(68, 57, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(69, 128, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(70, 366, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(71, 371, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(72, 374, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'FAM MENDEZ CRUZ PAGAN $765 AL MES', ''),
+(73, 204, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'FAM MENDEZ CRUZ PAGAN $765 AL MES', NULL),
+(74, 464, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(75, 372, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(76, 42, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'FAM CAAMAL TUN, PAGAN 765 AL MES ', ''),
+(77, 369, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'FAM CAAMAL TUN, PAGAN 765 AL MES ', ''),
+(78, 364, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(79, 362, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(80, 365, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(81, 385, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Becado paga 90 al mes ', NULL),
+(82, 382, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(83, 101, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Ciau Poot pagan 765 al mes ', ''),
+(84, 381, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Ciau Poot pagan 765 al mes ', ''),
+(85, 383, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becada paga 90 al mes ', NULL),
+(86, 388, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(87, 380, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(88, 386, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(89, 415, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Canto pagan 765 al mes ', ''),
+(90, 376, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Canto pagan 765 al mes \r\n', ''),
+(91, 379, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(92, 377, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Balam Dzidz pagan 765 al mes', ''),
+(93, 378, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Balam Dzidz pagan 765 al mes', ''),
+(94, 390, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(95, 308, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(96, 89, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(97, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(98, 93, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(99, 16, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(100, 140, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(101, 193, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(102, 13, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becada paga 90 al mes', NULL),
+(103, 162, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(104, 124, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Diaz Moo becados pagan $180 al mes', ''),
+(105, 123, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Diaz Moo becados pagan $180 al mes', ''),
+(106, 194, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(107, 22, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(108, 305, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Uc Ku becadas pagan $180 al mes ', NULL),
+(109, 303, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Uc Ku becadas pagan $180 al mes ', NULL),
+(110, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Aban Calan pagan $765 al mes', ''),
+(111, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Aban Calan pagan $765 al mes', ''),
+(112, 151, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Garcia Uicab pagan $510 al mes Fam anfitriona', NULL),
+(113, 448, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Garcia Uicab pagan $510 al mes Fam anfitriona', NULL),
+(114, 150, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Garcia Uicab pagan $510 al mes Fam anfitriona', NULL),
+(115, 284, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(116, 391, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(117, 192, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(118, 238, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(119, 119, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(120, 33, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Morales pagan $765 al mes ', ''),
+(121, 77, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Morales pagan $765 al mes ', ''),
+(122, 15, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(123, 314, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(124, 79, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(125, 41, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(126, 292, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(127, 219, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Nahuat Dzidz becada paga $180 al mes', ''),
+(128, 220, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Nahuat Dzidz becada paga $180 al mes\r\n', ''),
+(129, 109, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Cruz Balam pagan $600 al mes', ''),
+(130, 110, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Cruz Balam pagan $600 al mes', ''),
+(131, 138, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(132, 107, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Coral Viveros pagan $900 x 3 al mes', ''),
+(133, 106, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Coral Viveros pagan $900 x 3 al mes', ''),
+(134, 105, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Coral Viveros pagan $900 x 3 al mes', ''),
+(135, 245, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado paga $90 al mes', NULL),
+(136, 262, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, '2019', NULL, NULL, NULL),
+(137, 257, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(138, 392, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(139, 394, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Ku Cach becado hasta junio pagan $90 y uno normal ', ''),
+(140, 403, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Ku Cach becado hasta junio pagan $90 y uno normal ', ''),
+(141, 398, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(142, 399, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(143, 400, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(144, 266, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'becado paga $90 al mes', NULL),
+(145, 408, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Su pagan $900 x 3 al mes ', ''),
+(146, 417, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Su pagan $900 x 3 al mes ', ''),
+(147, 465, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Fam Su pagan $900 x 3 al mes ', ''),
+(148, 436, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(149, 435, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(150, 66, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Canul  su pariente es Andrea Fabiola Canul Mis pagan $180 al mes', NULL),
+(151, 413, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(152, 410, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(153, 411, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(154, 176, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'Becado paga $90 al mes', NULL),
+(155, 100, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(156, 74, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(157, 59, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(158, 414, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(159, 425, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(160, 458, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(161, 201, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(162, 202, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(163, 144, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Garcia Guillen pagan $745 x 2 al mes ', NULL),
+(164, 147, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Garcia Guillen pagan $745 x 2 al mes ', NULL),
+(165, 205, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becada paga $90 al mes', NULL),
+(166, 298, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, '2019', 'B', 'no paga colegiatura por ser fam anfitriona', NULL),
+(167, 434, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'paga $225 al mes', NULL),
+(168, 127, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(169, 404, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(170, 439, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Yeh Puc pagan $745 al mes ', NULL),
+(171, 405, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Yeh Puc pagan $745 al mes ', NULL),
+(172, 407, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(173, 418, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(174, 316, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'es becada hasta junio', NULL),
+(175, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'es familia de la maestra ', NULL),
+(176, 92, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Becada paga $90 al mes', NULL),
+(177, 280, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(178, 466, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(179, 233, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(180, 254, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(181, 306, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(182, 17, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(183, 18, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, ''),
+(184, 9, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(185, 423, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(186, 449, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(187, 450, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(188, 459, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(189, 451, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(190, 453, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(191, 454, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(192, 455, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(193, 456, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(194, 457, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(195, 460, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(196, 461, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(197, 462, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(198, 428, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'CONAFE', NULL),
+(199, 427, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(200, 433, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(201, 31, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(202, 112, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(203, 255, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'CONAFE', NULL),
+(204, 85, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'becada paga $90 al mes', NULL),
+(205, 120, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(206, 441, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(207, 442, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(208, 116, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, '2019', 'B', 'becada e hija de trabajadora ', NULL),
+(209, 160, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(210, 64, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Canul  su pariente es Monserrat Canul Almaraz pagan $180 al mes', NULL),
+(211, 136, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, '2019', NULL, 'familia', NULL),
+(212, 443, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(213, 37, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'CONAFE', NULL),
+(214, 293, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(215, 156, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(216, 239, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'CONAFE', NULL),
+(217, 260, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'becada paga $90 al mes', NULL),
+(218, 168, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'FAM, HERNANDEZ MOO CONAFE', NULL),
+(219, 444, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(220, 445, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, 'CONAFE', NULL),
+(221, 446, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(222, 173, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(223, 447, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(224, 40, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(225, 159, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, '2019', NULL, 'familia', NULL),
+(226, 217, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Nahuat Colli becados pagan $180 al mes ', ''),
+(227, 218, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Nahuat Colli becados pagan $180 al mes ', ''),
+(228, 154, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(229, 130, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Erosa Castillo pagan $725x2 alumnos de sabados  ', ''),
+(230, 129, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', 'B', 'Fam Erosa Castillo pagan $725x2 alumnos de sabados  ', ''),
+(231, 198, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2019', NULL, NULL, NULL),
+(232, 229, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, '2019', 'B', 'no paga porque es Fam anfitriona', NULL);
 
 -- --------------------------------------------------------
 
@@ -2876,7 +3079,7 @@ INSERT INTO `tutors` (`id_tutor`, `namet`, `surnamet`, `lastnamet`, `job`, `cell
 (185, 'Victoria', 'Angulo', 'Pool', 'AMA DE CASA', '9838099098', 'S/N', 'Abuelo(a)', '', '', '2018-06-08 00:17:17', '2018-06-08 00:17:17'),
 (186, 'Francisco', 'Salazar', 'Rodriguez', 'EMPLEADO (SESA)', '9831249485', '2671035', 'Padre', '', '', '2018-06-08 00:17:19', '2018-06-08 00:17:19'),
 (187, 'Patricia', 'Lopez', 'Vivas', 'AMA DE CASA', '9831084005', 'S/N', 'Madre', '', '', '2018-06-08 00:17:21', '2018-06-08 00:17:21'),
-(188, 'Mahaleth', 'Salinas', 'Segura', 'DOCENTE', '9831064553', '', 'Madre', '', '', '2018-06-08 00:17:22', '2018-06-08 00:17:22'),
+(188, 'Mahaleth', 'Salinas', 'Segura.', 'DOCENTE', '9831064553', '', 'Madre', '', '', '2018-06-08 00:17:22', '2018-06-08 00:17:22'),
 (189, 'Cintia Veranica', 'Aviles', 'Martinez', 'empleada', '', '8341078', 'Madre', '', '', '2018-06-08 00:17:25', '2018-06-08 00:17:25'),
 (190, 'Victor Hugo', 'Serna', 'Gonzalez', 'MEDICO', '9838090029', '2671064', 'Padre', '', '', '2018-06-08 00:17:26', '2018-06-08 00:17:26'),
 (191, 'Juan Alberto', 'Solis', 'Alcocer', 'TAXISTA', '983 114 7747', 'S/N', 'Padre', '', '', '2018-06-08 00:17:28', '2018-06-08 00:17:28'),
@@ -2890,7 +3093,7 @@ INSERT INTO `tutors` (`id_tutor`, `namet`, `surnamet`, `lastnamet`, `job`, `cell
 (199, 'Fatima Del Rosario', 'Cabrera', 'May', '', '9831242609', 'S/N', 'Madre', '', '', '2018-06-08 00:17:56', '2018-06-08 00:17:56'),
 (200, 'Weyler De Jesus', 'Yuz', 'Tuz', 'PROFESOR DE EDUC. PRIMARIA', '9831323244', '2671437', 'Padre', '', '', '2018-06-08 00:17:59', '2018-06-08 00:17:59'),
 (201, 'Carmita', 'Ku', 'Bermont', 'AMA DE CASA', '9831069996', 'S/N', 'Madre', '', '', '2018-06-08 00:18:00', '2018-06-08 00:18:00'),
-(202, 'Margarita', 'Ku', 'Bermont', 'AMA DE CASA', '9831247448', 'S/N', 'Madre', '', '', '2018-06-08 00:18:06', '2018-06-08 00:18:06'),
+(202, 'Carmita', 'Ku', 'Bermont', 'AMA DE CASA', '9831247448', 'S/N', 'Madre', '', '', '2018-06-08 00:18:06', '2018-06-08 00:18:06'),
 (203, 'Jorge', 'Uc', 'Caamal', 'EMPLEADO', '983 140 3974', 'S/N', 'Padre', '983 180 4706', 'Madre', '2018-06-08 00:18:07', '2018-06-08 00:18:07'),
 (204, 'Erika Isabel', 'Gomez', 'Vargas', 'AMA DE CASA', '9831064443', 'S/N', 'Madre', '', '', '2018-06-08 00:18:09', '2018-06-08 00:18:09'),
 (205, 'Irma', 'Yeh', 'Ku', 'COMERCIANTE', '9831061964', 'S/N', 'Madre', '', '', '2018-06-08 00:18:13', '2018-06-08 00:18:13'),
@@ -2926,7 +3129,7 @@ INSERT INTO `tutors` (`id_tutor`, `namet`, `surnamet`, `lastnamet`, `job`, `cell
 (238, 'Norma Georgina', 'Colli', 'May', 'Lic. en derecho', '9831323861', '', 'Madre', '', '', '2018-11-14 00:24:57', '2018-11-14 00:24:57'),
 (239, '---', '----', '------', '', '', '', '', '', '', '2018-11-14 00:38:35', '2018-11-14 00:38:35'),
 (240, 'Edwin', 'Puc', 'Hau', 'Docente', '9831127545', '', 'Madre', '9837520168', 'Madre', '2018-11-14 00:48:42', '2018-11-14 00:48:42'),
-(241, 'Mahaleth', 'Salinas', 'Segura', 'DOCENTE', '9831064553', '', 'Madre', '', '', '2018-11-21 21:34:34', '2018-11-21 21:34:34'),
+(241, 'Mahaleth', 'Salinas', 'Segura.', 'DOCENTE', '9831064553', '', 'Madre', '', '', '2018-11-21 21:34:34', '2018-11-21 21:34:34'),
 (242, 'Ligia Maria', 'Puc', 'Poot', 'AMA DE CASA', '9831243676', '9831921194', 'Madre', '', '', '2018-11-22 21:02:11', '2018-11-22 21:02:11'),
 (243, 'Pedro', 'Madrigal', 'Lopez', 'MEDICO', '9831246717', '', 'Padre', '', '', '2018-11-22 21:24:59', '2018-11-22 21:24:59'),
 (244, 'Abigayl', 'Cabrera', 'Alcocer', 'MAESTRA', '9847456371', '', 'Madre', '', '', '2018-11-23 18:30:24', '2018-11-23 18:30:24'),
@@ -2940,7 +3143,7 @@ INSERT INTO `tutors` (`id_tutor`, `namet`, `surnamet`, `lastnamet`, `job`, `cell
 (252, 'Manuela', 'Martin', '------', 'AMA DE CASA', '9831162095', '', 'Abuelo(a)', '', '', '2018-11-28 20:55:01', '2018-11-28 20:55:01'),
 (253, 'Rosana', 'Cruz', 'Sandoval', 'MAESTRA', '9837006614', '', 'Madre', '', '', '2018-11-28 21:00:21', '2018-11-28 21:00:21'),
 (254, 'Irasema', 'Dzib', 'Ucan', 'PSICOLOGA', '9831809393', '9831429620', 'Madre', '', '', '2018-11-28 21:17:21', '2018-11-28 21:17:21'),
-(255, 'Irasema', 'Dzib', 'Ucan', 'PSICOLOGA', '9831809393', '', 'Tio(a)', '', '', '2018-11-28 21:29:30', '2018-11-28 21:29:30'),
+(255, 'Irasema', 'Dzib', 'Ucan', 'PSICOLOGA', '9831809393', '9831429620', 'Madre', '', '', '2018-11-28 21:29:30', '2018-11-28 21:29:30'),
 (256, 'Jency Maribel', 'Balam', 'Pech', 'MAESTRA', '9831325122', '', 'Madre', '', '', '2018-11-28 23:00:22', '2018-11-28 23:00:22'),
 (257, 'Merli R.', 'Uc', 'Chi', 'AMA DE CASA', '9842284692', '', 'Madre', '', '', '2018-11-28 23:39:39', '2018-11-28 23:39:39'),
 (258, 'Manuela', 'Perez', 'Marin', 'AMA DE CASA', '9831860866', '', 'Madre', '', '', '2018-11-28 23:44:50', '2018-11-28 23:44:50'),
@@ -3041,21 +3244,23 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `session_id`, `name`, `lastname`, `user_type`, `user_name`, `user_phone`, `user_password_hash`, `user_email`, `user_access_code`, `user_active`, `user_deleted`, `user_account_type`, `user_has_avatar`, `user_avatar`, `user_remember_me_token`, `user_creation_timestamp`, `user_suspension_timestamp`, `user_last_login_timestamp`, `user_failed_logins`, `user_last_failed_login`, `user_activation_hash`, `user_password_reset_hash`, `user_password_reset_timestamp`, `user_provider_type`) VALUES
 (1, '', 'Luis', 'Yama', 777, 'LuisYama', NULL, '$2y$10$wZubnnm4w4k5hrStMKx5Z.FXzZJy3Ogkzxf5q4.Ze0LaHATF1jyZ6', 'jluis.yama@gmail.com', 'th3r4v3n', 1, 0, 1, 1, NULL, NULL, 1497318197, NULL, 1527904902, 0, NULL, 'c0e06a17c47e6149c0b1e16eed9b1d240f10ee5c', NULL, NULL, 'DEFAULT'),
-(2, NULL, 'CHRIS', '', 3, 'chris', NULL, '$2y$10$d5FuyMq7pm1grAcwtyBcpuY8XY.8Z1YWjzEjTmvjzI.yXbFcbqUnK', 'chris@test.com', 'OSORIO', 1, 1, 1, 0, 'teacher_2', NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
+(2, NULL, 'CHRIS', '', 3, 'chris', NULL, '$2y$10$d5FuyMq7pm1grAcwtyBcpuY8XY.8Z1YWjzEjTmvjzI.yXbFcbqUnK', 'chris@test.com', 'OSORIO', 1, 1, 1, 0, 'teacher_2', NULL, 1525747036, NULL, NULL, 1, 1555954073, NULL, NULL, NULL, NULL),
 (3, NULL, 'WENDY ', 'OSORIO ARANA', 3, 'wendy', NULL, '$2y$10$drdKAph93YyM9ae2ji4z4OVKwmzpQiJ261Pp8mJgFq1UTPaktaKWq', 'wendy@test.com', 'CHRIS', 1, 1, 1, 0, 'teacher_3', NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (4, NULL, 'CESAR GERMAN', 'MANRIQUE MANZANERO', 3, 'cesar', NULL, '$2y$10$5EVuT.B0zKoHjJnMjfnFKu2PjqYdbYccxxPanp3JjP6WmQyaGefiG', 'cesar@test.com', 'MANRIQUE', 1, 1, 1, 0, NULL, NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (5, NULL, 'PAUL', 'ALLEN', 3, 'Paul', NULL, '$2y$10$R8mK9Cy0P50/nrSslTPAkuiV33gZdB.rriqdCc5I89QNb6I6LatWy', 'paul@test.com', 'Allen', 1, 1, 1, 0, NULL, NULL, 1525747036, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(6, 'k0c38viv53smhpf21ar26u39n7', 'Luis', 'admin', 777, 'admin', NULL, '$2y$10$Ma2cqYIgJfVa1QI3NXGqIemK2C0jAAERMPpP8AZVkgr0qCM9xgwAq', 'admin@admin.com', 'admin', 1, 0, 1, 0, NULL, NULL, 1526254465, NULL, 1555951418, 0, NULL, NULL, NULL, NULL, NULL),
+(6, NULL, 'Luis', 'admin', 777, 'admin', NULL, '$2y$10$Ma2cqYIgJfVa1QI3NXGqIemK2C0jAAERMPpP8AZVkgr0qCM9xgwAq', 'admin@admin.com', 'admin', 1, 0, 1, 0, NULL, NULL, 1526254465, NULL, 1555951418, 0, NULL, NULL, NULL, NULL, NULL),
 (7, '', 'Silvia', 'Diaz Rubio', 1, 'silvia', NULL, '$2y$10$urOtS1Y083EFKSXia2.Ch.K5uJpMAIG.oSIpBJLIB4BaSEYJnwG5i', 'silvia@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917586, NULL, 1527918962, 0, NULL, NULL, NULL, NULL, NULL),
-(8, NULL, 'Sugeidy', 'Santiago', 1, 'suge', NULL, '$2y$10$kZ6Jss/3EtwZhBCIoe7tyuvARI86fYLwDSEAwlMEKmMyjAlg./6Le', 'suge@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917657, NULL, 1554928083, 0, NULL, NULL, NULL, NULL, NULL),
+(8, '6v4jq9b2siaorgd0mbqj4bhhu2', 'Sugeidy', 'Santiago', 1, 'suge', NULL, '$2y$10$kZ6Jss/3EtwZhBCIoe7tyuvARI86fYLwDSEAwlMEKmMyjAlg./6Le', 'suge@correo.com', '12345', 1, 0, 1, 0, NULL, NULL, 1527917657, NULL, 1562181417, 0, NULL, NULL, NULL, NULL, NULL),
 (9, NULL, 'Claudia', 'Pacheco', 1, 'ClauPachecoB', NULL, '$2y$10$xcOKjIloqfLRB8vQ7u7iJOdDsfbHRWqrjGCZlymVRU.TJ5wHYUv3q', 'claudia@correo.com', 'Pacheco021', 1, 0, 1, 0, NULL, NULL, 1527917764, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(10, NULL, 'HANNAH', 'PATCHING', 3, 'HANNAH', '0', '$2y$10$jUy75LpjWhC/29zt51viJO0I6WEmSijKMcyHqotrhpss7qLjPGHzm', 'hannahmpatching@gmail.com', '12345', 1, 0, 1, 0, NULL, NULL, 1541550328, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
+(10, NULL, 'HANNAH', 'PATCHING', 3, 'HANNAH', '0', '$2y$10$jUy75LpjWhC/29zt51viJO0I6WEmSijKMcyHqotrhpss7qLjPGHzm', 'hannahmpatching@gmail.com', '12345', 1, 0, 1, 0, NULL, NULL, 1541550328, NULL, 1556659508, 0, NULL, NULL, NULL, NULL, NULL),
 (11, NULL, 'DANIELLE', 'LITTLE', 3, 'DANIE', NULL, '$2y$10$i2tFtW4tLczIWce87SdwBOWfUTqJmP6hM3U2.4ehZQwGcDPrOduu2', 'danijeanne@gmail.com', '12345', 1, 0, 1, 0, 'teacher_11', NULL, 1541550616, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(12, NULL, 'AUDREY', 'ROSE', 3, 'AUDREY', NULL, '$2y$10$xnzCn0S/0aWaY41mrT1lQuQpqZKK08LOm7QCOwofYIyUVbB1ZZ5Te', 'audrey17rose@gmail.com', '12345', 1, 0, 1, 0, 'teacher_12', NULL, 1541551141, NULL, 1550189997, 0, NULL, NULL, NULL, NULL, NULL),
-(13, NULL, 'STEVEN', 'NORTON', 3, 'STEVEN', NULL, '$2y$10$.uBh37isx0jdgAFvCyePWuYee0AeCiNGt1maQOKfnoDI8r8/QMhQK', 'sdnorton.naatik@gmail.com', '12345', 1, 0, 1, 0, NULL, NULL, 1541718285, NULL, 1547070082, 0, NULL, NULL, NULL, NULL, NULL),
+(12, NULL, 'AUDREY', 'ROSE', 3, 'AUDREY', NULL, '$2y$10$xnzCn0S/0aWaY41mrT1lQuQpqZKK08LOm7QCOwofYIyUVbB1ZZ5Te', 'audrey17rose@gmail.com', '12345', 1, 0, 1, 0, 'teacher_12', NULL, 1541551141, NULL, 1562094564, 0, NULL, NULL, NULL, NULL, NULL),
+(13, NULL, 'STEVEN', 'NORTON', 3, 'STEVEN', NULL, '$2y$10$.uBh37isx0jdgAFvCyePWuYee0AeCiNGt1maQOKfnoDI8r8/QMhQK', 'sdnorton.naatik@gmail.com', '12345', 1, 1, 1, 0, NULL, NULL, 1541718285, NULL, 1562084794, 0, NULL, NULL, NULL, NULL, NULL),
 (14, NULL, 'WENDY', 'OSORIO', 3, 'WEND', NULL, '$2y$10$eFjjAMivq58oPXWLIjQQiuVTkVrRHWDLB8KMw1FFWIM0bahDSMBqG', 'KARK1824MEEN@HOTMAIL.COM', '67890', 1, 1, 1, 0, NULL, NULL, 1541718410, NULL, 1547070380, 0, NULL, NULL, NULL, NULL, NULL),
-(15, NULL, 'CESAR', 'MANRIQUE', 3, 'GERMAN', NULL, '$2y$10$DbAo8sVVWccEAf8v5LYyP.W5tGgs5eFv6HlkxgMExTUW5E1uCX3mO', 'DOLCEBIEN@GMAIL.COM', '09876', 1, 0, 1, 0, NULL, NULL, 1547070303, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(16, NULL, 'mari', 'caceres', 2, 'mary', NULL, '$2y$10$BHTpR9wjUYP7SdkMH8.v3OOyFMRSxwCwWxLom7wbOn95td2dFfa4i', 'naatik.recepcion@gmail.com', '052103', 1, 0, 1, 0, NULL, NULL, 1550241008, NULL, 1555950015, 0, NULL, NULL, NULL, NULL, NULL);
+(15, NULL, 'CESAR', 'MANRIQUE', 3, 'GERMAN', NULL, '$2y$10$DbAo8sVVWccEAf8v5LYyP.W5tGgs5eFv6HlkxgMExTUW5E1uCX3mO', 'DOLCEBIEN@GMAIL.COM', '09876', 1, 0, 1, 0, NULL, NULL, 1547070303, NULL, 1558484157, 0, NULL, NULL, NULL, NULL, NULL),
+(16, NULL, 'mari', 'caceres', 2, 'mary', NULL, '$2y$10$BHTpR9wjUYP7SdkMH8.v3OOyFMRSxwCwWxLom7wbOn95td2dFfa4i', 'naatik.recepcion@gmail.com', '052103', 1, 0, 1, 0, NULL, NULL, 1550241008, NULL, 1562093386, 0, NULL, NULL, NULL, NULL, NULL),
+(17, 'gsfp391ccbqkg8cbeav5p7sjo5', 'CATHERINE', 'GRAY', 2, 'GRAY', '9831819453', '$2y$10$bA5/PQzMEGytQXFULJVACuDe/zYh74fk.ZxrIfD0AkO218rxAg.qS', 'catherine.gray@naatikmexico.org', '577880', 1, 0, 1, 0, NULL, NULL, 1556841992, NULL, 1562091811, 0, NULL, NULL, NULL, NULL, NULL),
+(18, NULL, 'STEVEN', 'NORTON', 2, 'NORTON', '52 1 81 8691 3726', '$2y$10$wCBx5ZDj0CyxP6MSKkI5zeKtdDSXhT2NVjWvbrzhKMv/nuiXHLgAq', 'english@naatikmexico.org', '12345', 1, 0, 1, 0, NULL, NULL, 1562085384, NULL, 1562091377, 0, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -3191,7 +3396,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `address`
 --
 ALTER TABLE `address`
-  MODIFY `id_address` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=397;
+  MODIFY `id_address` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=398;
 
 --
 -- AUTO_INCREMENT de la tabla `becas`
@@ -3239,19 +3444,19 @@ ALTER TABLE `sponsors`
 -- AUTO_INCREMENT de la tabla `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
+  MODIFY `student_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=467;
 
 --
 -- AUTO_INCREMENT de la tabla `students_absences`
 --
 ALTER TABLE `students_absences`
-  MODIFY `absence_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `absence_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `students_details`
 --
 ALTER TABLE `students_details`
-  MODIFY `detail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
+  MODIFY `detail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=462;
 
 --
 -- AUTO_INCREMENT de la tabla `students_evaluations`
@@ -3263,13 +3468,13 @@ ALTER TABLE `students_evaluations`
 -- AUTO_INCREMENT de la tabla `students_groups`
 --
 ALTER TABLE `students_groups`
-  MODIFY `group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=465;
+  MODIFY `group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=469;
 
 --
 -- AUTO_INCREMENT de la tabla `students_pays`
 --
 ALTER TABLE `students_pays`
-  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `pay_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
 
 --
 -- AUTO_INCREMENT de la tabla `students_sep`
@@ -3305,7 +3510,7 @@ ALTER TABLE `tutors`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index', AUTO_INCREMENT=17;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index', AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
