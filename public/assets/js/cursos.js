@@ -112,6 +112,11 @@ var Cursos = {
             });
         });
 
+        $('#addGroup').on('click', function(event){
+            event.preventDefault();
+            $('#modal_addGroup').modal('show');
+        });
+
 
         $('#frmCreateClase').submit(function(event){
             event.preventDefault();
@@ -350,13 +355,18 @@ var Cursos = {
                 data: { grupo: grupo },
                 synch: 'true',
                 type: 'POST',
+                datatype: 'JSON',
                 url: _root_ + 'curso/nuevoGrupo',
                 success: function(data){
-                    $('#addGroup').modal('hide');
-                    if (data === '1') {
+                    if (data.success) {
+                        $('#modal_addGroup').modal('hide');
                         $('#general_snack').attr('data-content', 'Nuevo grupo agregado!');
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-green');
                     } else {
                         $('#general_snack').attr('data-content', 'No se agrego el grupo, intente de nuevo!');
+                        $('#general_snack').snackbar('show');
+                        $('.snackbar').addClass('snackbar-green');
                     }
                     that.getGroups();
                 }

@@ -21,7 +21,7 @@
                 <div class="dropdown-menu" aria-labelledby="menuButton">
                     <a class="dropdown-item" href="#" id="addClase">
                         <span class="sp-blue" data-feather="plus"></span> Nueva Clase</a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="#" id="addGroup">
                         <span class="sp-blue" data-feather="plus"></span> Nuevo Grupo</a>
                     <a class="dropdown-item" href="#">
                         <span class="sp-blue" data-feather="plus"></span> Nuevo Curso</a>
@@ -427,7 +427,7 @@
     </div>
 </div>
 
-<div id="addGroup" class="modal fade">
+<div id="modal_addGroup" class="modal fade">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-success py-2">
@@ -435,7 +435,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&nbsp;&times;&nbsp;</button>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row justify-content-center">
                     <div class="col-md-10 col-md-offset-1 text-center">
                         <label for="new_group_name">Nombre del Grupo:</label>
                         <input type="text" 
@@ -447,8 +447,8 @@
             </div>
             <div class="row">
                 <div class="modal-footer col-md-10 col-md-offset-1 text-center">
-                    <button type="button" class="btn btn-sm btn-naatik btn-raised left" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="new_group" class="btn btn-sm btn-second btn-raised right">Crear</button>
+                    <button type="button" class="btn btn-secondary btn-flat-md btn-sm" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="new_group" class="btn btn-info btn-flat-md btn-sm">Crear</button>
                 </div>             
             </div>
         </div>

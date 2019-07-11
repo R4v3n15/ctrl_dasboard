@@ -175,7 +175,7 @@ class CursoController extends Controller
     }
 
     public function nuevoGrupo() {
-        CursoModel::newGroup(Request::post('grupo'));
+        $this->View->renderJSON(CursoModel::newGroup(Request::post('grupo')));
     }
 
     public function obtenerGrupos(){

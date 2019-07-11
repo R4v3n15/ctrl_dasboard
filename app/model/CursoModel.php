@@ -857,7 +857,7 @@ class CursoModel {
         $insert = $database->prepare("INSERT INTO groups(group_name) VALUES(:grupo);");
         $insert->execute(array(':grupo' => $grupo));
 
-        echo $insert->rowCount() > 0 ? 1 : 0;
+        return ['success' => $insert->rowCount() > 0];
     }
 
     public static function updateGroup($id, $grupo){
