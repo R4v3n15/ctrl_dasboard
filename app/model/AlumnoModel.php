@@ -41,7 +41,7 @@ class AlumnoModel
                 }
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, 
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, c.book,
                                                         cu.course, g.group_name, h.date_end, h.hour_init, h.hour_end
                                                  FROM classes as c, courses as cu, groups as g, schedules as h
                                                  WHERE c.class_id   = :clase
@@ -85,7 +85,7 @@ class AlumnoModel
                                      data-course="'.$clase->course_id.'"
                                      data-group="'.$nombre_curso.' '.$clase->group_name.'"
                                      data-reinscripcion="'.$finished.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a> <br>'.$clase->book;
                         } else {
                            $grupo = '<a href="javascript:void(0)" title="Grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'; 
                         }
@@ -322,7 +322,7 @@ class AlumnoModel
                 }
 
                 if ($alumno->class_id !== NULL) {
-                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, 
+                    $clase = $database->prepare("SELECT c.class_id, c.course_id, c.teacher_id, c.schedul_id, c.status, c.book,
                                                         cu.course, g.group_name, h.date_end, h.hour_init, h.hour_end
                                                  FROM classes as c, courses as cu, groups as g, schedules as h
                                                  WHERE c.class_id   = :clase
@@ -357,7 +357,7 @@ class AlumnoModel
                         }
 
 
-
+                        $libro = $clase->book ? '<br>Libro: '.$clase->book : '';
                         $horario  = date('g:i a', strtotime($clase->hour_init)) . ' - ' . date('g:i a', strtotime($clase->hour_end));
                         if ($user_type !== 3) {
                         $grupo = '<a class="btnChangeGroup"
@@ -367,9 +367,9 @@ class AlumnoModel
                                      data-course="'.$clase->course_id.'"
                                      data-group="'.$nombre_curso.' '.$clase->group_name.'"
                                      data-reinscripcion="'.$finished.'"
-                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>';
+                                     title="Agregar grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'.$libro;
                         } else {
-                           $grupo = '<a href="javascript:void(0)" title="Grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'; 
+                           $grupo = '<a href="javascript:void(0)" title="Grupo">'.$nombre_curso.' '.$clase->group_name.'</a>'.$libro; 
                         }
 
                         if ($clase->teacher_id !== null) {
@@ -382,6 +382,15 @@ class AlumnoModel
                             }
                         }
                     }
+                }
+
+                // BECARIOS
+                $getBeca = $database->prepare("SELECT * FROM becas WHERE student_id = :student AND status = 1 LIMIT 1;");
+                $getBeca->execute(array('student' => $alumno->student_id));
+
+                $becado = '';
+                if($getBeca->rowCount() > 0){
+                    $becado = 'Becario';
                 }
 
                 //-> Tutor del Alumno
@@ -501,7 +510,7 @@ class AlumnoModel
                 $info = array(
                     'count'      => $check,
                     'avatar'     => $photo,
-                    'surname'    => $alumno->surname.' '.$alumno->lastname,
+                    'surname'    => $alumno->surname.' '.$alumno->lastname.'<br> <strong>'.$becado.'</strong>',
                     'name'       => $alumno->name,
                     'studies'    => $alumno->studies.' '.$alumno->lastgrade,
                     'age'        => $alumno->age,
