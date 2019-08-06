@@ -104,6 +104,13 @@ function initMap() {
     var latitud  = parseFloat(document.getElementById('lat').value);
     var longitud = parseFloat(document.getElementById('lng').value);
 
+    console.log(latitud, longitud);
+
+    if(isNaN(latitud) || isNaN(longitud)){
+        latitud = 19.579994462915835;
+        longitud = -88.04420235898436;
+    }
+
     var map = new google.maps.Map(document.getElementById('map'), {
         minZoom: 10,
         zoom: 14,

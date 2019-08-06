@@ -390,7 +390,7 @@ class AlumnoModel
 
                 $becado = '';
                 if($getBeca->rowCount() > 0){
-                    $becado = 'Becario';
+                    $becado = 'Becado';
                 }
 
                 //-> Tutor del Alumno
