@@ -13,6 +13,8 @@ class AlumnosController extends Controller
     }
 
     public function index() {
+        // AlumnoModel::loadLaravel();
+        
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));
         Registry::set('js', array('moment.min&assets/libs/js', 
                                   'pikaday.min&assets/libs/js',

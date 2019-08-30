@@ -2,6 +2,100 @@
 
 class AlumnoModel
 {
+    public static function loadLaravel(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $laradb   = DatabaseFactory::getFactory()->laravelConnect();
+
+        $query = $database->prepare("SELECT * FROM courses;");
+        $query->execute();
+            
+        $commit = true;
+        $laradb->beginTransaction();
+        try{
+            foreach($query->fetchAll() as $clase){
+                $insert = $laradb->prepare("INSERT INTO classes(
+                                                                course_id, 
+                                                                group_id, 
+                                                                ciclo_escolar, 
+                                                                date_init, 
+                                                                date_end, 
+                                                                hour_init, 
+                                                                hour_end, 
+                                                                teacher_id, 
+                                                                book, 
+                                                                costo_normal, 
+                                                                costo_promocional, 
+                                                                costo_inscripcion, 
+                                                                status) 
+                                                        VALUES(
+                                                                :curso, 
+                                                                :grupo, 
+                                                                :ciclo, 
+                                                                :fecha1, 
+                                                                :fecha2, 
+                                                                :hora1, 
+                                                                :hora2, 
+                                                                :maestro, 
+                                                                :libro, 
+                                                                :costo1, 
+                                                                :costo2, 
+                                                                :costo3, 
+                                                                :status);");
+                $insert->execute([
+                    ':curso'     => $clase->course_id,
+                    ':grupo'    => $clase->group_id,
+                    ':ciclo'     => $clase->year,
+                    ':fecha1'    => $clase->date_init,
+                    ':fecha2'   => $clase->date_end,
+                    ':hora1'    => $clase->hour_init,
+                    ':hora2'    => $clase->hour_end,
+                    ':maestro'    => $clase->teacher_id,
+                    ':libro'    => $clase->book,
+                    ':costo1'    => $clase->costo_normal,
+                    ':costo2'    => $clase->costo_promocional,
+                    ':costo3'    => $clase->costo_inscripcion,
+                    ':status'    => $clase->status,
+                ]);
+
+                if ($insert->rowCount() > 0) {
+                    $idClase = $laradb->lastInsertId();
+                    $dias  = $database->prepare("SELECT * FROM schedul_days WHERE schedul_id = :horario;");
+                    $dias->execute([':horario' => $clase->schedul_id]);
+
+                    foreach ($dias as $dia) {
+                        $_sql = $laradb->prepare("INSERT INTO classes_days(class_id, day_id)
+                                                                VALUES(:clase, :dia);");
+                        $_sql->execute(array(
+                                            ':clase'    => $idClase,
+                                            ':dia'      => $dia->day_id));
+
+                        if ($_sql->rowCount() < 1) {
+                            $commit = false;
+                            break;
+                        }
+                    }
+                } else {
+                    $commit = false;
+                    break;
+                }           
+            }
+
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $laradb->rollBack();
+            dump('Error en INSERT');
+            exit();
+        } 
+
+        $laradb->commit();
+        dump('Inserts OK');
+        exit();
+    }
+
+
     public static function Students($course){
         $user_type = (int)Session::get('user_type');
         $database = DatabaseFactory::getFactory()->getConnection();
