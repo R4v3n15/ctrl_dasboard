@@ -13,6 +13,9 @@ class AlumnosController extends Controller
     }
 
     public function index() {
+        // AlumnoModel::loadTutores();
+        // AlumnoModel::loadStudents();
+        // AlumnoModel::loadGrupos();
         // AlumnoModel::loadLaravel();
         
         Registry::set('css',array('fileinput.min&assets/libs/css', 'pikaday&assets/libs/css'));

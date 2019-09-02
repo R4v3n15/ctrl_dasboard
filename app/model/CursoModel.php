@@ -335,7 +335,7 @@ class CursoModel {
 
 
                     echo '<tr class="'.$rowClase.'">';
-                    echo '<td>'.$counter++.'</td>';
+                    echo '<td>'.$clase->id.'</td>';
                     echo '<td>'.$clase->name.'</td>';
                     echo '<td>'.$clase->ciclo.'</td>';
                     echo '<td>'.$clase->inicia.'</td>';

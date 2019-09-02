@@ -2,6 +2,683 @@
 
 class AlumnoModel
 {
+    public static function loadTutores(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $laradb   = DatabaseFactory::getFactory()->laravelConnect();
+
+        $query = $database->prepare("SELECT * FROM tutors;");
+        $query->execute();
+
+        $commit = true;
+        $laradb->beginTransaction();
+        try{
+            foreach ($query->fetchAll() as $tutor) {
+                // Direccion
+                $address = $database->prepare("SELECT * FROM address WHERE user_id = :tutor AND user_type = 1 LIMIT 1;");
+                $address->execute([':tutor' => $tutor->id_tutor]);
+                $address = $address->fetch();
+
+                $insert = $laradb->prepare("INSERT INTO tutors(
+                                                            name,
+                                                            surname,
+                                                            lastname,
+                                                            job,
+                                                            relationship,
+                                                            cellphone,
+                                                            phone,
+                                                            relationship_alt,
+                                                            phone_alt,
+                                                            status,
+                                                            created_at,
+                                                            updated_at
+                                                        ) 
+                                                    VALUES(
+                                                        :name,
+                                                        :surname,
+                                                        :lastname,
+                                                        :job,
+                                                        :relationship,
+                                                        :cellphone,
+                                                        :phone,
+                                                        :relationship_alt,
+                                                        :phone_alt,
+                                                        :status,
+                                                        :created_at,
+                                                        :updated_at
+                                                    )");
+                $insert->execute([
+                                    ':name'             => $tutor->namet,
+                                    ':surname'          => $tutor->surnamet,
+                                    ':lastname'         => $tutor->lastnamet,
+                                    ':job'              => $tutor->job,
+                                    ':relationship'     => $tutor->relationship,
+                                    ':cellphone'        => $tutor->cellphone,
+                                    ':phone'            => $tutor->phone,
+                                    ':relationship_alt' => $tutor->relationship_alt,
+                                    ':phone_alt'        => $tutor->phone_alt,
+                                    ':status'           => $tutor->status,
+                                    ':created_at'       => $tutor->created_at,
+                                    ':updated_at'       => $tutor->updated_at
+                                ]);
+
+                $commit = $insert->rowCount() > 0;
+
+                if (!$commit) {
+                    $laradb->rollBack();
+                    dump('Error en INSERT_TUTOR: '.$tutor->id_tutor);
+                    exit();
+                }
+
+                if ($commit) {
+                    $idTutor = $laradb->lastInsertId();
+
+                    $upgrade  = $laradb->prepare("UPDATE students SET id_tutor = :tutor WHERE id_tutor = :old_tutor;");
+                    $upgrade->execute([':tutor' => $idTutor, ':old_tutor' => $tutor->id_tutor]);
+
+                    $update  = $laradb->prepare("INSERT INTO address(
+                                                                    user_id,
+                                                                    user_type,
+                                                                    street,
+                                                                    st_number,
+                                                                    st_between,
+                                                                    reference,
+                                                                    colony,
+                                                                    city,
+                                                                    zipcode,
+                                                                    state,
+                                                                    country,
+                                                                    latitud,
+                                                                    longitud,
+                                                                    created_at,
+                                                                    updated_at
+                                                                ) 
+                                                            VALUES(
+                                                                :user_id,
+                                                                :user_type,
+                                                                :street,
+                                                                :st_number,
+                                                                :st_between,
+                                                                :reference,
+                                                                :colony,
+                                                                :city,
+                                                                :zipcode,
+                                                                :state,
+                                                                :country,
+                                                                :latitud,
+                                                                :longitud,
+                                                                :created_at,
+                                                                :updated_at
+                                                            );");
+                    $update->execute([
+                                    ':user_id'      => $idTutor,
+                                    ':user_type'    => 1,
+                                    ':street'       => $address->street,
+                                    ':st_number'    => $address->st_number,
+                                    ':st_between'   => $address->st_between,
+                                    ':reference'    => $address->reference,
+                                    ':colony'       => $address->colony,
+                                    ':city'         => $address->city,
+                                    ':zipcode'      => $address->zipcode,
+                                    ':state'        => $address->state,
+                                    ':country'      => $address->country,
+                                    ':latitud'      => $address->latitud ? $address->latitud : 19.579994462915835,
+                                    ':longitud'     => $address->longitud ? $address->longitud : -88.04420235898436,
+                                    ':created_at'   => $address->created_at,
+                                    ':updated_at'   => $address->updated_at
+                                ]);
+
+                    if ($update->rowCount() < 1) {
+                        $laradb->rollBack();
+                        dump('Error en INSERT_ADDRESS: '.$tutor->id_tutor);
+                        exit();
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $laradb->rollBack();
+            dump('Error en INSERT');
+            exit();
+        } 
+
+        $laradb->commit();
+        dump('Inserts OK');
+        exit();
+    }
+
+    public static function loadStudents(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $laradb   = DatabaseFactory::getFactory()->laravelConnect();
+
+        $query = $database->prepare("SELECT * FROM students WHERE status != 9;");
+        $query->execute();
+
+        $commit = true;
+        $laradb->beginTransaction();
+        try{
+            foreach ($query->fetchAll() as $student) {
+                // Faltas
+                $faltas = $database->prepare("SELECT * FROM students_absences WHERE student_id = :student;");
+                $faltas->execute([':student' => $student->student_id]);
+                $faltas = $faltas->fetchAll();
+
+                // Detalles
+                $details = $database->prepare("SELECT * FROM students_details WHERE student_id = :student LIMIT 1;");
+                $details->execute([':student' => $student->student_id]);
+                $details = $details->fetch();
+
+                // Grupos
+                $grupos = $database->prepare("SELECT * FROM students_groups WHERE student_id = :student LIMIT 1;");
+                $grupos->execute([':student' => $student->student_id]);
+                $grupos = $grupos->fetch();
+
+                // Becas
+                $becas = $database->prepare("SELECT * FROM becas WHERE student_id = :student;");
+                $becas->execute([':student' => $student->student_id]);
+                $becas = $becas->fetchAll();
+
+                // Pagos
+                $pagos = $database->prepare("SELECT * FROM students_pays WHERE student_id = :student;");
+                $pagos->execute([':student' => $student->student_id]);
+                $pagos = $pagos->fetchAll();
+
+                // Historial
+                $historial = $database->prepare("SELECT * FROM student_history WHERE student_id = :student;");
+                $historial->execute([':student' => $student->student_id]);
+                $historial = $historial->fetchAll();
+
+                // Direccion
+                $address = $database->prepare("SELECT * FROM address WHERE user_id = :student AND user_type = 2 LIMIT 1;");
+                $address->execute([':student' => $student->student_id]);
+                $address = $address->fetch();
+
+
+                $insert = $laradb->prepare("INSERT INTO students(
+                                                                id_tutor,
+                                                                name,
+                                                                surname,
+                                                                lastname,
+                                                                birthday,
+                                                                age,
+                                                                genre,
+                                                                edo_civil,
+                                                                cellphone,
+                                                                reference,
+                                                                sickness,
+                                                                medication,
+                                                                avatar,
+                                                                comments,
+                                                                status,
+                                                                fecha_baja,
+                                                                motivo_baja,
+                                                                deleted,
+                                                                created_at,
+                                                                updated_at,
+                                                                deleted_at
+                                                            )
+                                                        VALUES(
+                                                                :tutor,
+                                                                :name,
+                                                                :surname,
+                                                                :lastname,
+                                                                :birthday,
+                                                                :age,
+                                                                :genre,
+                                                                :civil,
+                                                                :cellphone,
+                                                                :reference,
+                                                                :sickness,
+                                                                :medication,
+                                                                :avatar,
+                                                                :comment,
+                                                                :status,
+                                                                :fecha_baja,
+                                                                :motivo_baja,
+                                                                :deleted,
+                                                                :created_at,
+                                                                :updated_at,
+                                                                :deleted_at
+                                                            )");
+                $insert->execute([
+                                ':tutor'    => $student->id_tutor,
+                                ':name'     => $student->name,
+                                ':surname'  => $student->surname,
+                                ':lastname' => $student->lastname,
+                                ':birthday' => $student->birthday,
+                                ':age'      => $student->age,
+                                ':genre'    => $student->genre,
+                                ':civil'    => $student->edo_civil,
+                                ':cellphone'    => $student->cellphone,
+                                ':reference'    => $student->reference,
+                                ':sickness'     => $student->sickness,
+                                ':medication'   => $student->medication,
+                                ':avatar'       => $student->avatar ? $student->avatar.'.jpg' : $student->genre.'.jpg',
+                                ':comment'      => $student->comment_s,
+                                ':status'       => $student->status,
+                                ':fecha_baja'    => $student->fecha_baja,
+                                ':motivo_baja'  => $student->motivo_baja,
+                                ':deleted'      => $student->deleted,
+                                ':created_at'   => $student->created_at,
+                                ':updated_at'   => $student->updated_at,
+                                ':deleted_at'   => $student->deleted_at
+                                ]);
+
+                $commit = $insert->rowCount() > 0;
+
+                if (!$commit) {
+                    $laradb->rollBack();
+                    dump('Error en INSERT_STUDENT: '.$student->student_id);
+                    exit();
+                }
+
+
+                if ($commit) {
+                    $idStudent = $laradb->lastInsertId();
+
+                    foreach ($faltas as $falta) {
+                        $insertFaltas = $laradb->prepare("INSERT INTO students_absences(
+                                                                                    student_id,
+                                                                                    course,
+                                                                                    horary,
+                                                                                    teacher_id,
+                                                                                    absence_note,
+                                                                                    teacher_note,
+                                                                                    absence_date,
+                                                                                    contact_date,
+                                                                                    return_date,
+                                                                                    status,
+                                                                                    created_by
+                                                                                ) VALUES(
+                                                                                    :student,
+                                                                                    :curso,
+                                                                                    :horario,
+                                                                                    :maestro,
+                                                                                    :nota_falta,
+                                                                                    :nota_maestro,
+                                                                                    :fecha_falta,
+                                                                                    :fecha_contacto,
+                                                                                    :fecha_regreso,
+                                                                                    :status,
+                                                                                    :creado_por
+                                                                                );");
+                        $insertFaltas->execute([
+                                                ':student'          => $idStudent,
+                                                ':curso'            => $falta->course,
+                                                ':horario'          => $falta->horary,
+                                                ':maestro'          => $falta->teacher_id,
+                                                ':nota_falta'       => $falta->absence_note,
+                                                ':nota_maestro'     => $falta->teacher_note,
+                                                ':fecha_falta'      => $falta->absence_date,
+                                                ':fecha_contacto'   => $falta->contact_date,
+                                                ':fecha_regreso'    => $falta->return_date,
+                                                ':status'           => $falta->status,
+                                                ':creado_por'       => $falta->created_by
+                                            ]);
+                        if ($insertFaltas->rowCount() < 1) {
+                            $laradb->rollBack();
+                            dump('Error en INSERT_FALTAS');
+                            exit();
+                        }
+                    }
+
+                    $insertDetalles = $laradb->prepare("INSERT INTO students_details(
+                                                                                    student_id,
+                                                                                    convenio,
+                                                                                    facturacion,
+                                                                                    homestay,
+                                                                                    acta_nacimiento,
+                                                                                    ocupation,
+                                                                                    workplace,
+                                                                                    studies,
+                                                                                    lastgrade,
+                                                                                    prior_course,
+                                                                                    prior_comments,
+                                                                                    status
+                                                                                ) VALUES(
+                                                                                    :student,
+                                                                                    :convenio,
+                                                                                    :facturacion,
+                                                                                    :homestay,
+                                                                                    :acta_nacimiento,
+                                                                                    :ocupation,
+                                                                                    :workplace,
+                                                                                    :studies,
+                                                                                    :lastgrade,
+                                                                                    :prior_course,
+                                                                                    :prior_comments,
+                                                                                    1
+                                                                                    );");
+                    $insertDetalles->execute([
+                                            ':student'          => $idStudent,
+                                            ':convenio'         => $details->convenio,
+                                            ':facturacion'      => $details->facturacion,
+                                            ':homestay'         => $details->homestay,
+                                            ':acta_nacimiento'  => $details->acta_nacimiento,
+                                            ':ocupation'        => $details->ocupation,
+                                            ':workplace'        => $details->workplace,
+                                            ':studies'          => $details->studies,
+                                            ':lastgrade'        => $details->lastgrade,
+                                            ':prior_course'     => $details->prior_course,
+                                            ':prior_comments'   => $details->prior_comments
+                                        ]);
+
+                    if ($insertDetalles->rowCount() < 1) {
+                        $laradb->rollBack();
+                        dump('Error en INSERT_DETALLES');
+                        exit();
+                    }
+
+                    $insertGrupos = $laradb->prepare("INSERT INTO students_groups(
+                                                                                    class_id,
+                                                                                    student_id,
+                                                                                    date_begin,
+                                                                                    convenio,
+                                                                                    status,
+                                                                                    year,
+                                                                                    ciclo,
+                                                                                    prior_course
+                                                                                ) 
+                                                                            VALUES(
+                                                                                :class_id,
+                                                                                :student_id,
+                                                                                :date_begin,
+                                                                                :convenio,
+                                                                                :status,
+                                                                                :year,
+                                                                                :ciclo,
+                                                                                :prior_course
+                                                                            );");
+                    $insertGrupos->execute([
+                                            ':class_id'     => $grupos->class_id,
+                                            ':student_id'   => $idStudent,
+                                            ':date_begin'   => $grupos->date_begin,
+                                            ':convenio'     => $grupos->convenio,
+                                            ':status'       => $grupos->status,
+                                            ':year'         => $grupos->year,
+                                            ':ciclo'        => $grupos->ciclo,
+                                            ':prior_course' => $grupos->prior_course
+                                        ]);
+
+                    if ($insertGrupos->rowCount() < 1) {
+                        $laradb->rollBack();
+                        dump('Error en INSERT_GRUPOS');
+                        exit();
+                    }
+
+                    foreach ($becas as $beca) {
+                        $insertBecas = $laradb->prepare("INSERT INTO becas(
+                                                                            student_id,
+                                                                            sponsor_id,
+                                                                            status,
+                                                                            percentage,
+                                                                            applicant_at,
+                                                                            granted_at,
+                                                                            removed_at,
+                                                                            emailed
+                                                                        ) 
+                                                                    VALUES(
+                                                                        :student_id,
+                                                                        :sponsor_id,
+                                                                        :status,
+                                                                        :percentage,
+                                                                        :applicant_at,
+                                                                        :granted_at,
+                                                                        :removed_at,
+                                                                        :emailed
+                                                                    );");
+                        $insertBecas->execute([
+                                            ':student_id'   => $idStudent,
+                                            ':sponsor_id'   => $beca->sponsor_id,
+                                            ':status'       => $beca->status,
+                                            ':percentage'   => $beca->percentage,
+                                            ':applicant_at' => $beca->applicant_at,
+                                            ':granted_at'   => $beca->granted_at,
+                                            ':removed_at'   => $beca->removed_at,
+                                            ':emailed'      => $beca->emailed
+                                        ]);
+
+                        if ($insertBecas->rowCount() < 1) {
+                            $laradb->rollBack();
+                            dump('Error en INSERT_BECAS');
+                            exit();
+                        }
+                    }
+
+                    foreach ($pagos as $pago) {    
+                        $insertPagos = $laradb->prepare("INSERT INTO students_pays(
+                                                                                    student_id,
+                                                                                    ene,
+                                                                                    feb,
+                                                                                    mar,
+                                                                                    abr,
+                                                                                    may,
+                                                                                    jun,
+                                                                                    jul,
+                                                                                    ago,
+                                                                                    sep,
+                                                                                    oct,
+                                                                                    nov,
+                                                                                    dic,
+                                                                                    anio,
+                                                                                    ciclo,
+                                                                                    status,
+                                                                                    comentarios
+                                                                                ) 
+                                                                            VALUES(
+                                                                                :student_id,
+                                                                                :ene,
+                                                                                :feb,
+                                                                                :mar,
+                                                                                :abr,
+                                                                                :may,
+                                                                                :jun,
+                                                                                :jul,
+                                                                                :ago,
+                                                                                :sep,
+                                                                                :oct,
+                                                                                :nov,
+                                                                                :dic,
+                                                                                :anio,
+                                                                                :ciclo,
+                                                                                :status,
+                                                                                :comentarios
+                                                                            );");
+                        $insertPagos->execute([
+                                            ':student_id'   => $idStudent,
+                                            ':ene'          => $pago->ene,
+                                            ':feb'          => $pago->feb,
+                                            ':mar'          => $pago->mar,
+                                            ':abr'          => $pago->abr,
+                                            ':may'          => $pago->may,
+                                            ':jun'          => $pago->jun,
+                                            ':jul'          => $pago->jul,
+                                            ':ago'          => $pago->ago,
+                                            ':sep'          => $pago->sep,
+                                            ':oct'          => $pago->oct,
+                                            ':nov'          => $pago->nov,
+                                            ':dic'          => $pago->dic,
+                                            ':anio'         => $pago->year,
+                                            ':ciclo'        => $pago->ciclo,
+                                            ':status'       => $pago->estado,
+                                            ':comentarios'  => $pago->comment
+                                        ]);
+
+                        if ($insertPagos->rowCount() < 1) {
+                            $laradb->rollBack();
+                            dump('Error en INSERT_PAGOS');
+                            exit();
+                        }
+                    }
+
+                    foreach ($historial as $history) {
+                        $insertHistory = $laradb->prepare("INSERT INTO students_history(
+                                                                                        student_id,
+                                                                                        student_age,
+                                                                                        ciclo,
+                                                                                        student_group,
+                                                                                        teacher_group,
+                                                                                        student_init_date,
+                                                                                        student_end_date,
+                                                                                        student_school,
+                                                                                        student_grade,
+                                                                                        student_becado,
+                                                                                        student_sponsor,
+                                                                                        student_sep,
+                                                                                        created_at
+                                                                                    ) 
+                                                                                VALUES(
+                                                                                    :student_id,
+                                                                                    :student_age,
+                                                                                    :ciclo,
+                                                                                    :student_group,
+                                                                                    :teacher_group,
+                                                                                    :student_init_date,
+                                                                                    :student_end_date,
+                                                                                    :student_school,
+                                                                                    :student_grade,
+                                                                                    :student_becado,
+                                                                                    :student_sponsor,
+                                                                                    :student_sep,
+                                                                                    :created_at
+                                                                                );");
+                        $insertHistory->execute([
+                                                ':student_id'       => $idStudent,
+                                                ':student_age'      => $history->student_age,
+                                                ':ciclo'            => $history->ciclo,
+                                                ':student_group'    => $history->student_group,
+                                                ':teacher_group'    => $history->teacher_group,
+                                                ':student_init_date' => $history->student_init_date,
+                                                ':student_end_date' => $history->student_end_date,
+                                                ':student_school'   => $history->student_school,
+                                                ':student_grade'    => $history->student_grade,
+                                                ':student_becado'   => $history->student_becado,
+                                                ':student_sponsor'  => $history->student_sponsor,
+                                                ':student_sep'      => $history->student_sep,
+                                                ':created_at'       => $history->created_at
+                                            ]);
+
+                        if ($insertHistory->rowCount() < 1) {
+                            $laradb->rollBack();
+                            dump('Error en INSERT_HISTORIAL');
+                            exit();
+                        }
+                    }
+
+                    if($address){
+                        $insertAddress  = $laradb->prepare("INSERT INTO address(
+                                                                        user_id,
+                                                                        user_type,
+                                                                        street,
+                                                                        st_number,
+                                                                        st_between,
+                                                                        reference,
+                                                                        colony,
+                                                                        city,
+                                                                        zipcode,
+                                                                        state,
+                                                                        country,
+                                                                        latitud,
+                                                                        longitud,
+                                                                        created_at,
+                                                                        updated_at
+                                                                    ) 
+                                                                VALUES(
+                                                                    :user_id,
+                                                                    :user_type,
+                                                                    :street,
+                                                                    :st_number,
+                                                                    :st_between,
+                                                                    :reference,
+                                                                    :colony,
+                                                                    :city,
+                                                                    :zipcode,
+                                                                    :state,
+                                                                    :country,
+                                                                    :latitud,
+                                                                    :longitud,
+                                                                    :created_at,
+                                                                    :updated_at
+                                                                );");
+                        $insertAddress->execute([
+                                        ':user_id'      => $idStudent,
+                                        ':user_type'    => 1,
+                                        ':street'       => $address->street,
+                                        ':st_number'    => $address->st_number,
+                                        ':st_between'   => $address->st_between,
+                                        ':reference'    => $address->reference,
+                                        ':colony'       => $address->colony,
+                                        ':city'         => $address->city,
+                                        ':zipcode'      => $address->zipcode,
+                                        ':state'        => $address->state,
+                                        ':country'      => $address->country,
+                                        ':latitud'      => $address->latitud ? $address->latitud : 19.579994462915835,
+                                        ':longitud'     => $address->longitud ? $address->longitud : -88.04420235898436,
+                                        ':created_at'   => $address->created_at,
+                                        ':updated_at'   => $address->updated_at
+                                    ]);
+
+                        if ($insertAddress->rowCount() < 1) {
+                            $laradb->rollBack();
+                            dump('Error en INSERT_ADDRESS: '.$student->student_id);
+                            exit();
+                        }
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $laradb->rollBack();
+            dump('Error en INSERT');
+            exit();
+        } 
+
+        $laradb->commit();
+        dump('Inserts OK');
+        exit();
+    }
+
+
+    public static function loadGrupos(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $laradb   = DatabaseFactory::getFactory()->laravelConnect();
+
+        $query = $database->prepare("SELECT * FROM groups;");
+        $query->execute();
+        $commit = true;
+        $laradb->beginTransaction();
+        try{
+            foreach ($query->fetchAll() as $grupo) {
+                $insert = $laradb->prepare("INSERT INTO groups(nombre, descripcion, status) VALUES(:nombre, null, 1)");
+                $insert->execute([':nombre' => $grupo->group_name]);
+
+                if ($insert->rowCount() > 0) {
+                    $idGrupo = $laradb->lastInsertId();
+                    $update  = $laradb->prepare("UPDATE classes SET group_id = :grupo WHERE group_id = :oldid;");
+                    $update->execute([':grupo' => $idGrupo, ':oldid' => $grupo->group_id]);
+                }
+            }
+        } catch (PDOException $e) {
+            $commit = false;
+        }
+
+        if (!$commit) {
+            $laradb->rollBack();
+            dump('Error en INSERT');
+            exit();
+        } 
+
+        $laradb->commit();
+        dump('Inserts OK');
+        exit();
+    }
+
+
     public static function loadLaravel(){
         $database = DatabaseFactory::getFactory()->getConnection();
         $laradb   = DatabaseFactory::getFactory()->laravelConnect();
